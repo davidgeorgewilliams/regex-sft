@@ -34,26 +34,35 @@ untrained generation ran to the cap without emitting `<|im_end|>`, so only 1.9%
 contained a parseable answer. Its 0.6% "accuracy" therefore measures the token
 cap, not the model, and is not reported.
 
-Re-running under the model card's documented conditions — sampling at
-`temperature=0.6, top_p=0.95, top_k=20` with the recommended **32,768**-token
-budget — a single batch of 4 prompts did not terminate within 13 minutes,
-putting a full 160-turn baseline at roughly **10 hours** on this hardware.
+### What was and was not established
 
-**The finding is about termination, not capability.** Inspecting a raw
-generation (`results/untrained_thinking_sample.txt`, reproduce with
-`scripts/inspect_base_generation.py`) shows it is not looping or producing
-gibberish — distinct 8-gram ratio **0.97**, most-repeated phrase just 2x. It
-reasons coherently, correctly identifies that it needs the `s` flag, and
-derives the exact gold answer `BEGIN(.*?)END` — roughly **five times** in 1200
-tokens — without ever committing to it. The word "Wait" appears over a dozen
-times: self-verification with no natural stopping point on a task this small.
+**Measured.** At 384 tokens, greedy, on all 160 test prompts: 100% truncation,
+1.9% valid JSON. Every generation ran to the cap without emitting `<|im_end|>`.
 
-So a large part of what SFT bought was not better regexes but *decisiveness*.
-The fine-tuned model answers in ~73 tokens; the untrained one knows the answer
-and will not stop restating it.
+**Measured.** One prompt at 1200 tokens under the card's sampling settings
+(`results/untrained_thinking_sample.txt`, reproduce with
+`scripts/inspect_base_generation.py`): the model is **not looping and not
+producing gibberish** — distinct 8-gram ratio **0.97**, most-repeated phrase
+just 2x. It reasons coherently, identifies that it needs the `s` flag, and
+derives the exact gold answer `BEGIN(.*?)END` about **five times**, without
+ever committing to it. "Wait" appears over a dozen times: self-verification
+with no natural stopping point on a task this small.
 
-An accuracy baseline at reduced *n* under full documented conditions is the
-outstanding work — see Known Limitations.
+**Not established.** Whether it terminates at all within the card's
+recommended 32,768-token budget. It was never run to that limit. A batch of 4
+had not finished after 13 minutes, which puts a full 160-turn baseline at
+roughly **10 hours** on this hardware.
+
+**Why it is blank.** This is a scoping decision, not a blocker. Because the
+model elaborates rather than loops, a longer run would plausibly terminate and
+yield a real number — the compute was simply not spent. Claiming "the untrained
+model cannot do this task" would overstate what was measured; the 0.6% figure
+measures a token cap and is not reported.
+
+What the evidence does support is narrower: within every budget tested, the
+untrained model did not produce a committed answer, while the fine-tuned model
+answers in ~73 tokens. Part of what SFT bought was decisiveness. How much of
+the accuracy gap that accounts for is **unquantified**.
 
 Tuned Thinking vs tuned Instruct: **−1.2 pp, χ²=0.03 — not significant.** The
 disagreement is near-symmetric (20 instruct-only correct, 18 thinking-only), so
@@ -207,12 +216,14 @@ already turned over. Selecting on loss would have picked the worse checkpoint.
    are rationalisation. Guaranteed only: the stated pattern is the verified
    gold, no trace cites a string the model cannot see, every trap is reasoned
    about somewhere. Rejection sampling would give genuinely certified traces.
-5. **No accuracy baseline for untrained Thinking.** It does not terminate
-   within a practical budget (above), so "did fine-tuning improve Thinking's
-   accuracy?" is unanswered. Only the Instruct improvement (+15.0 pp) is
-   established. The outstanding work is a reduced-*n* baseline under the model
-   card's sampling settings and full 32,768-token budget, requiring **0%
-   truncation** to count — a smaller cap would repeat the original error.
+5. **No accuracy baseline for untrained Thinking — deliberately descoped.**
+   "Did fine-tuning improve Thinking's accuracy?" is unanswered; only the
+   Instruct improvement (+15.0 pp) is established. The model was not run to its
+   recommended 32,768-token budget, so it is **unknown** whether it terminates
+   there. It is not looping (8-gram ratio 0.97), so a longer run would
+   plausibly succeed — the ~10 hours it needs on this hardware was simply not
+   spent. Any future attempt must require **0% truncation** to count; a smaller
+   cap would repeat the original error.
 6. **Two decode configurations.** Checkpoint comparison uses greedy decoding
    for determinism across the dev sweep; baselines should use each card's
    recommended sampling. Both are defensible for their purpose, but they are

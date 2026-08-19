@@ -34,16 +34,23 @@ same two defects -- greedy decoding, and a budget 16x below the card's
 recommendation -- and would have produced another number needing the same
 caveat.
 
-A properly configured run (the card's `temperature=0.6, top_p=0.95, top_k=20`
-with the recommended 32,768-token budget) did not finish a single batch of 4
-prompts in 13 minutes, projecting to roughly 10 hours for the full 160-turn
-test set on this hardware.
+The model was never run to its recommended 32,768-token budget, so **whether
+it terminates there is unknown**. A batch of 4 had not finished after 13
+minutes, projecting to ~10 hours for the full 160-turn test set on this
+hardware, and that compute was deliberately not spent.
 
-What IS measured, and is the more interesting result: at an identical
-384-token budget on identical prompts, the untrained model truncated **100%**
-of generations (1.9% valid JSON) while the fine-tuned model truncated **0%**
-(97.5% valid JSON). A large part of what SFT bought was the ability to
-terminate, not better regexes.
+Note this is NOT a repetition failure. `untrained_thinking_sample.txt` shows a
+distinct 8-gram ratio of 0.97 with the most-repeated phrase appearing twice --
+the model elaborates with new reasoning throughout and derives the correct
+answer about five times without committing to it. Since it is not looping, a
+longer run would plausibly terminate; the baseline is unpaid-for rather than
+impossible.
+
+What IS measured: at an identical 384-token budget on identical prompts, the
+untrained model truncated 100% of generations (1.9% valid JSON) while the
+fine-tuned model truncated 0% (97.5% valid JSON). Part of what SFT bought was
+decisiveness. How much of the accuracy difference that explains is
+unquantified.
 
 The file is kept rather than deleted because the failure is instructive: a
 baseline that is silently measuring your own token limit looks exactly like a
