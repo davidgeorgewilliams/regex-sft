@@ -181,8 +181,9 @@ def main() -> int:
                 for i in range(3)] for v in VARIANTS}
     charts.append(line_chart("free", "Free-running: accuracy collapse across turns",
         "Each model reads its OWN previous answers. Instruct compounds its mistakes; Thinking "
-        "re-derives from the instruction each turn and degrades far less.",
-        ser3, xt3, yt3, "conversation turn", "hidden-pass"))
+        "re-derives from the instruction each turn and degrades far less. Each point is 30 turns; "
+        "averaging the three gives the free-running bars in the next chart (51.1% and 72.2%).",
+        ser3, xt3, yt3, "conversation turn", "hidden-pass, per turn (n=30)"))
     tables.append(table("Free-running by turn", ["turn", "instruct", "thinking"],
         [[i + 1, f"{free['instruct'][i]}%", f"{free['thinking'][i]}%"] for i in range(3)]))
 
@@ -194,9 +195,10 @@ def main() -> int:
     bars = {v: [traj_rate(f"{v}_test_best_gold.json"), traj_rate(f"{v}_test_best_free.json")]
             for v in VARIANTS}
     charts.append(grouped_bars("gf", "Multi-turn: given correct history vs its own",
-        "Same 90 test turns, same models — only the conversation history differs. Instruct drops "
-        "15.6 pp when it must read its own output (p&lt;0.05); Thinking drops 4.5 pp (not significant).",
-        ["gold history", "free-running"], bars, "hidden-pass", 80))
+        "All three turns pooled (n=90), so these are the averages of the per-turn curves at left — "
+        "not turn-3 values. Same turns, same models; only the conversation history differs. Instruct "
+        "drops 15.6 pp when it must read its own output (p&lt;0.05); Thinking drops 4.5 pp (ns).",
+        ["gold history", "free-running"], bars, "hidden-pass, all 3 turns (n=90)", 80))
     tables.append(table("Gold vs free", ["condition", "instruct", "thinking"],
         [["gold history", f"{bars['instruct'][0]}%", f"{bars['thinking'][0]}%"],
          ["free-running", f"{bars['instruct'][1]}%", f"{bars['thinking'][1]}%"]]))
