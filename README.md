@@ -108,10 +108,27 @@ Turn by turn, free-running:
 
 Instruct collapses 80 → 47 → 27. Thinking degrades gently, 87 → 77 → 53.
 
-**Interpretation.** Thinking is not the better regex writer — on turn 1, where
-no history exists, Instruct is *ahead* (63.0% vs 54.0%). What the trace buys is
-**error recovery**: Instruct pattern-matches its previous answer forward, so an
-early mistake propagates; Thinking re-derives from the instruction each turn.
+**Interpretation.** The trace buys **error recovery**, not raw skill. The
+degradation column is the unambiguous evidence: over the same 90 turns, Instruct
+loses 15.6 pp when it must read its own answers (p<0.05) while Thinking loses
+4.5 pp (ns). Instruct pattern-matches its previous answer forward, so an early
+mistake propagates; Thinking re-derives from the instruction each turn.
+
+Whether Thinking is also the weaker *single-shot* model depends on the slice, so
+it is worth stating carefully rather than as a slogan:
+
+| items with no history to read | n | Instruct | Thinking |
+|---|---|---|---|
+| standalone single-turn tasks | 70 | **55.7%** | 40.0% |
+| trajectory turn 1 | 30 | 80.0% | **86.7%** |
+| both pooled | 100 | **63.0%** | 54.0% |
+
+Instruct leads clearly on the 70 standalone tasks — which are the harder ones,
+dominated by bounded-range `validate` concepts — and that slice carries the
+pooled figure. On the 30 trajectory openers, which are simpler "establish"
+patterns, Thinking is slightly ahead. So "Thinking is the weaker single-shot
+model" holds on the harder majority but is not universal, and the error-recovery
+claim does not depend on it.
 
 This effect is invisible under gold history (+10 pp, not significant). Running
 only the conventional teacher-forced evaluation would have concluded the traces
