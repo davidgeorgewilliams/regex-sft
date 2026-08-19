@@ -17,7 +17,35 @@ somewhere more interesting than raw accuracy.
 | model | before tuning | after tuning |
 |---|---|---|
 | Instruct | 46.9% | **61.9%** (+15.0 pp, paired McNemar p<0.05) |
-| Thinking | *see results/* | **60.6%** |
+| Thinking | *not established — see below* | **60.6%** |
+
+### Why the Thinking baseline is blank
+
+The untrained Thinking model **does not finish answering**, so it has no
+comparable accuracy number. This is measured, not inferred:
+
+| at a 384-token budget, greedy, same 160 test prompts | truncated | valid JSON |
+|---|---|---|
+| untrained Thinking | **100%** | 1.9% |
+| fine-tuned Thinking | **0%** | 97.5% |
+
+Identical budget, identical prompts, identical base weights. Every single
+untrained generation ran to the cap without emitting `<|im_end|>`, so only 1.9%
+contained a parseable answer. Its 0.6% "accuracy" therefore measures the token
+cap, not the model, and is not reported.
+
+Re-running under the model card's documented conditions — sampling at
+`temperature=0.6, top_p=0.95, top_k=20` with the recommended **32,768**-token
+budget — a single batch of 4 prompts did not terminate within 13 minutes,
+putting a full 160-turn baseline at roughly **10 hours** on this hardware.
+
+**The finding is about termination, not accuracy:** a large part of what SFT
+bought here is not better regexes but *the ability to stop*. The fine-tuned
+model answers in ~73 tokens; the untrained one does not converge on an answer
+within a budget 85× larger.
+
+An accuracy baseline at reduced *n* under full documented conditions is the
+outstanding work — see Known Limitations.
 
 Tuned Thinking vs tuned Instruct: **−1.2 pp, χ²=0.03 — not significant.** The
 disagreement is near-symmetric (20 instruct-only correct, 18 thinking-only), so
@@ -171,6 +199,17 @@ already turned over. Selecting on loss would have picked the worse checkpoint.
    are rationalisation. Guaranteed only: the stated pattern is the verified
    gold, no trace cites a string the model cannot see, every trap is reasoned
    about somewhere. Rejection sampling would give genuinely certified traces.
+5. **No accuracy baseline for untrained Thinking.** It does not terminate
+   within a practical budget (above), so "did fine-tuning improve Thinking's
+   accuracy?" is unanswered. Only the Instruct improvement (+15.0 pp) is
+   established. The outstanding work is a reduced-*n* baseline under the model
+   card's sampling settings and full 32,768-token budget, requiring **0%
+   truncation** to count — a smaller cap would repeat the original error.
+6. **Two decode configurations.** Checkpoint comparison uses greedy decoding
+   for determinism across the dev sweep; baselines should use each card's
+   recommended sampling. Both are defensible for their purpose, but they are
+   not interchangeable, and applying the checkpoint-comparison config to a
+   baseline is exactly the mistake that produced the invalid 0.6% number.
 4. **Per-move results are not reportable.** n=6 per move in test; a 6/6 result
    has a 95% interval of [61, 100]. The move balancing still matters — it keeps
    the *training* distribution even — but answering "which moves does SFT

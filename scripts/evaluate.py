@@ -45,6 +45,21 @@ MODEL_DIR = {
 }
 MAX_NEW = {"instruct": 128, "thinking": 384}
 
+# Sampling settings taken verbatim from each model card's "Best Practices".
+# Used for BASELINE measurement, where the question is what the model can do
+# under its intended operating conditions. Checkpoint comparison uses greedy
+# instead, because the dev sweep needs determinism to select between epochs
+# that differ by a point or two -- two different purposes, two configs, both
+# stated rather than one default silently carried across.
+RECOMMENDED = {
+    "instruct": dict(do_sample=True, temperature=0.7, top_p=0.8, top_k=20, min_p=0.0),
+    "thinking": dict(do_sample=True, temperature=0.6, top_p=0.95, top_k=20, min_p=0.0),
+}
+# Both cards: "We recommend using an output length of 32,768 tokens for most
+# queries." Anything smaller risks truncating mid-reasoning, which measures the
+# budget rather than the model.
+RECOMMENDED_MAX_NEW = 32768
+
 
 def parse_output(text: str) -> dict | None:
     """Pull the JSON answer out of a generation.
@@ -76,16 +91,26 @@ def build_prompt(tok, rec: dict, k: int, prior_answers: list[str]) -> str:
 
 
 @torch.no_grad()
-def generate(model, tok, prompts: list[str], max_new: int, batch_size: int) -> list[str]:
-    outs = []
+def generate(model, tok, prompts: list[str], max_new: int, batch_size: int,
+             gen_kwargs: dict | None = None) -> tuple[list[str], list[int]]:
+    outs, lens = [], []
+    kw = gen_kwargs or dict(do_sample=False)
     for i in range(0, len(prompts), batch_size):
         chunk = prompts[i:i + batch_size]
         enc = tok(chunk, return_tensors="pt", padding=True, add_special_tokens=False).to("mps")
-        gen = model.generate(**enc, max_new_tokens=max_new, do_sample=False,
-                             pad_token_id=tok.pad_token_id)
+        gen = model.generate(**enc, max_new_tokens=max_new,
+                             pad_token_id=tok.pad_token_id, **kw)
+        plen = enc["input_ids"].shape[1]
         for j in range(len(chunk)):
-            outs.append(tok.decode(gen[j][enc["input_ids"].shape[1]:], skip_special_tokens=False))
-    return outs
+            new = gen[j][plen:]
+            text = tok.decode(new, skip_special_tokens=False)
+            outs.append(text)
+            # Count real tokens, excluding right-padding added after EOS.
+            lens.append(int((new != tok.pad_token_id).sum()))
+        print(f"    batch {i // batch_size + 1}/"
+              f"{(len(prompts) + batch_size - 1) // batch_size} "
+              f"gen_len max={max(lens[-len(chunk):])}", flush=True)
+    return outs, lens
 
 
 def score(turn: dict, cand: dict | None) -> dict:
@@ -114,8 +139,20 @@ def main() -> int:
     # generations and scored the token cap rather than the model. Fine-tuned
     # checkpoints emit short traces and are unaffected.
     ap.add_argument("--max-new", type=int, default=0, help="override MAX_NEW")
+    ap.add_argument("--decode", default="greedy", choices=["greedy", "recommended"],
+                    help="greedy = deterministic, for checkpoint comparison; "
+                         "recommended = the model card's sampling settings, for baselines")
+    ap.add_argument("--seed", type=int, default=20260819)
     args = ap.parse_args()
-    max_new = args.max_new or MAX_NEW[args.variant]
+
+    torch.manual_seed(args.seed)
+    torch.mps.manual_seed(args.seed)
+    if args.decode == "recommended":
+        gen_kwargs = dict(RECOMMENDED[args.variant])
+        max_new = args.max_new or RECOMMENDED_MAX_NEW
+    else:
+        gen_kwargs = dict(do_sample=False)
+        max_new = args.max_new or MAX_NEW[args.variant]
 
     tok = AutoTokenizer.from_pretrained(str(MODEL_DIR[args.variant]))
     tok.padding_side = "left"          # required for correct batched generation
@@ -145,9 +182,9 @@ def main() -> int:
         if not active:
             continue
         prompts = [build_prompt(tok, r, k, prior[r["id"]]) for r in active]
-        texts = generate(model, tok, prompts, max_new, args.batch_size)
+        texts, glens = generate(model, tok, prompts, max_new, args.batch_size, gen_kwargs)
 
-        for r, text in zip(active, texts):
+        for r, text, glen in zip(active, texts, glens):
             turn = r["turns"][k]
             cand = parse_output(text)
             s = score(turn, cand)
@@ -155,7 +192,13 @@ def main() -> int:
                 "id": r["id"], "turn": turn["index"], "concept": r["concept"],
                 "kind": r["kind"], "family": turn["family"],
                 "difficulty": r["difficulty"], "move": turn.get("move", "SINGLE"),
-                "truncated": "<|im_end|>" not in text, **s,
+                "truncated": "<|im_end|>" not in text,
+                "gen_tokens": glen,
+                # Keep a slice of raw output. Without it, a truncation flag tells
+                # you THAT generation failed but not what it was doing -- coherent
+                # long reasoning and a repetition loop look identical in the metrics.
+                "gen_head": text[:600],
+                **s,
             })
             # gold mode feeds the reference answer forward; free mode feeds the
             # model's own answer, so errors compound across turns.
@@ -172,6 +215,9 @@ def main() -> int:
     summary = {
         "variant": args.variant, "split": args.split, "checkpoint": args.checkpoint,
         "mode": args.mode, "n_turns": len(rows), "max_new": max_new,
+        "decode": args.decode, "seed": args.seed,
+        "gen_tokens_mean": round(sum(r["gen_tokens"] for r in rows) / max(1, len(rows)), 1),
+        "gen_tokens_max": max((r["gen_tokens"] for r in rows), default=0),
         "seconds": round(time.time() - t0),
         "hidden_pass": rate("hidden_pass"),
         "visible_pass": rate("visible_pass"),
