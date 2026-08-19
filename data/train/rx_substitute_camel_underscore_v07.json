@@ -1,0 +1,81 @@
+{
+  "id": "rx_substitute_camel_underscore_v07",
+  "kind": "single",
+  "concept": "camel_underscore",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "insert without consuming",
+    "do not fire at the start"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Insert an underscore between a lowercase letter or digit and an immediately following uppercase letter. Do not change the letters themselves.",
+      "traps": [
+        "insert without consuming",
+        "do not fire at the start"
+      ],
+      "visible": [
+        [
+          "lowercase",
+          "lowercase"
+        ],
+        [
+          "camelCase",
+          "camel_Case"
+        ]
+      ],
+      "hidden": [
+        [
+          "myVariableName",
+          "my_Variable_Name"
+        ],
+        [
+          "parseHTTPResponse",
+          "parse_HTTPResponse"
+        ],
+        [
+          "a1B",
+          "a1_B"
+        ],
+        [
+          "ABC",
+          "ABC"
+        ]
+      ],
+      "gold": {
+        "pattern": "([a-z0-9])([A-Z])",
+        "replacement": "\\1_\\2",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "([a-z0-9])([A-Z])",
+        "replacement": "\\1_\\2",
+        "flags": ""
+      },
+      "user": "Task: Insert an underscore between a lowercase letter or digit and an immediately following uppercase letter. Do not change the letters themselves.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'lowercase' -> 'lowercase'\n  'camelCase' -> 'camel_Case'",
+      "thinking": "Matching the uppercase letter alone and replacing it would delete it: the insert has to happen without consuming either side, so both are captured. Pattern: ([a-z0-9])([A-Z]) with replacement \\1_\\2",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Insert an underscore between a lowercase letter or digit and an immediately following uppercase letter. Do not change the letters themselves.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'lowercase' -> 'lowercase'\n  'camelCase' -> 'camel_Case'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nMatching the uppercase letter alone and replacing it would delete it: the insert has to happen without consuming either side, so both are captured. Pattern: ([a-z0-9])([A-Z]) with replacement \\1_\\2\n</think>\n{\"pattern\": \"([a-z0-9])([A-Z])\", \"replacement\": \"\\\\1_\\\\2\", \"flags\": \"\"}"
+    }
+  ]
+}

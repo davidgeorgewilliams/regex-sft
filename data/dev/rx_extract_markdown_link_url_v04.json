@@ -1,0 +1,72 @@
+{
+  "id": "rx_extract_markdown_link_url_v04",
+  "kind": "single",
+  "concept": "markdown_link_url",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "two bracket types",
+    "greedy vs lazy"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the URL from the first Markdown link, i.e. the part inside the parentheses of [text](url).",
+      "traps": [
+        "two bracket types",
+        "greedy vs lazy"
+      ],
+      "visible": [
+        [
+          "see [docs](https://a.com) now",
+          "https://a.com"
+        ]
+      ],
+      "hidden": [
+        [
+          "[x](y)",
+          "y"
+        ],
+        [
+          "no links",
+          null
+        ],
+        [
+          "[a](1) and [b](2)",
+          "1"
+        ],
+        [
+          "[with spaces](http://x.com/a b)",
+          "http://x.com/a b"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\[[^\\]]*\\]\\(([^)]*)\\)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\[[^\\]]*\\]\\(([^)]*)\\)",
+        "flags": ""
+      },
+      "user": "Task: Capture the URL from the first Markdown link, i.e. the part inside the parentheses of [text](url).\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'see [docs](https://a.com) now' -> 'https://a.com'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the URL from the first Markdown link, i.e. the part inside the parentheses of [text](url).\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'see [docs](https://a.com) now' -> 'https://a.com'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\[[^\\\\]]*\\\\]\\\\(([^)]*)\\\\)\", \"flags\": \"\"}"
+    }
+  ]
+}

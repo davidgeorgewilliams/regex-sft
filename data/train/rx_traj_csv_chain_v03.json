@@ -1,0 +1,181 @@
+{
+  "id": "rx_traj_csv_chain_v03",
+  "kind": "trajectory",
+  "concept": "csv_chain",
+  "arc": "REPAIR->GENERALIZE",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE anchoring",
+    "drop the end anchor to admit any field count",
+    "field must not contain the delimiter",
+    "fix a cited failure",
+    "three fields"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "Swap the two comma-separated fields on every line, so 'a,b' becomes 'b,a'. Fields never contain commas.",
+      "traps": [
+        "MULTILINE anchoring",
+        "field must not contain the delimiter"
+      ],
+      "visible": [
+        [
+          "first,second",
+          "second,first"
+        ]
+      ],
+      "hidden": [
+        [
+          "a,b\nc,d",
+          "b,a\nd,c"
+        ],
+        [
+          "1,2\n3,4",
+          "2,1\n4,3"
+        ],
+        [
+          "nocomma",
+          "nocomma"
+        ]
+      ],
+      "gold": {
+        "pattern": "^([^,\\n]+),([^,\\n]+)$",
+        "replacement": "\\2,\\1",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^([^,\\n]+),([^,\\n]+)$",
+        "replacement": "\\2,\\1",
+        "flags": "m"
+      },
+      "user": "Task: Swap the two comma-separated fields on every line, so 'a,b' becomes 'b,a'. Fields never contain commas.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'first,second' -> 'second,first'",
+      "thinking": "Excluding the comma from the field class keeps a field from swallowing the delimiter. Pattern: ^([^,\\n]+),([^,\\n]+)$ with replacement \\2,\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "REPAIR",
+      "instruction": "Bug: it left 'a,b,c' completely untouched. These rows have three columns -- reverse all three, so 'a,b,c' becomes 'c,b,a'.",
+      "traps": [
+        "three fields",
+        "fix a cited failure"
+      ],
+      "visible": [
+        [
+          "a,b,c",
+          "c,b,a"
+        ]
+      ],
+      "hidden": [
+        [
+          "1,2,3\n4,5,6",
+          "3,2,1\n6,5,4"
+        ],
+        [
+          "x,y,z",
+          "z,y,x"
+        ],
+        [
+          "only,two",
+          "only,two"
+        ]
+      ],
+      "gold": {
+        "pattern": "^([^,\\n]+),([^,\\n]+),([^,\\n]+)$",
+        "replacement": "\\3,\\2,\\1",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^([^,\\n]+),([^,\\n]+),([^,\\n]+)$",
+        "replacement": "\\3,\\2,\\1",
+        "flags": "m"
+      },
+      "user": "Task: Bug: it left 'a,b,c' completely untouched. These rows have three columns -- reverse all three, so 'a,b,c' becomes 'c,b,a'.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a,b,c' -> 'c,b,a'",
+      "thinking": "Making the third field optional would leave the replacement referring to a group that may not exist. Pattern: ^([^,\\n]+),([^,\\n]+),([^,\\n]+)$ with replacement \\3,\\2,\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "GENERALIZE",
+      "instruction": "The column count varies row to row. Generalise it: swap just the first two fields of every line, however many fields follow.",
+      "traps": [
+        "drop the end anchor to admit any field count"
+      ],
+      "visible": [
+        [
+          "first,second",
+          "second,first"
+        ]
+      ],
+      "hidden": [
+        [
+          "a,b,c",
+          "b,a,c"
+        ],
+        [
+          "1,2,3,4\n5,6",
+          "2,1,3,4\n6,5"
+        ],
+        [
+          "nocomma",
+          "nocomma"
+        ]
+      ],
+      "gold": {
+        "pattern": "^([^,\\n]+),([^,\\n]+)",
+        "replacement": "\\2,\\1",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^([^,\\n]+),([^,\\n]+)",
+        "replacement": "\\2,\\1",
+        "flags": "m"
+      },
+      "user": "Task: The column count varies row to row. Generalise it: swap just the first two fields of every line, however many fields follow.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'first,second' -> 'second,first'",
+      "thinking": "Fixing the field count is the wrong shape when rows vary. Dropping the end anchor generalises it to the first two fields wherever the row ends. Pattern: ^([^,\\n]+),([^,\\n]+) with replacement \\2,\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Swap the two comma-separated fields on every line, so 'a,b' becomes 'b,a'. Fields never contain commas.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'first,second' -> 'second,first'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nExcluding the comma from the field class keeps a field from swallowing the delimiter. Pattern: ^([^,\\n]+),([^,\\n]+)$ with replacement \\2,\\1\n</think>\n{\"pattern\": \"^([^,\\\\n]+),([^,\\\\n]+)$\", \"replacement\": \"\\\\2,\\\\1\", \"flags\": \"m\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Bug: it left 'a,b,c' completely untouched. These rows have three columns -- reverse all three, so 'a,b,c' becomes 'c,b,a'.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a,b,c' -> 'c,b,a'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nMaking the third field optional would leave the replacement referring to a group that may not exist. Pattern: ^([^,\\n]+),([^,\\n]+),([^,\\n]+)$ with replacement \\3,\\2,\\1\n</think>\n{\"pattern\": \"^([^,\\\\n]+),([^,\\\\n]+),([^,\\\\n]+)$\", \"replacement\": \"\\\\3,\\\\2,\\\\1\", \"flags\": \"m\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: The column count varies row to row. Generalise it: swap just the first two fields of every line, however many fields follow.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'first,second' -> 'second,first'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nFixing the field count is the wrong shape when rows vary. Dropping the end anchor generalises it to the first two fields wherever the row ends. Pattern: ^([^,\\n]+),([^,\\n]+) with replacement \\2,\\1\n</think>\n{\"pattern\": \"^([^,\\\\n]+),([^,\\\\n]+)\", \"replacement\": \"\\\\2,\\\\1\", \"flags\": \"m\"}"
+    }
+  ]
+}

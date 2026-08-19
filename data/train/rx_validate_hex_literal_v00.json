@@ -1,0 +1,74 @@
+{
+  "id": "rx_validate_hex_literal_v00",
+  "kind": "single",
+  "concept": "hex_literal",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "prefix required",
+    "hex alphabet"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a hexadecimal literal: '0x' or '0X' followed by one or more hexadecimal digits.",
+      "traps": [
+        "prefix required",
+        "hex alphabet"
+      ],
+      "visible": {
+        "positives": [
+          "0XFF"
+        ],
+        "negatives": [
+          "ff",
+          "0x"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0x0",
+          "0xDEADBEEF",
+          "0xff"
+        ],
+        "negatives": [
+          "0xg1",
+          "x0ff",
+          "00xff",
+          "0x ff",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "0[xX][0-9A-Fa-f]+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "0[xX][0-9A-Fa-f]+",
+        "flags": ""
+      },
+      "user": "Task: Match a hexadecimal literal: '0x' or '0X' followed by one or more hexadecimal digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0XFF'\nMust not match:\n  'ff'\n  '0x'",
+      "thinking": "Both prefix spellings collapse into a character class, then '+' over the hex alphabet. Pattern: 0[xX][0-9A-Fa-f]+",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a hexadecimal literal: '0x' or '0X' followed by one or more hexadecimal digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0XFF'\nMust not match:\n  'ff'\n  '0x'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nBoth prefix spellings collapse into a character class, then '+' over the hex alphabet. Pattern: 0[xX][0-9A-Fa-f]+\n</think>\n{\"pattern\": \"0[xX][0-9A-Fa-f]+\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "rx_substitute_strip_html_tags_v02",
+  "kind": "single",
+  "concept": "strip_html_tags",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "greedy vs lazy across tags"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Remove every HTML tag, keeping the text between them. A tag is a '<', then any characters that are not '>', then '>'.",
+      "traps": [
+        "greedy vs lazy across tags"
+      ],
+      "visible": [
+        [
+          "plain text",
+          "plain text"
+        ]
+      ],
+      "hidden": [
+        [
+          "<p>a</p><p>b</p>",
+          "ab"
+        ],
+        [
+          "<b>bold</b> text",
+          "bold text"
+        ],
+        [
+          "<a href=\"x\">link</a>",
+          "link"
+        ],
+        [
+          "<br/>line",
+          "line"
+        ]
+      ],
+      "gold": {
+        "pattern": "<[^>]*>",
+        "replacement": "",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "<[^>]*>",
+        "replacement": "",
+        "flags": ""
+      },
+      "user": "Task: Remove every HTML tag, keeping the text between them. A tag is a '<', then any characters that are not '>', then '>'.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'plain text' -> 'plain text'",
+      "thinking": "A tag runs from an opening bracket to the next closing one, so a negated class rather than a greedy dot-star. Pattern: <[^>]*>",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove every HTML tag, keeping the text between them. A tag is a '<', then any characters that are not '>', then '>'.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'plain text' -> 'plain text'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA tag runs from an opening bracket to the next closing one, so a negated class rather than a greedy dot-star. Pattern: <[^>]*>\n</think>\n{\"pattern\": \"<[^>]*>\", \"replacement\": \"\", \"flags\": \"\"}"
+    }
+  ]
+}

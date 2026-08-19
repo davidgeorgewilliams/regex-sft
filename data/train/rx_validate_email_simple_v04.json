@@ -1,0 +1,73 @@
+{
+  "id": "rx_validate_email_simple_v04",
+  "kind": "single",
+  "concept": "email_simple",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "no whitespace or @ in the parts",
+    "dot required in domain"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a simple email address: one or more characters that are not whitespace or '@', then '@', then more such characters, then a dot, then more such characters.",
+      "traps": [
+        "no whitespace or @ in the parts",
+        "dot required in domain"
+      ],
+      "visible": {
+        "positives": [
+          "bob@example.com"
+        ],
+        "negatives": [
+          "@b.co"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "a@b.co",
+          "x.y@sub.domain.org"
+        ],
+        "negatives": [
+          "a@b",
+          "no-at-sign.com",
+          "a b@c.co",
+          "a@b c.co",
+          "a@@b.co",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+        "flags": ""
+      },
+      "user": "Task: Match a simple email address: one or more characters that are not whitespace or '@', then '@', then more such characters, then a dot, then more such characters.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'bob@example.com'\nMust not match:\n  '@b.co'",
+      "thinking": "Using a dot-star for the parts would let whitespace and extra '@' characters through. A negated class per run prevents that and gives the domain its required dot. Pattern: [^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a simple email address: one or more characters that are not whitespace or '@', then '@', then more such characters, then a dot, then more such characters.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'bob@example.com'\nMust not match:\n  '@b.co'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUsing a dot-star for the parts would let whitespace and extra '@' characters through. A negated class per run prevents that and gives the domain its required dot. Pattern: [^\\s@]+@[^\\s@]+\\.[^\\s@]+\n</think>\n{\"pattern\": \"[^\\\\s@]+@[^\\\\s@]+\\\\.[^\\\\s@]+\", \"flags\": \"\"}"
+    }
+  ]
+}

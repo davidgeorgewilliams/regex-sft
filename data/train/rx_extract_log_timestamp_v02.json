@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_log_timestamp_v02",
+  "kind": "single",
+  "concept": "log_timestamp",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "bracket escaping",
+    "greedy vs lazy"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the timestamp inside the first pair of square brackets in a log line, without the brackets.",
+      "traps": [
+        "bracket escaping",
+        "greedy vs lazy"
+      ],
+      "visible": [
+        [
+          "[2024-01-15 10:30:00] INFO started",
+          "2024-01-15 10:30:00"
+        ],
+        [
+          "no brackets here",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "[12:00:00] ok",
+          "12:00:00"
+        ],
+        [
+          "[a] and [b]",
+          "a"
+        ],
+        [
+          "[] empty",
+          ""
+        ]
+      ],
+      "gold": {
+        "pattern": "\\[([^\\]]*)\\]",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\[([^\\]]*)\\]",
+        "flags": ""
+      },
+      "user": "Task: Capture the timestamp inside the first pair of square brackets in a log line, without the brackets.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '[2024-01-15 10:30:00] INFO started' -> '2024-01-15 10:30:00'\n  'no brackets here' -> null",
+      "thinking": "Square brackets are metacharacters and need escaping. A greedy middle would run to the last closing bracket on the line. Pattern: \\[([^\\]]*)\\]",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the timestamp inside the first pair of square brackets in a log line, without the brackets.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '[2024-01-15 10:30:00] INFO started' -> '2024-01-15 10:30:00'\n  'no brackets here' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nSquare brackets are metacharacters and need escaping. A greedy middle would run to the last closing bracket on the line. Pattern: \\[([^\\]]*)\\]\n</think>\n{\"pattern\": \"\\\\[([^\\\\]]*)\\\\]\", \"flags\": \"\"}"
+    }
+  ]
+}

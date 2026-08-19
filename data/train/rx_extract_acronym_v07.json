@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_acronym_v07",
+  "kind": "single",
+  "concept": "acronym",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "minimum length two",
+    "word boundaries"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the first all-uppercase acronym of two or more letters in the text.",
+      "traps": [
+        "minimum length two",
+        "word boundaries"
+      ],
+      "visible": [
+        [
+          "using an API today",
+          "API"
+        ],
+        [
+          "the NASA mission",
+          "NASA"
+        ]
+      ],
+      "hidden": [
+        [
+          "all lowercase words",
+          null
+        ],
+        [
+          "A single letter then HTTP",
+          "HTTP"
+        ],
+        [
+          "XML and JSON",
+          "XML"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b([A-Z]{2,})\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b([A-Z]{2,})\\b",
+        "flags": ""
+      },
+      "user": "Task: Capture the first all-uppercase acronym of two or more letters in the text.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'using an API today' -> 'API'\n  'the NASA mission' -> 'NASA'",
+      "thinking": "Without the minimum length every capitalised word would match its first letter; without the boundaries the run could start mid-word. Pattern: \\b([A-Z]{2,})\\b",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the first all-uppercase acronym of two or more letters in the text.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'using an API today' -> 'API'\n  'the NASA mission' -> 'NASA'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nWithout the minimum length every capitalised word would match its first letter; without the boundaries the run could start mid-word. Pattern: \\b([A-Z]{2,})\\b\n</think>\n{\"pattern\": \"\\\\b([A-Z]{2,})\\\\b\", \"flags\": \"\"}"
+    }
+  ]
+}

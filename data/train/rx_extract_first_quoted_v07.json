@@ -1,0 +1,81 @@
+{
+  "id": "rx_extract_first_quoted_v07",
+  "kind": "single",
+  "concept": "first_quoted",
+  "family": "extract",
+  "difficulty": "easy",
+  "traps": [
+    "greedy vs lazy"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the contents of the FIRST double-quoted string, without the quotes. Quotes are never escaped.",
+      "traps": [
+        "greedy vs lazy"
+      ],
+      "visible": [
+        [
+          "he said \"hello\" then \"goodbye\"",
+          "hello"
+        ],
+        [
+          "no quotes at all",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "log: \"started\" ok",
+          "started"
+        ],
+        [
+          "\"only one\"",
+          "only one"
+        ],
+        [
+          "a \"\" b \"x\"",
+          ""
+        ],
+        [
+          "\"first\" \"second\" \"third\"",
+          "first"
+        ],
+        [
+          "\"a\"+\"b\"",
+          "a"
+        ]
+      ],
+      "gold": {
+        "pattern": "\"([^\"]*)\"",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\"([^\"]*)\"",
+        "flags": ""
+      },
+      "user": "Task: Capture the contents of the FIRST double-quoted string, without the quotes. Quotes are never escaped.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'he said \"hello\" then \"goodbye\"' -> 'hello'\n  'no quotes at all' -> null",
+      "thinking": "Dot-star between quotes is the classic greedy mistake here: it spans every quoted run on the line instead of the first. Pattern: \"([^\"]*)\"",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the contents of the FIRST double-quoted string, without the quotes. Quotes are never escaped.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'he said \"hello\" then \"goodbye\"' -> 'hello'\n  'no quotes at all' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nDot-star between quotes is the classic greedy mistake here: it spans every quoted run on the line instead of the first. Pattern: \"([^\"]*)\"\n</think>\n{\"pattern\": \"\\\"([^\\\"]*)\\\"\", \"flags\": \"\"}"
+    }
+  ]
+}

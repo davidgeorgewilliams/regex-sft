@@ -1,0 +1,173 @@
+{
+  "id": "rx_traj_slug_chain_v01",
+  "kind": "trajectory",
+  "concept": "slug_chain",
+  "arc": "COMPOSE->INVERT",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "add a second separator to the class",
+    "match the complement of a character class",
+    "no leading or trailing separator",
+    "no repeated separators"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a URL slug: lowercase letters and digits in groups separated by single hyphens, with no leading, trailing or repeated hyphens.",
+      "traps": [
+        "no leading or trailing separator",
+        "no repeated separators"
+      ],
+      "visible": {
+        "positives": [
+          "hello-world",
+          "abc123"
+        ],
+        "negatives": [
+          "-leading"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "a-b-c",
+          "my-post-123"
+        ],
+        "negatives": [
+          "a--b",
+          "trailing-",
+          "Hello"
+        ]
+      },
+      "gold": {
+        "pattern": "[a-z0-9]+(?:-[a-z0-9]+)*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[a-z0-9]+(?:-[a-z0-9]+)*",
+        "flags": ""
+      },
+      "user": "Task: Match a URL slug: lowercase letters and digits in groups separated by single hyphens, with no leading, trailing or repeated hyphens.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'hello-world'\n  'abc123'\nMust not match:\n  '-leading'",
+      "thinking": "One flat class containing the hyphen would allow leading, trailing and repeated hyphens. Pattern: [a-z0-9]+(?:-[a-z0-9]+)*",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "COMPOSE",
+      "instruction": "Our CMS also emits underscores as separators. Accept underscore as well as hyphen, under the same rules.",
+      "traps": [
+        "add a second separator to the class"
+      ],
+      "visible": {
+        "positives": [
+          "abc123",
+          "a-b_c"
+        ],
+        "negatives": [
+          "a__b"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "hello_world",
+          "my_post-123"
+        ],
+        "negatives": [
+          "_leading",
+          "trailing_",
+          "a-_b"
+        ]
+      },
+      "gold": {
+        "pattern": "[a-z0-9]+(?:[-_][a-z0-9]+)*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[a-z0-9]+(?:[-_][a-z0-9]+)*",
+        "flags": ""
+      },
+      "user": "Task: Our CMS also emits underscores as separators. Accept underscore as well as hyphen, under the same rules.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'abc123'\n  'a-b_c'\nMust not match:\n  'a__b'",
+      "thinking": "Adding the underscore is a one-character change to the separator class. Pattern: [a-z0-9]+(?:[-_][a-z0-9]+)*",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "INVERT",
+      "instruction": "Flip it into a linter: match any string that contains at least one character outside the allowed set of lowercase letters, digits, hyphen and underscore.",
+      "traps": [
+        "match the complement of a character class"
+      ],
+      "visible": {
+        "positives": [
+          "Hello"
+        ],
+        "negatives": [
+          "hello-world"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "has space",
+          "café",
+          "a!b"
+        ],
+        "negatives": [
+          "abc_123",
+          "",
+          "a-b_c"
+        ]
+      },
+      "gold": {
+        "pattern": "[\\s\\S]*[^a-z0-9_-][\\s\\S]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[\\s\\S]*[^a-z0-9_-][\\s\\S]*",
+        "flags": ""
+      },
+      "user": "Task: Flip it into a linter: match any string that contains at least one character outside the allowed set of lowercase letters, digits, hyphen and underscore.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'Hello'\nMust not match:\n  'hello-world'",
+      "thinking": "Rather than negating the whole grammar, I assert that one out-of-class character exists somewhere, with anything either side. Pattern: [\\s\\S]*[^a-z0-9_-][\\s\\S]*",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a URL slug: lowercase letters and digits in groups separated by single hyphens, with no leading, trailing or repeated hyphens.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'hello-world'\n  'abc123'\nMust not match:\n  '-leading'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOne flat class containing the hyphen would allow leading, trailing and repeated hyphens. Pattern: [a-z0-9]+(?:-[a-z0-9]+)*\n</think>\n{\"pattern\": \"[a-z0-9]+(?:-[a-z0-9]+)*\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Our CMS also emits underscores as separators. Accept underscore as well as hyphen, under the same rules.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'abc123'\n  'a-b_c'\nMust not match:\n  'a__b'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nAdding the underscore is a one-character change to the separator class. Pattern: [a-z0-9]+(?:[-_][a-z0-9]+)*\n</think>\n{\"pattern\": \"[a-z0-9]+(?:[-_][a-z0-9]+)*\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Flip it into a linter: match any string that contains at least one character outside the allowed set of lowercase letters, digits, hyphen and underscore.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'Hello'\nMust not match:\n  'hello-world'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nRather than negating the whole grammar, I assert that one out-of-class character exists somewhere, with anything either side. Pattern: [\\s\\S]*[^a-z0-9_-][\\s\\S]*\n</think>\n{\"pattern\": \"[\\\\s\\\\S]*[^a-z0-9_-][\\\\s\\\\S]*\", \"flags\": \"\"}"
+    }
+  ]
+}

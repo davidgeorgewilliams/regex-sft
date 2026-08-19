@@ -1,0 +1,74 @@
+{
+  "id": "rx_substitute_md_header_to_html_v02",
+  "kind": "single",
+  "concept": "md_header_to_html",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE anchoring",
+    "capture the heading text"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Convert Markdown level-1 headers into HTML: a line starting with '# ' becomes <h1>text</h1>, keeping the text.",
+      "traps": [
+        "MULTILINE anchoring",
+        "capture the heading text"
+      ],
+      "visible": [
+        [
+          "not a header",
+          "not a header"
+        ],
+        [
+          "# A\n# B",
+          "<h1>A</h1>\n<h1>B</h1>"
+        ]
+      ],
+      "hidden": [
+        [
+          "# Title",
+          "<h1>Title</h1>"
+        ],
+        [
+          "## Sub",
+          "## Sub"
+        ],
+        [
+          "# Has Spaces Here",
+          "<h1>Has Spaces Here</h1>"
+        ]
+      ],
+      "gold": {
+        "pattern": "^# (.+)$",
+        "replacement": "<h1>\\1</h1>",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^# (.+)$",
+        "replacement": "<h1>\\1</h1>",
+        "flags": "m"
+      },
+      "user": "Task: Convert Markdown level-1 headers into HTML: a line starting with '# ' becomes <h1>text</h1>, keeping the text.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'not a header' -> 'not a header'\n  '# A\\n# B' -> '<h1>A</h1>\\n<h1>B</h1>'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Convert Markdown level-1 headers into HTML: a line starting with '# ' becomes <h1>text</h1>, keeping the text.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'not a header' -> 'not a header'\n  '# A\\n# B' -> '<h1>A</h1>\\n<h1>B</h1>'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"^# (.+)$\", \"replacement\": \"<h1>\\\\1</h1>\", \"flags\": \"m\"}"
+    }
+  ]
+}

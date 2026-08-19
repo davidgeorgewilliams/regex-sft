@@ -1,0 +1,70 @@
+{
+  "id": "rx_extract_version_from_tag_v02",
+  "kind": "single",
+  "concept": "version_from_tag",
+  "family": "extract",
+  "difficulty": "easy",
+  "traps": [
+    "strip the v prefix"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the version number from a release tag like 'v1.2.3', without the leading 'v'.",
+      "traps": [
+        "strip the v prefix"
+      ],
+      "visible": [
+        [
+          "v0.0.1",
+          "0.0.1"
+        ],
+        [
+          "no version",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "release v1.2.3 shipped",
+          "1.2.3"
+        ],
+        [
+          "tags: v10.20.30 and v1.0.0",
+          "10.20.30"
+        ],
+        [
+          "prefix-v2.3.4-suffix",
+          "2.3.4"
+        ]
+      ],
+      "gold": {
+        "pattern": "v(\\d+\\.\\d+\\.\\d+)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "v(\\d+\\.\\d+\\.\\d+)",
+        "flags": ""
+      },
+      "user": "Task: Capture the version number from a release tag like 'v1.2.3', without the leading 'v'.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'v0.0.1' -> '0.0.1'\n  'no version' -> null"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the version number from a release tag like 'v1.2.3', without the leading 'v'.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'v0.0.1' -> '0.0.1'\n  'no version' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"v(\\\\d+\\\\.\\\\d+\\\\.\\\\d+)\", \"flags\": \"\"}"
+    }
+  ]
+}

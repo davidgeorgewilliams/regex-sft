@@ -1,0 +1,69 @@
+{
+  "id": "rx_validate_jwt_format_v00",
+  "kind": "single",
+  "concept": "jwt_format",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "exactly two dots",
+    "base64url alphabet"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match the structural shape of a JWT: three non-empty segments separated by dots, where each segment contains only letters, digits, hyphens and underscores.",
+      "traps": [
+        "exactly two dots",
+        "base64url alphabet"
+      ],
+      "visible": {
+        "positives": [
+          "abc.def.ghi"
+        ],
+        "negatives": [
+          "abc..ghi",
+          "abc.def"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+          "a-b_c.d.e"
+        ],
+        "negatives": [
+          "abc.def.ghi.jkl",
+          "abc.def.gh i",
+          "abc.def.gh+i",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+",
+        "flags": ""
+      },
+      "user": "Task: Match the structural shape of a JWT: three non-empty segments separated by dots, where each segment contains only letters, digits, hyphens and underscores.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'abc.def.ghi'\nMust not match:\n  'abc..ghi'\n  'abc.def'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match the structural shape of a JWT: three non-empty segments separated by dots, where each segment contains only letters, digits, hyphens and underscores.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'abc.def.ghi'\nMust not match:\n  'abc..ghi'\n  'abc.def'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+\", \"flags\": \"\"}"
+    }
+  ]
+}

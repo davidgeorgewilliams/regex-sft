@@ -1,0 +1,181 @@
+{
+  "id": "rx_traj_ssn_chain_v03",
+  "kind": "trajectory",
+  "concept": "ssn_chain",
+  "arc": "RETARGET->NARROW",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "lookbehind",
+    "preserve the last group",
+    "require a preceding label",
+    "unseparated form",
+    "word boundaries"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "Redact SSNs of the form NNN-NN-NNNN, replacing the first two groups with asterisks and keeping the last four digits.",
+      "traps": [
+        "preserve the last group"
+      ],
+      "visible": [
+        [
+          "ssn 123-45-6789 on file",
+          "ssn ***-**-6789 on file"
+        ]
+      ],
+      "hidden": [
+        [
+          "000-00-0000",
+          "***-**-0000"
+        ],
+        [
+          "a 111-22-3333 b",
+          "a ***-**-3333 b"
+        ],
+        [
+          "no ssn",
+          "no ssn"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\d{3}-\\d{2}-(\\d{4})",
+        "replacement": "***-**-\\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{3}-\\d{2}-(\\d{4})",
+        "replacement": "***-**-\\1",
+        "flags": ""
+      },
+      "user": "Task: Redact SSNs of the form NNN-NN-NNNN, replacing the first two groups with asterisks and keeping the last four digits.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'ssn 123-45-6789 on file' -> 'ssn ***-**-6789 on file'",
+      "thinking": "Only the final field needs a group; everything before it is matched and discarded. Pattern: \\d{3}-\\d{2}-(\\d{4}) with replacement ***-**-\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "RETARGET",
+      "instruction": "Some records store SSNs as nine digits with no hyphens. Redact those instead, keeping the last four: 123456789 becomes *****6789.",
+      "traps": [
+        "unseparated form",
+        "word boundaries"
+      ],
+      "visible": [
+        [
+          "ssn 123456789 ok",
+          "ssn *****6789 ok"
+        ]
+      ],
+      "hidden": [
+        [
+          "000000000",
+          "*****0000"
+        ],
+        [
+          "a 111223333 b",
+          "a *****3333 b"
+        ],
+        [
+          "12345",
+          "12345"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b\\d{5}(\\d{4})\\b",
+        "replacement": "*****\\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b\\d{5}(\\d{4})\\b",
+        "replacement": "*****\\1",
+        "flags": ""
+      },
+      "user": "Task: Some records store SSNs as nine digits with no hyphens. Redact those instead, keeping the last four: 123456789 becomes *****6789.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'ssn 123456789 ok' -> 'ssn *****6789 ok'",
+      "thinking": "Carrying the hyphenated pattern forward would simply not match this format at all. Pattern: \\b\\d{5}(\\d{4})\\b with replacement *****\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "NARROW",
+      "instruction": "Too aggressive -- it hit phone numbers. Only redact when the digits are directly preceded by the label 'SSN: '.",
+      "traps": [
+        "require a preceding label",
+        "lookbehind"
+      ],
+      "visible": [
+        [
+          "Phone: 5551234567",
+          "Phone: 5551234567"
+        ]
+      ],
+      "hidden": [
+        [
+          "SSN: 123456789",
+          "SSN: *****6789"
+        ],
+        [
+          "SSN: 000000000 and 987654321",
+          "SSN: *****0000 and 987654321"
+        ],
+        [
+          "no label 111223333",
+          "no label 111223333"
+        ]
+      ],
+      "gold": {
+        "pattern": "(?<=SSN: )\\d{5}(\\d{4})\\b",
+        "replacement": "*****\\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?<=SSN: )\\d{5}(\\d{4})\\b",
+        "replacement": "*****\\1",
+        "flags": ""
+      },
+      "user": "Task: Too aggressive -- it hit phone numbers. Only redact when the digits are directly preceded by the label 'SSN: '.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'Phone: 5551234567' -> 'Phone: 5551234567'",
+      "thinking": "Nine consecutive digits describe plenty of things that are not SSNs, which is why phone numbers were hit. Requiring the label immediately before fixes it. Pattern: (?<=SSN: )\\d{5}(\\d{4})\\b with replacement *****\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Redact SSNs of the form NNN-NN-NNNN, replacing the first two groups with asterisks and keeping the last four digits.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'ssn 123-45-6789 on file' -> 'ssn ***-**-6789 on file'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOnly the final field needs a group; everything before it is matched and discarded. Pattern: \\d{3}-\\d{2}-(\\d{4}) with replacement ***-**-\\1\n</think>\n{\"pattern\": \"\\\\d{3}-\\\\d{2}-(\\\\d{4})\", \"replacement\": \"***-**-\\\\1\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Some records store SSNs as nine digits with no hyphens. Redact those instead, keeping the last four: 123456789 becomes *****6789.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'ssn 123456789 ok' -> 'ssn *****6789 ok'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nCarrying the hyphenated pattern forward would simply not match this format at all. Pattern: \\b\\d{5}(\\d{4})\\b with replacement *****\\1\n</think>\n{\"pattern\": \"\\\\b\\\\d{5}(\\\\d{4})\\\\b\", \"replacement\": \"*****\\\\1\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Too aggressive -- it hit phone numbers. Only redact when the digits are directly preceded by the label 'SSN: '.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'Phone: 5551234567' -> 'Phone: 5551234567'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nNine consecutive digits describe plenty of things that are not SSNs, which is why phone numbers were hit. Requiring the label immediately before fixes it. Pattern: (?<=SSN: )\\d{5}(\\d{4})\\b with replacement *****\\1\n</think>\n{\"pattern\": \"(?<=SSN: )\\\\d{5}(\\\\d{4})\\\\b\", \"replacement\": \"*****\\\\1\", \"flags\": \"\"}"
+    }
+  ]
+}

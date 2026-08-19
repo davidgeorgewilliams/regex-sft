@@ -1,0 +1,175 @@
+{
+  "id": "rx_traj_card_mask_chain_v04",
+  "kind": "trajectory",
+  "concept": "card_mask_chain",
+  "arc": "PIVOT->ROLLBACK",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "capture the leading group",
+    "fixed-width counting",
+    "lookahead instead of consuming",
+    "revert to turn 1's task"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the last four digits of a sixteen-digit card number.",
+      "traps": [
+        "fixed-width counting"
+      ],
+      "visible": [
+        [
+          "4111111111111234",
+          "1234"
+        ]
+      ],
+      "hidden": [
+        [
+          "0000111122223333",
+          "3333"
+        ],
+        [
+          "9876543210987654",
+          "7654"
+        ],
+        [
+          "1111222233334444",
+          "4444"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\d{12}(\\d{4})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{12}(\\d{4})",
+        "flags": ""
+      },
+      "user": "Task: Capture the last four digits of a sixteen-digit card number.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '4111111111111234' -> '1234'",
+      "thinking": "Anchoring to the end would work on a bare number but not inside surrounding text; the counted prefix is more robust. Pattern: \\d{12}(\\d{4})",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "PIVOT",
+      "instruction": "Now mask everything except those last four digits.",
+      "traps": [
+        "lookahead instead of consuming"
+      ],
+      "visible": [
+        [
+          "1234",
+          "1234"
+        ]
+      ],
+      "hidden": [
+        [
+          "4111111111111234",
+          "************1234"
+        ],
+        [
+          "12345",
+          "*2345"
+        ],
+        [
+          "0000111122223333",
+          "************3333"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\d(?=\\d{4})",
+        "replacement": "*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d(?=\\d{4})",
+        "replacement": "*",
+        "flags": ""
+      },
+      "user": "Task: Now mask everything except those last four digits.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '1234' -> '1234'",
+      "thinking": "The task turns positional: mask a digit if four or more follow it. A lookahead tests that without consuming what it counts. Pattern: \\d(?=\\d{4}) with replacement *",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "ROLLBACK",
+      "instruction": "Drop the masking -- go back to just capturing from a sixteen-digit number, but give me the FIRST four digits instead of the last.",
+      "traps": [
+        "revert to turn 1's task",
+        "capture the leading group"
+      ],
+      "visible": [
+        [
+          "4111111111111234",
+          "4111"
+        ]
+      ],
+      "hidden": [
+        [
+          "0000111122223333",
+          "0000"
+        ],
+        [
+          "9876543210987654",
+          "9876"
+        ],
+        [
+          "short 1234",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d{4})\\d{12}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d{4})\\d{12}",
+        "flags": ""
+      },
+      "user": "Task: Drop the masking -- go back to just capturing from a sixteen-digit number, but give me the FIRST four digits instead of the last.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '4111111111111234' -> '4111'",
+      "thinking": "Going back to extraction, with the counted twelve now trailing the captured four. Pattern: (\\d{4})\\d{12}",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the last four digits of a sixteen-digit card number.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '4111111111111234' -> '1234'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nAnchoring to the end would work on a bare number but not inside surrounding text; the counted prefix is more robust. Pattern: \\d{12}(\\d{4})\n</think>\n{\"pattern\": \"\\\\d{12}(\\\\d{4})\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now mask everything except those last four digits.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '1234' -> '1234'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe task turns positional: mask a digit if four or more follow it. A lookahead tests that without consuming what it counts. Pattern: \\d(?=\\d{4}) with replacement *\n</think>\n{\"pattern\": \"\\\\d(?=\\\\d{4})\", \"replacement\": \"*\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Drop the masking -- go back to just capturing from a sixteen-digit number, but give me the FIRST four digits instead of the last.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '4111111111111234' -> '4111'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nGoing back to extraction, with the counted twelve now trailing the captured four. Pattern: (\\d{4})\\d{12}\n</think>\n{\"pattern\": \"(\\\\d{4})\\\\d{12}\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "rx_substitute_collapse_blank_lines_v05",
+  "kind": "single",
+  "concept": "collapse_blank_lines",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "multiple newlines",
+    "preserve a single break"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Collapse runs of three or more consecutive newline characters into exactly two newlines, leaving single and double breaks alone.",
+      "traps": [
+        "multiple newlines",
+        "preserve a single break"
+      ],
+      "visible": [
+        [
+          "a\n\nb",
+          "a\n\nb"
+        ],
+        [
+          "a\n\n\nb",
+          "a\n\nb"
+        ]
+      ],
+      "hidden": [
+        [
+          "a\n\n\n\n\nb",
+          "a\n\nb"
+        ],
+        [
+          "a\nb",
+          "a\nb"
+        ],
+        [
+          "x\n\n\n\ny\n\n\nz",
+          "x\n\ny\n\nz"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\n{3,}",
+        "replacement": "\n\n",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\n{3,}",
+        "replacement": "\n\n",
+        "flags": ""
+      },
+      "user": "Task: Collapse runs of three or more consecutive newline characters into exactly two newlines, leaving single and double breaks alone.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a\\n\\nb' -> 'a\\n\\nb'\n  'a\\n\\n\\nb' -> 'a\\n\\nb'",
+      "thinking": "The quantifier lower bound is the entire rule: three or more collapse, fewer stay. Pattern: \\n{3,} with replacement \n\n",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Collapse runs of three or more consecutive newline characters into exactly two newlines, leaving single and double breaks alone.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a\\n\\nb' -> 'a\\n\\nb'\n  'a\\n\\n\\nb' -> 'a\\n\\nb'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe quantifier lower bound is the entire rule: three or more collapse, fewer stay. Pattern: \\n{3,} with replacement \n\n\n</think>\n{\"pattern\": \"\\\\n{3,}\", \"replacement\": \"\\n\\n\", \"flags\": \"\"}"
+    }
+  ]
+}

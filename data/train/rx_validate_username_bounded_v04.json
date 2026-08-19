@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_username_bounded_v04",
+  "kind": "single",
+  "concept": "username_bounded",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "length bounds",
+    "allowed alphabet",
+    "cannot start with a digit"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a username: 3 to 16 characters, letters digits and underscores only, and it must not start with a digit.",
+      "traps": [
+        "length bounds",
+        "allowed alphabet",
+        "cannot start with a digit"
+      ],
+      "visible": {
+        "positives": [
+          "a_1"
+        ],
+        "negatives": [
+          "has-hyphen",
+          "1user"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "sixteen_chars_ok",
+          "user_name",
+          "abc"
+        ],
+        "negatives": [
+          "ab",
+          "seventeen_chars_x",
+          "user name",
+          "_",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "[A-Za-z_][A-Za-z0-9_]{2,15}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[A-Za-z_][A-Za-z0-9_]{2,15}",
+        "flags": ""
+      },
+      "user": "Task: Match a username: 3 to 16 characters, letters digits and underscores only, and it must not start with a digit.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'a_1'\nMust not match:\n  'has-hyphen'\n  '1user'",
+      "thinking": "Bounding the tail at 3 to 16 would give a total length one too long. The head character has to be counted. Pattern: [A-Za-z_][A-Za-z0-9_]{2,15}",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a username: 3 to 16 characters, letters digits and underscores only, and it must not start with a digit.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'a_1'\nMust not match:\n  'has-hyphen'\n  '1user'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nBounding the tail at 3 to 16 would give a total length one too long. The head character has to be counted. Pattern: [A-Za-z_][A-Za-z0-9_]{2,15}\n</think>\n{\"pattern\": \"[A-Za-z_][A-Za-z0-9_]{2,15}\", \"flags\": \"\"}"
+    }
+  ]
+}

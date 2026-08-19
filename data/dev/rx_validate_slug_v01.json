@@ -1,0 +1,73 @@
+{
+  "id": "rx_validate_slug_v01",
+  "kind": "single",
+  "concept": "slug",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "lowercase only",
+    "no leading or trailing hyphen",
+    "no double hyphen"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a URL slug: lowercase letters and digits separated by single hyphens, with no leading, trailing or repeated hyphens.",
+      "traps": [
+        "lowercase only",
+        "no leading or trailing hyphen",
+        "no double hyphen"
+      ],
+      "visible": {
+        "positives": [
+          "hello-world",
+          "my-post-123",
+          "a"
+        ],
+        "negatives": [
+          "Hello-World"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "abc123"
+        ],
+        "negatives": [
+          "-leading",
+          "trailing-",
+          "double--hyphen",
+          "has_underscore",
+          "has space",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "[a-z0-9]+(?:-[a-z0-9]+)*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[a-z0-9]+(?:-[a-z0-9]+)*",
+        "flags": ""
+      },
+      "user": "Task: Match a URL slug: lowercase letters and digits separated by single hyphens, with no leading, trailing or repeated hyphens.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'hello-world'\n  'my-post-123'\n  'a'\nMust not match:\n  'Hello-World'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a URL slug: lowercase letters and digits separated by single hyphens, with no leading, trailing or repeated hyphens.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'hello-world'\n  'my-post-123'\n  'a'\nMust not match:\n  'Hello-World'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[a-z0-9]+(?:-[a-z0-9]+)*\", \"flags\": \"\"}"
+    }
+  ]
+}

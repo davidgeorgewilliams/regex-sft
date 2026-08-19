@@ -1,0 +1,75 @@
+{
+  "id": "rx_substitute_comma_to_tab_v07",
+  "kind": "single",
+  "concept": "comma_to_tab",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "escape the tab in the replacement"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Replace every comma with a tab character.",
+      "traps": [
+        "escape the tab in the replacement"
+      ],
+      "visible": [
+        [
+          "nocommas",
+          "nocommas"
+        ],
+        [
+          "one,two",
+          "one\ttwo"
+        ]
+      ],
+      "hidden": [
+        [
+          "a,b,c",
+          "a\tb\tc"
+        ],
+        [
+          "1,2\n3,4",
+          "1\t2\n3\t4"
+        ],
+        [
+          ",",
+          "\t"
+        ]
+      ],
+      "gold": {
+        "pattern": ",",
+        "replacement": "\t",
+        "flags": ""
+      },
+      "target": {
+        "pattern": ",",
+        "replacement": "\t",
+        "flags": ""
+      },
+      "user": "Task: Replace every comma with a tab character.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'nocommas' -> 'nocommas'\n  'one,two' -> 'one\\ttwo'",
+      "thinking": "No groups or classes are involved; a single literal character maps to another. Pattern: , with replacement \t",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Replace every comma with a tab character.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'nocommas' -> 'nocommas'\n  'one,two' -> 'one\\ttwo'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nNo groups or classes are involved; a single literal character maps to another. Pattern: , with replacement \t\n</think>\n{\"pattern\": \",\", \"replacement\": \"\\t\", \"flags\": \"\"}"
+    }
+  ]
+}

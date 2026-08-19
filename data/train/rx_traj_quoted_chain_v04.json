@@ -1,0 +1,185 @@
+{
+  "id": "rx_traj_quoted_chain_v04",
+  "kind": "trajectory",
+  "concept": "quoted_chain",
+  "arc": "GENERALIZE->REPAIR",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "fix a cited failure",
+    "greedy vs lazy",
+    "parameterise the delimiter",
+    "reject cross-delimiter pairing"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the contents of the first double-quoted string, without the quotes.",
+      "traps": [
+        "greedy vs lazy"
+      ],
+      "visible": [
+        [
+          "he said \"hello\" then \"bye\"",
+          "hello"
+        ]
+      ],
+      "hidden": [
+        [
+          "\"only\"",
+          "only"
+        ],
+        [
+          "none here",
+          null
+        ],
+        [
+          "\"first\" \"second\"",
+          "first"
+        ],
+        [
+          "a \"x\" b",
+          "x"
+        ]
+      ],
+      "gold": {
+        "pattern": "\"([^\"]*)\"",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\"([^\"]*)\"",
+        "flags": ""
+      },
+      "user": "Task: Capture the contents of the first double-quoted string, without the quotes.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'he said \"hello\" then \"bye\"' -> 'hello'",
+      "thinking": "Dot-star between quotes is the classic greedy mistake here. Pattern: \"([^\"]*)\"",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "extract",
+      "move": "GENERALIZE",
+      "instruction": "Generalise it: the delimiter may be a double quote, a single quote or a backtick. Capture the contents of the first quoted run, whichever delimiter is used.",
+      "traps": [
+        "parameterise the delimiter"
+      ],
+      "visible": [
+        [
+          "use `code` here",
+          "code"
+        ]
+      ],
+      "hidden": [
+        [
+          "he said 'hello' ok",
+          "hello"
+        ],
+        [
+          "a \"x\" b",
+          "x"
+        ],
+        [
+          "none here",
+          null
+        ],
+        [
+          "'first' `second`",
+          "first"
+        ]
+      ],
+      "gold": {
+        "pattern": "[\\\"'`]([^\\\"'`]*)[\\\"'`]",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[\\\"'`]([^\\\"'`]*)[\\\"'`]",
+        "flags": ""
+      },
+      "user": "Task: Generalise it: the delimiter may be a double quote, a single quote or a backtick. Capture the contents of the first quoted run, whichever delimiter is used.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'use `code` here' -> 'code'",
+      "thinking": "Parameterising the delimiter means a class at both ends, and excluding all three characters from the content so the match still stops at the first closing one. Pattern: [\\\"'`]([^\\\"'`]*)[\\\"'`]",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "REPAIR",
+      "instruction": "Bug: on `\"\" and 'x'` it captured ' and ', pairing a quote with a different delimiter type. Require the content to be at least one character long and to contain no whitespace.",
+      "traps": [
+        "reject cross-delimiter pairing",
+        "fix a cited failure"
+      ],
+      "visible": [
+        [
+          "\"\" and 'x'",
+          "x"
+        ]
+      ],
+      "hidden": [
+        [
+          "`code`",
+          "code"
+        ],
+        [
+          "'' `` 'real'",
+          "real"
+        ],
+        [
+          "none here",
+          null
+        ],
+        [
+          "\"hello world\"",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "[\\\"'`]([^\\\"'`\\s]+)[\\\"'`]",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[\\\"'`]([^\\\"'`\\s]+)[\\\"'`]",
+        "flags": ""
+      },
+      "user": "Task: Bug: on `\"\" and 'x'` it captured ' and ', pairing a quote with a different delimiter type. Require the content to be at least one character long and to contain no whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '\"\" and \\'x\\'' -> 'x'",
+      "thinking": "Excluding whitespace from the content rules that out here without needing a backreference, which would put the content in the second group. Pattern: [\\\"'`]([^\\\"'`\\s]+)[\\\"'`]",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the contents of the first double-quoted string, without the quotes.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'he said \"hello\" then \"bye\"' -> 'hello'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nDot-star between quotes is the classic greedy mistake here. Pattern: \"([^\"]*)\"\n</think>\n{\"pattern\": \"\\\"([^\\\"]*)\\\"\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Generalise it: the delimiter may be a double quote, a single quote or a backtick. Capture the contents of the first quoted run, whichever delimiter is used.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'use `code` here' -> 'code'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nParameterising the delimiter means a class at both ends, and excluding all three characters from the content so the match still stops at the first closing one. Pattern: [\\\"'`]([^\\\"'`]*)[\\\"'`]\n</think>\n{\"pattern\": \"[\\\\\\\"'`]([^\\\\\\\"'`]*)[\\\\\\\"'`]\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Bug: on `\"\" and 'x'` it captured ' and ', pairing a quote with a different delimiter type. Require the content to be at least one character long and to contain no whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '\"\" and \\'x\\'' -> 'x'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nExcluding whitespace from the content rules that out here without needing a backreference, which would put the content in the second group. Pattern: [\\\"'`]([^\\\"'`\\s]+)[\\\"'`]\n</think>\n{\"pattern\": \"[\\\\\\\"'`]([^\\\\\\\"'`\\\\s]+)[\\\\\\\"'`]\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "rx_validate_amex_card_v05",
+  "kind": "single",
+  "concept": "amex_card",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "two valid prefixes",
+    "exact length"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match an American Express card number: starts with 34 or 37 and is exactly 15 digits long.",
+      "traps": [
+        "two valid prefixes",
+        "exact length"
+      ],
+      "visible": {
+        "positives": [
+          "371111111111111"
+        ],
+        "negatives": [
+          "351111111111111",
+          "3411111111111111"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "341111111111111",
+          "378282246310005"
+        ],
+        "negatives": [
+          "34111111111111",
+          "3782 822463 10005",
+          "301111111111111",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "3[47]\\d{13}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "3[47]\\d{13}",
+        "flags": ""
+      },
+      "user": "Task: Match an American Express card number: starts with 34 or 37 and is exactly 15 digits long.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '371111111111111'\nMust not match:\n  '351111111111111'\n  '3411111111111111'",
+      "thinking": "Two valid prefixes, 34 and 37, collapse into '3' followed by a class. The total length is exactly 15, so 13 digits remain. Pattern: 3[47]\\d{13}",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match an American Express card number: starts with 34 or 37 and is exactly 15 digits long.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '371111111111111'\nMust not match:\n  '351111111111111'\n  '3411111111111111'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nTwo valid prefixes, 34 and 37, collapse into '3' followed by a class. The total length is exactly 15, so 13 digits remain. Pattern: 3[47]\\d{13}\n</think>\n{\"pattern\": \"3[47]\\\\d{13}\", \"flags\": \"\"}"
+    }
+  ]
+}

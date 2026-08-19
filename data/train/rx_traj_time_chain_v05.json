@@ -1,0 +1,173 @@
+{
+  "id": "rx_traj_time_chain_v05",
+  "kind": "trajectory",
+  "concept": "time_chain",
+  "arc": "BROADEN->INVERT",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "hour range",
+    "match the complement of the hour range",
+    "minute range",
+    "optional seconds group"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a 24-hour time HH:MM with hours 00-23 and minutes 00-59, zero-padded.",
+      "traps": [
+        "hour range",
+        "minute range"
+      ],
+      "visible": {
+        "positives": [
+          "00:00",
+          "09:30"
+        ],
+        "negatives": [
+          "12:60"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "23:59",
+          "19:45"
+        ],
+        "negatives": [
+          "24:00",
+          "9:30",
+          "23:5"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:[01]\\d|2[0-3]):[0-5]\\d",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:[01]\\d|2[0-3]):[0-5]\\d",
+        "flags": ""
+      },
+      "user": "Task: Match a 24-hour time HH:MM with hours 00-23 and minutes 00-59, zero-padded.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '00:00'\n  '09:30'\nMust not match:\n  '12:60'",
+      "thinking": "Hours split into two branches and minutes into one, each field exactly two characters so the padding is enforced structurally. Pattern: (?:[01]\\d|2[0-3]):[0-5]\\d",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "BROADEN",
+      "instruction": "Allow optional seconds too, as :SS with seconds 00-59.",
+      "traps": [
+        "optional seconds group"
+      ],
+      "visible": {
+        "positives": [
+          "09:30:00",
+          "23:59:59"
+        ],
+        "negatives": [
+          "24:00"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "00:00",
+          "19:45:01"
+        ],
+        "negatives": [
+          "12:30:60",
+          "12:30:",
+          "12:30:1"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?",
+        "flags": ""
+      },
+      "user": "Task: Allow optional seconds too, as :SS with seconds 00-59.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '09:30:00'\n  '23:59:59'\nMust not match:\n  '24:00'",
+      "thinking": "One optional non-capturing group appended; nothing else changes. Pattern: (?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "INVERT",
+      "instruction": "Now flip it: match strings of the HH:MM shape that the hour rule REJECTS -- two digits, a colon, then minutes 00-59, where the hour is 24 or greater.",
+      "traps": [
+        "match the complement of the hour range"
+      ],
+      "visible": {
+        "positives": [
+          "24:00"
+        ],
+        "negatives": [
+          "23:59"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "99:59",
+          "30:15",
+          "45:00"
+        ],
+        "negatives": [
+          "00:00",
+          "12:60",
+          "9:30"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:2[4-9]|[3-9]\\d):[0-5]\\d",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:2[4-9]|[3-9]\\d):[0-5]\\d",
+        "flags": ""
+      },
+      "user": "Task: Now flip it: match strings of the HH:MM shape that the hour rule REJECTS -- two digits, a colon, then minutes 00-59, where the hour is 24 or greater.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '24:00'\nMust not match:\n  '23:59'",
+      "thinking": "Negating the whole pattern would also admit malformed minutes, which is not what is being asked for. Pattern: (?:2[4-9]|[3-9]\\d):[0-5]\\d",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a 24-hour time HH:MM with hours 00-23 and minutes 00-59, zero-padded.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '00:00'\n  '09:30'\nMust not match:\n  '12:60'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nHours split into two branches and minutes into one, each field exactly two characters so the padding is enforced structurally. Pattern: (?:[01]\\d|2[0-3]):[0-5]\\d\n</think>\n{\"pattern\": \"(?:[01]\\\\d|2[0-3]):[0-5]\\\\d\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Allow optional seconds too, as :SS with seconds 00-59.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '09:30:00'\n  '23:59:59'\nMust not match:\n  '24:00'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOne optional non-capturing group appended; nothing else changes. Pattern: (?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d)?\n</think>\n{\"pattern\": \"(?:[01]\\\\d|2[0-3]):[0-5]\\\\d(?::[0-5]\\\\d)?\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now flip it: match strings of the HH:MM shape that the hour rule REJECTS -- two digits, a colon, then minutes 00-59, where the hour is 24 or greater.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '24:00'\nMust not match:\n  '23:59'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nNegating the whole pattern would also admit malformed minutes, which is not what is being asked for. Pattern: (?:2[4-9]|[3-9]\\d):[0-5]\\d\n</think>\n{\"pattern\": \"(?:2[4-9]|[3-9]\\\\d):[0-5]\\\\d\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "rx_validate_domain_name_v03",
+  "kind": "single",
+  "concept": "domain_name",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "labels cannot start or end with a hyphen",
+    "TLD is letters only"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a domain name: one or more dot-separated labels made of letters, digits and hyphens, where no label starts or ends with a hyphen, followed by a final label of at least two letters.",
+      "traps": [
+        "labels cannot start or end with a hyphen",
+        "TLD is letters only"
+      ],
+      "visible": {
+        "positives": [
+          "x.io",
+          "a-b.org"
+        ],
+        "negatives": [
+          "-bad.com"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "sub.domain.co.uk",
+          "example.com"
+        ],
+        "negatives": [
+          "bad-.com",
+          "example",
+          "example.c",
+          "example.123",
+          "exa mple.com",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z]{2,}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z]{2,}",
+        "flags": ""
+      },
+      "user": "Task: Match a domain name: one or more dot-separated labels made of letters, digits and hyphens, where no label starts or ends with a hyphen, followed by a final label of at least two letters.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'x.io'\n  'a-b.org'\nMust not match:\n  '-bad.com'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a domain name: one or more dot-separated labels made of letters, digits and hyphens, where no label starts or ends with a hyphen, followed by a final label of at least two letters.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'x.io'\n  'a-b.org'\nMust not match:\n  '-bad.com'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\\\.)+[A-Za-z]{2,}\", \"flags\": \"\"}"
+    }
+  ]
+}

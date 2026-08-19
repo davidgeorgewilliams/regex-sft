@@ -1,0 +1,75 @@
+{
+  "id": "rx_substitute_pad_single_digits_v07",
+  "kind": "single",
+  "concept": "pad_single_digits",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "word boundaries on both sides"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Zero-pad standalone single digits to two digits, leaving longer numbers untouched.",
+      "traps": [
+        "word boundaries on both sides"
+      ],
+      "visible": [
+        [
+          "1 and 2",
+          "01 and 02"
+        ],
+        [
+          "day 5 of 12",
+          "day 05 of 12"
+        ]
+      ],
+      "hidden": [
+        [
+          "100 stays",
+          "100 stays"
+        ],
+        [
+          "a 7 b 77 c",
+          "a 07 b 77 c"
+        ],
+        [
+          "0",
+          "00"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(\\d)\\b",
+        "replacement": "0\\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(\\d)\\b",
+        "replacement": "0\\1",
+        "flags": ""
+      },
+      "user": "Task: Zero-pad standalone single digits to two digits, leaving longer numbers untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '1 and 2' -> '01 and 02'\n  'day 5 of 12' -> 'day 05 of 12'",
+      "thinking": "Without the boundaries the first digit of a longer number would be padded, corrupting it. Pattern: \\b(\\d)\\b with replacement 0\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Zero-pad standalone single digits to two digits, leaving longer numbers untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '1 and 2' -> '01 and 02'\n  'day 5 of 12' -> 'day 05 of 12'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nWithout the boundaries the first digit of a longer number would be padded, corrupting it. Pattern: \\b(\\d)\\b with replacement 0\\1\n</think>\n{\"pattern\": \"\\\\b(\\\\d)\\\\b\", \"replacement\": \"0\\\\1\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "id": "rx_substitute_collapse_whitespace_v03",
+  "kind": "single",
+  "concept": "collapse_whitespace",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "quantifier on the whitespace class"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Collapse every run of one or more whitespace characters into a single space.",
+      "traps": [
+        "quantifier on the whitespace class"
+      ],
+      "visible": [
+        [
+          "a   b",
+          "a b"
+        ],
+        [
+          "too    many     spaces",
+          "too many spaces"
+        ]
+      ],
+      "hidden": [
+        [
+          "single space",
+          "single space"
+        ],
+        [
+          "a\tb",
+          "a b"
+        ],
+        [
+          "line\nbreak",
+          "line break"
+        ],
+        [
+          "  lead and trail  ",
+          " lead and trail "
+        ]
+      ],
+      "gold": {
+        "pattern": "\\s+",
+        "replacement": " ",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\s+",
+        "replacement": " ",
+        "flags": ""
+      },
+      "user": "Task: Collapse every run of one or more whitespace characters into a single space.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a   b' -> 'a b'\n  'too    many     spaces' -> 'too many spaces'",
+      "thinking": "One match per run, replaced wholesale by a single space, which is what makes runs of any length collapse correctly. Pattern: \\s+ with replacement  ",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Collapse every run of one or more whitespace characters into a single space.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a   b' -> 'a b'\n  'too    many     spaces' -> 'too many spaces'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOne match per run, replaced wholesale by a single space, which is what makes runs of any length collapse correctly. Pattern: \\s+ with replacement  \n</think>\n{\"pattern\": \"\\\\s+\", \"replacement\": \" \", \"flags\": \"\"}"
+    }
+  ]
+}

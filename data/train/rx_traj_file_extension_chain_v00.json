@@ -1,0 +1,179 @@
+{
+  "id": "rx_traj_file_extension_chain_v00",
+  "kind": "trajectory",
+  "concept": "file_extension_chain",
+  "arc": "GENERALIZE->INVERT",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "capture a multi-part extension",
+    "end anchoring",
+    "first dot of the final segment",
+    "last dot not first",
+    "match names the previous pattern rejected"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the file extension: the characters after the final dot, excluding the dot. There is no trailing whitespace.",
+      "traps": [
+        "last dot not first",
+        "end anchoring"
+      ],
+      "visible": [
+        [
+          "report.pdf",
+          "pdf"
+        ]
+      ],
+      "hidden": [
+        [
+          "noextension",
+          null
+        ],
+        [
+          "archive.tar.gz",
+          "gz"
+        ],
+        [
+          "a.b.c.txt",
+          "txt"
+        ],
+        [
+          "path/to/file.py",
+          "py"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\.([^.]+)$",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\.([^.]+)$",
+        "flags": ""
+      },
+      "user": "Task: Capture the file extension: the characters after the final dot, excluding the dot. There is no trailing whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'report.pdf' -> 'pdf'",
+      "thinking": "Anchoring to the end and forbidding dots inside the group forces the match onto the last one. Pattern: \\.([^.]+)$",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 2,
+      "family": "extract",
+      "move": "GENERALIZE",
+      "instruction": "Generalise to multi-part extensions: capture everything after the FIRST dot of the final path segment, so archive.tar.gz gives tar.gz.",
+      "traps": [
+        "capture a multi-part extension",
+        "first dot of the final segment"
+      ],
+      "visible": [
+        [
+          "report.pdf",
+          "pdf"
+        ]
+      ],
+      "hidden": [
+        [
+          "archive.tar.gz",
+          "tar.gz"
+        ],
+        [
+          "path/to/file.py",
+          "py"
+        ],
+        [
+          "a.b.c.txt",
+          "b.c.txt"
+        ]
+      ],
+      "gold": {
+        "pattern": "[^/.]*\\.(.+)$",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[^/.]*\\.(.+)$",
+        "flags": ""
+      },
+      "user": "Task: Generalise to multi-part extensions: capture everything after the FIRST dot of the final path segment, so archive.tar.gz gives tar.gz.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'report.pdf' -> 'pdf'",
+      "thinking": "Relaxing the group to allow dots is not enough on its own; the match also has to be anchored to the right dot to begin with. Pattern: [^/.]*\\.(.+)$",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "INVERT",
+      "instruction": "Flip it: match filenames that have no extension at all, capturing the whole name. There are no path separators in these.",
+      "traps": [
+        "match names the previous pattern rejected"
+      ],
+      "visible": [
+        [
+          "report.pdf",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "noextension",
+          "noextension"
+        ],
+        [
+          "README",
+          "README"
+        ],
+        [
+          "archive.tar.gz",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "^([^/.]+)$",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "^([^/.]+)$",
+        "flags": ""
+      },
+      "user": "Task: Flip it: match filenames that have no extension at all, capturing the whole name. There are no path separators in these.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'report.pdf' -> null",
+      "thinking": "The complement is a name containing no dot at all. Pattern: ^([^/.]+)$",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the file extension: the characters after the final dot, excluding the dot. There is no trailing whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'report.pdf' -> 'pdf'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nAnchoring to the end and forbidding dots inside the group forces the match onto the last one. Pattern: \\.([^.]+)$\n</think>\n{\"pattern\": \"\\\\.([^.]+)$\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Generalise to multi-part extensions: capture everything after the FIRST dot of the final path segment, so archive.tar.gz gives tar.gz.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'report.pdf' -> 'pdf'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nRelaxing the group to allow dots is not enough on its own; the match also has to be anchored to the right dot to begin with. Pattern: [^/.]*\\.(.+)$\n</think>\n{\"pattern\": \"[^/.]*\\\\.(.+)$\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Flip it: match filenames that have no extension at all, capturing the whole name. There are no path separators in these.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'report.pdf' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe complement is a name containing no dot at all. Pattern: ^([^/.]+)$\n</think>\n{\"pattern\": \"^([^/.]+)$\", \"flags\": \"\"}"
+    }
+  ]
+}

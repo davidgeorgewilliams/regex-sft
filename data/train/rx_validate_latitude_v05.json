@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_latitude_v05",
+  "kind": "single",
+  "concept": "latitude",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "range -90 to 90",
+    "optional decimals"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a latitude: an optional minus sign, then a number from 0 to 90 with an optional decimal part. Values beyond 90 are invalid.",
+      "traps": [
+        "range -90 to 90",
+        "optional decimals"
+      ],
+      "visible": {
+        "positives": [
+          "0",
+          "90",
+          "45.5"
+        ],
+        "negatives": [
+          "-90.1"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "-33.8688",
+          "-90",
+          "90.0",
+          "-0.5"
+        ],
+        "negatives": [
+          "91",
+          "abc",
+          "100",
+          "9999",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "-?(?:90(?:\\.0+)?|[0-8]?\\d(?:\\.\\d+)?)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "-?(?:90(?:\\.0+)?|[0-8]?\\d(?:\\.\\d+)?)",
+        "flags": ""
+      },
+      "user": "Task: Match a latitude: an optional minus sign, then a number from 0 to 90 with an optional decimal part. Values beyond 90 are invalid.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0'\n  '90'\n  '45.5'\nMust not match:\n  '-90.1'",
+      "thinking": "The bound is 90, so it is special-cased: exactly 90 with optional zero decimals, or 0 to 89 with an optional fraction. An optional minus covers the south. Pattern: -?(?:90(?:\\.0+)?|[0-8]?\\d(?:\\.\\d+)?)",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a latitude: an optional minus sign, then a number from 0 to 90 with an optional decimal part. Values beyond 90 are invalid.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0'\n  '90'\n  '45.5'\nMust not match:\n  '-90.1'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe bound is 90, so it is special-cased: exactly 90 with optional zero decimals, or 0 to 89 with an optional fraction. An optional minus covers the south. Pattern: -?(?:90(?:\\.0+)?|[0-8]?\\d(?:\\.\\d+)?)\n</think>\n{\"pattern\": \"-?(?:90(?:\\\\.0+)?|[0-8]?\\\\d(?:\\\\.\\\\d+)?)\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_query_param_v06",
+  "kind": "single",
+  "concept": "query_param",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "match the named key only",
+    "stop at the next separator"
+  ],
+  "variant": 6,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the value of the 'id' query parameter from a URL. It appears after '?id=' or '&id=' and ends at the next '&' or end of string.",
+      "traps": [
+        "match the named key only",
+        "stop at the next separator"
+      ],
+      "visible": [
+        [
+          "https://x.com/p?a=1",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "https://x.com/p?a=1&id=abc",
+          "abc"
+        ],
+        [
+          "https://x.com/p?id=42&y=1",
+          "42"
+        ],
+        [
+          "https://x.com/p?userid=99&id=7",
+          "7"
+        ],
+        [
+          "https://x.com/p?id=",
+          ""
+        ]
+      ],
+      "gold": {
+        "pattern": "[?&]id=([^&]*)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[?&]id=([^&]*)",
+        "flags": ""
+      },
+      "user": "Task: Capture the value of the 'id' query parameter from a URL. It appears after '?id=' or '&id=' and ends at the next '&' or end of string.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'https://x.com/p?a=1' -> null",
+      "thinking": "Separator class, literal key, then a negated class for the value so it stops at the next separator and an empty value still matches. Pattern: [?&]id=([^&]*)",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the value of the 'id' query parameter from a URL. It appears after '?id=' or '&id=' and ends at the next '&' or end of string.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'https://x.com/p?a=1' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nSeparator class, literal key, then a negated class for the value so it stops at the next separator and an empty value still matches. Pattern: [?&]id=([^&]*)\n</think>\n{\"pattern\": \"[?&]id=([^&]*)\", \"flags\": \"\"}"
+    }
+  ]
+}

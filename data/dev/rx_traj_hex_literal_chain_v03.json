@@ -1,0 +1,164 @@
+{
+  "id": "rx_traj_hex_literal_chain_v03",
+  "kind": "trajectory",
+  "concept": "hex_literal_chain",
+  "arc": "INVERT->RETARGET",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "different invalid alphabet",
+    "different literal prefix",
+    "hex alphabet",
+    "match the rejected invalid-digit case",
+    "prefix required"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a hexadecimal literal: '0x' or '0X' followed by one or more hexadecimal digits.",
+      "traps": [
+        "prefix required",
+        "hex alphabet"
+      ],
+      "visible": {
+        "positives": [
+          "0XFF"
+        ],
+        "negatives": [
+          "ff"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0x0",
+          "0xff",
+          "0xDEADBEEF"
+        ],
+        "negatives": [
+          "0x",
+          "0xg1",
+          "x0ff"
+        ]
+      },
+      "gold": {
+        "pattern": "0[xX][0-9A-Fa-f]+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "0[xX][0-9A-Fa-f]+",
+        "flags": ""
+      },
+      "user": "Task: Match a hexadecimal literal: '0x' or '0X' followed by one or more hexadecimal digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0XFF'\nMust not match:\n  'ff'"
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "INVERT",
+      "instruction": "Now match the malformed ones instead: a '0x' prefix followed by alphanumerics where at least one character is a letter outside the hex range a-f.",
+      "traps": [
+        "match the rejected invalid-digit case"
+      ],
+      "visible": {
+        "positives": [
+          "0xZZ"
+        ],
+        "negatives": [
+          "0x0"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0xg1",
+          "0X1g2"
+        ],
+        "negatives": [
+          "0xff",
+          "0xDEADBEEF",
+          "0x"
+        ]
+      },
+      "gold": {
+        "pattern": "0[xX][0-9A-Za-z]*[g-zG-Z][0-9A-Za-z]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "0[xX][0-9A-Za-z]*[g-zG-Z][0-9A-Za-z]*",
+        "flags": ""
+      },
+      "user": "Task: Now match the malformed ones instead: a '0x' prefix followed by alphanumerics where at least one character is a letter outside the hex range a-f.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0xZZ'\nMust not match:\n  '0x0'"
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "RETARGET",
+      "instruction": "Same idea for binary literals: a '0b' prefix followed by digits where at least one digit is 2 through 9.",
+      "traps": [
+        "different literal prefix",
+        "different invalid alphabet"
+      ],
+      "visible": {
+        "positives": [
+          "0B19"
+        ],
+        "negatives": [
+          "0b101"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0b102",
+          "0b1112"
+        ],
+        "negatives": [
+          "0b0",
+          "0b1010",
+          "0b"
+        ]
+      },
+      "gold": {
+        "pattern": "0[bB][0-9]*[2-9][0-9]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "0[bB][0-9]*[2-9][0-9]*",
+        "flags": ""
+      },
+      "user": "Task: Same idea for binary literals: a '0b' prefix followed by digits where at least one digit is 2 through 9.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0B19'\nMust not match:\n  '0b101'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a hexadecimal literal: '0x' or '0X' followed by one or more hexadecimal digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0XFF'\nMust not match:\n  'ff'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"0[xX][0-9A-Fa-f]+\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now match the malformed ones instead: a '0x' prefix followed by alphanumerics where at least one character is a letter outside the hex range a-f.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0xZZ'\nMust not match:\n  '0x0'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"0[xX][0-9A-Za-z]*[g-zG-Z][0-9A-Za-z]*\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Same idea for binary literals: a '0b' prefix followed by digits where at least one digit is 2 through 9.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0B19'\nMust not match:\n  '0b101'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"0[bB][0-9]*[2-9][0-9]*\", \"flags\": \"\"}"
+    }
+  ]
+}

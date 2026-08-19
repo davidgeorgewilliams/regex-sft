@@ -1,0 +1,73 @@
+{
+  "id": "rx_extract_first_mention_v01",
+  "kind": "single",
+  "concept": "first_mention",
+  "family": "extract",
+  "difficulty": "easy",
+  "traps": [
+    "distinguish from email addresses"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the first @mention in the text without the '@'. A mention is '@' preceded by start-of-string or whitespace, followed by letters, digits or underscores.",
+      "traps": [
+        "distinguish from email addresses"
+      ],
+      "visible": [
+        [
+          "@bob started it",
+          "bob"
+        ],
+        [
+          "nobody mentioned",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "hey @alice look",
+          "alice"
+        ],
+        [
+          "mail me at bob@example.com",
+          null
+        ],
+        [
+          "cc @a_1 and @b",
+          "a_1"
+        ]
+      ],
+      "gold": {
+        "pattern": "(?:^|(?<=\\s))@(\\w+)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:^|(?<=\\s))@(\\w+)",
+        "flags": ""
+      },
+      "user": "Task: Capture the first @mention in the text without the '@'. A mention is '@' preceded by start-of-string or whitespace, followed by letters, digits or underscores.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '@bob started it' -> 'bob'\n  'nobody mentioned' -> null",
+      "thinking": "Matching a bare '@' plus word characters would fire on the domain of any email address in the text. Pattern: (?:^|(?<=\\s))@(\\w+)",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the first @mention in the text without the '@'. A mention is '@' preceded by start-of-string or whitespace, followed by letters, digits or underscores.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '@bob started it' -> 'bob'\n  'nobody mentioned' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nMatching a bare '@' plus word characters would fire on the domain of any email address in the text. Pattern: (?:^|(?<=\\s))@(\\w+)\n</think>\n{\"pattern\": \"(?:^|(?<=\\\\s))@(\\\\w+)\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "id": "rx_traj_md_header_chain_v01",
+  "kind": "trajectory",
+  "concept": "md_header_chain",
+  "arc": "GENERALIZE->COMPOSE",
+  "family": "mixed",
+  "difficulty": "easy",
+  "traps": [
+    "MULTILINE anchoring",
+    "alternation of two marker syntaxes",
+    "parameterise the repeat count"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "Convert Markdown level-1 headers to HTML: a line starting '# ' becomes <h1>text</h1>.",
+      "traps": [
+        "MULTILINE anchoring"
+      ],
+      "visible": [
+        [
+          "# A\n# B",
+          "<h1>A</h1>\n<h1>B</h1>"
+        ]
+      ],
+      "hidden": [
+        [
+          "# Title",
+          "<h1>Title</h1>"
+        ],
+        [
+          "## Sub",
+          "## Sub"
+        ],
+        [
+          "not a header",
+          "not a header"
+        ]
+      ],
+      "gold": {
+        "pattern": "^# (.+)$",
+        "replacement": "<h1>\\1</h1>",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^# (.+)$",
+        "replacement": "<h1>\\1</h1>",
+        "flags": "m"
+      },
+      "user": "Task: Convert Markdown level-1 headers to HTML: a line starting '# ' becomes <h1>text</h1>.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# A\\n# B' -> '<h1>A</h1>\\n<h1>B</h1>'"
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "GENERALIZE",
+      "instruction": "Handle any header level from one to six hashes, emitting a generic <h>text</h> tag regardless of depth.",
+      "traps": [
+        "parameterise the repeat count"
+      ],
+      "visible": [
+        [
+          "# A\n### C",
+          "<h>A</h>\n<h>C</h>"
+        ]
+      ],
+      "hidden": [
+        [
+          "###### Deep",
+          "<h>Deep</h>"
+        ],
+        [
+          "####### TooDeep",
+          "####### TooDeep"
+        ],
+        [
+          "plain",
+          "plain"
+        ]
+      ],
+      "gold": {
+        "pattern": "^#{1,6} (.+)$",
+        "replacement": "<h>\\1</h>",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^#{1,6} (.+)$",
+        "replacement": "<h>\\1</h>",
+        "flags": "m"
+      },
+      "user": "Task: Handle any header level from one to six hashes, emitting a generic <h>text</h> tag regardless of depth.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# A\\n### C' -> '<h>A</h>\\n<h>C</h>'"
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "COMPOSE",
+      "instruction": "This document also uses a run of '=' characters as a header marker on the same line. Treat those the same way.",
+      "traps": [
+        "alternation of two marker syntaxes"
+      ],
+      "visible": [
+        [
+          "# A\n=== B",
+          "<h>A</h>\n<h>B</h>"
+        ]
+      ],
+      "hidden": [
+        [
+          "= C",
+          "<h>C</h>"
+        ],
+        [
+          "## D\n== E",
+          "<h>D</h>\n<h>E</h>"
+        ],
+        [
+          "plain",
+          "plain"
+        ]
+      ],
+      "gold": {
+        "pattern": "^(?:#{1,6}|=+) (.+)$",
+        "replacement": "<h>\\1</h>",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^(?:#{1,6}|=+) (.+)$",
+        "replacement": "<h>\\1</h>",
+        "flags": "m"
+      },
+      "user": "Task: This document also uses a run of '=' characters as a header marker on the same line. Treat those the same way.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# A\\n=== B' -> '<h>A</h>\\n<h>B</h>'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Convert Markdown level-1 headers to HTML: a line starting '# ' becomes <h1>text</h1>.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# A\\n# B' -> '<h1>A</h1>\\n<h1>B</h1>'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"^# (.+)$\", \"replacement\": \"<h1>\\\\1</h1>\", \"flags\": \"m\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Handle any header level from one to six hashes, emitting a generic <h>text</h> tag regardless of depth.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# A\\n### C' -> '<h>A</h>\\n<h>C</h>'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"^#{1,6} (.+)$\", \"replacement\": \"<h>\\\\1</h>\", \"flags\": \"m\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: This document also uses a run of '=' characters as a header marker on the same line. Treat those the same way.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# A\\n=== B' -> '<h>A</h>\\n<h>B</h>'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"^(?:#{1,6}|=+) (.+)$\", \"replacement\": \"<h>\\\\1</h>\", \"flags\": \"m\"}"
+    }
+  ]
+}

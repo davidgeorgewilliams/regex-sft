@@ -1,0 +1,72 @@
+{
+  "id": "rx_substitute_comma_decimal_v01",
+  "kind": "single",
+  "concept": "comma_decimal",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "capture groups required to rebuild"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Replace the decimal comma with a dot in every number that uses a comma as its decimal point, leaving the digits unchanged.",
+      "traps": [
+        "capture groups required to rebuild"
+      ],
+      "visible": [
+        [
+          "no decimals here 42",
+          "no decimals here 42"
+        ],
+        [
+          "weight 10,5 kg",
+          "weight 10.5 kg"
+        ]
+      ],
+      "hidden": [
+        [
+          "Prices: 1,50 and 2,75 EUR",
+          "Prices: 1.50 and 2.75 EUR"
+        ],
+        [
+          "3,141592 approx",
+          "3.141592 approx"
+        ],
+        [
+          "a 0,99 b 12,00 c",
+          "a 0.99 b 12.00 c"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d+),(\\d+)",
+        "replacement": "\\1.\\2",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d+),(\\d+)",
+        "replacement": "\\1.\\2",
+        "flags": ""
+      },
+      "user": "Task: Replace the decimal comma with a dot in every number that uses a comma as its decimal point, leaving the digits unchanged.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'no decimals here 42' -> 'no decimals here 42'\n  'weight 10,5 kg' -> 'weight 10.5 kg'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Replace the decimal comma with a dot in every number that uses a comma as its decimal point, leaving the digits unchanged.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'no decimals here 42' -> 'no decimals here 42'\n  'weight 10,5 kg' -> 'weight 10.5 kg'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(\\\\d+),(\\\\d+)\", \"replacement\": \"\\\\1.\\\\2\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "rx_extract_srt_timecode_v01",
+  "kind": "single",
+  "concept": "srt_timecode",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "comma milliseconds",
+    "anchor to the arrow"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the start timecode of an SRT subtitle line, which appears before ' --> '. The format is HH:MM:SS,mmm.",
+      "traps": [
+        "comma milliseconds",
+        "anchor to the arrow"
+      ],
+      "visible": [
+        [
+          "01:23:45,678 --> 01:23:47,000",
+          "01:23:45,678"
+        ],
+        [
+          "not a timecode line",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "00:00:01,000 --> 00:00:04,000",
+          "00:00:01,000"
+        ],
+        [
+          "00:00:00,000 --> 00:00:02,500",
+          "00:00:00,000"
+        ],
+        [
+          "10:00:00,001 --> 10:00:05,000",
+          "10:00:00,001"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d{2}:\\d{2}:\\d{2},\\d{3}) -->",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d{2}:\\d{2}:\\d{2},\\d{3}) -->",
+        "flags": ""
+      },
+      "user": "Task: Capture the start timecode of an SRT subtitle line, which appears before ' --> '. The format is HH:MM:SS,mmm.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '01:23:45,678 --> 01:23:47,000' -> '01:23:45,678'\n  'not a timecode line' -> null"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the start timecode of an SRT subtitle line, which appears before ' --> '. The format is HH:MM:SS,mmm.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '01:23:45,678 --> 01:23:47,000' -> '01:23:45,678'\n  'not a timecode line' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(\\\\d{2}:\\\\d{2}:\\\\d{2},\\\\d{3}) -->\", \"flags\": \"\"}"
+    }
+  ]
+}

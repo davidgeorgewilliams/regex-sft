@@ -1,0 +1,74 @@
+{
+  "id": "rx_extract_first_hashtag_v01",
+  "kind": "single",
+  "concept": "first_hashtag",
+  "family": "extract",
+  "difficulty": "easy",
+  "traps": [
+    "word boundary after the tag"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the first hashtag in the text without its '#'. A hashtag is '#' followed by letters, digits or underscores.",
+      "traps": [
+        "word boundary after the tag"
+      ],
+      "visible": [
+        [
+          "no tags here",
+          null
+        ],
+        [
+          "love this #python code",
+          "python"
+        ]
+      ],
+      "hidden": [
+        [
+          "#first #second",
+          "first"
+        ],
+        [
+          "end with #tag.",
+          "tag"
+        ],
+        [
+          "#a_1 and more",
+          "a_1"
+        ],
+        [
+          "# not a tag",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "#(\\w+)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "#(\\w+)",
+        "flags": ""
+      },
+      "user": "Task: Capture the first hashtag in the text without its '#'. A hashtag is '#' followed by letters, digits or underscores.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'no tags here' -> null\n  'love this #python code' -> 'python'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the first hashtag in the text without its '#'. A hashtag is '#' followed by letters, digits or underscores.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'no tags here' -> null\n  'love this #python code' -> 'python'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"#(\\\\w+)\", \"flags\": \"\"}"
+    }
+  ]
+}

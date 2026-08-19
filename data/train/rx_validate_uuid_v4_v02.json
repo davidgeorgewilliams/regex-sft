@@ -1,0 +1,72 @@
+{
+  "id": "rx_validate_uuid_v4_v02",
+  "kind": "single",
+  "concept": "uuid_v4",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "version nibble is 4",
+    "variant nibble is 8/9/a/b",
+    "segment lengths"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a version-4 UUID: 8-4-4-4-12 hex digits separated by hyphens, where the first digit of the third group is '4' and the first digit of the fourth group is 8, 9, a or b.",
+      "traps": [
+        "version nibble is 4",
+        "variant nibble is 8/9/a/b",
+        "segment lengths"
+      ],
+      "visible": {
+        "positives": [
+          "550e8400-e29b-41d4-a716-446655440000"
+        ],
+        "negatives": [
+          "not-a-uuid",
+          "550e8400-e29b-41d4-a716"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+        ],
+        "negatives": [
+          "550e8400e29b41d4a716446655440000",
+          "550e8400-e29b-11d4-a716-446655440000",
+          "550e8400-e29b-41d4-c716-446655440000"
+        ]
+      },
+      "gold": {
+        "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
+        "flags": ""
+      },
+      "user": "Task: Match a version-4 UUID: 8-4-4-4-12 hex digits separated by hyphens, where the first digit of the third group is '4' and the first digit of the fourth group is 8, 9, a or b.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '550e8400-e29b-41d4-a716-446655440000'\nMust not match:\n  'not-a-uuid'\n  '550e8400-e29b-41d4-a716'",
+      "thinking": "Segment lengths are 8-4-4-4-12. Version 4 pins the third group's first character to '4', and the variant pins the fourth group's to 8, 9, a or b. Pattern: [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a version-4 UUID: 8-4-4-4-12 hex digits separated by hyphens, where the first digit of the third group is '4' and the first digit of the fourth group is 8, 9, a or b.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '550e8400-e29b-41d4-a716-446655440000'\nMust not match:\n  'not-a-uuid'\n  '550e8400-e29b-41d4-a716'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nSegment lengths are 8-4-4-4-12. Version 4 pins the third group's first character to '4', and the variant pins the fourth group's to 8, 9, a or b. Pattern: [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\n</think>\n{\"pattern\": \"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\", \"flags\": \"\"}"
+    }
+  ]
+}

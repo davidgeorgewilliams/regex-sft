@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_roman_numeral_v01",
+  "kind": "single",
+  "concept": "roman_numeral",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "subtractive pairs",
+    "repeat limits",
+    "must not match empty string"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a Roman numeral from 1 to 3999 in uppercase, using standard subtractive notation (IV, IX, XL, XC, CD, CM). The empty string is not a valid numeral.",
+      "traps": [
+        "subtractive pairs",
+        "repeat limits",
+        "must not match empty string"
+      ],
+      "visible": {
+        "positives": [
+          "IX",
+          "MMXXIV",
+          "IV"
+        ],
+        "negatives": [
+          "abc"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "MMMCMXCIX",
+          "XL",
+          "I",
+          "CDXLIV"
+        ],
+        "negatives": [
+          "IIII",
+          "VX",
+          "",
+          "MMMM",
+          "IC",
+          "VV"
+        ]
+      },
+      "gold": {
+        "pattern": "(?=[MDCLXVI])M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?=[MDCLXVI])M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})",
+        "flags": ""
+      },
+      "user": "Task: Match a Roman numeral from 1 to 3999 in uppercase, using standard subtractive notation (IV, IX, XL, XC, CD, CM). The empty string is not a valid numeral.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'IX'\n  'MMXXIV'\n  'IV'\nMust not match:\n  'abc'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a Roman numeral from 1 to 3999 in uppercase, using standard subtractive notation (IV, IX, XL, XC, CD, CM). The empty string is not a valid numeral.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'IX'\n  'MMXXIV'\n  'IV'\nMust not match:\n  'abc'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(?=[MDCLXVI])M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})\", \"flags\": \"\"}"
+    }
+  ]
+}

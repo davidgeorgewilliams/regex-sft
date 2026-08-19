@@ -1,0 +1,81 @@
+{
+  "id": "rx_substitute_mask_card_v03",
+  "kind": "single",
+  "concept": "mask_card",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "lookahead instead of consuming",
+    "preserve the tail"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Replace every digit that has at least four more digits after it with a '*', leaving the final four digits visible.",
+      "traps": [
+        "lookahead instead of consuming",
+        "preserve the tail"
+      ],
+      "visible": [
+        [
+          "4111111111111234",
+          "************1234"
+        ],
+        [
+          "card 1234567890 end",
+          "card ******7890 end"
+        ]
+      ],
+      "hidden": [
+        [
+          "1234",
+          "1234"
+        ],
+        [
+          "12345",
+          "*2345"
+        ],
+        [
+          "999",
+          "999"
+        ],
+        [
+          "pin 000011112222 ok",
+          "pin ********2222 ok"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\d(?=\\d{4})",
+        "replacement": "*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d(?=\\d{4})",
+        "replacement": "*",
+        "flags": ""
+      },
+      "user": "Task: Replace every digit that has at least four more digits after it with a '*', leaving the final four digits visible.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '4111111111111234' -> '************1234'\n  'card 1234567890 end' -> 'card ******7890 end'",
+      "thinking": "Single digit matched, lookahead counting the tail, so each digit is judged independently. Pattern: \\d(?=\\d{4}) with replacement *",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Replace every digit that has at least four more digits after it with a '*', leaving the final four digits visible.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '4111111111111234' -> '************1234'\n  'card 1234567890 end' -> 'card ******7890 end'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nSingle digit matched, lookahead counting the tail, so each digit is judged independently. Pattern: \\d(?=\\d{4}) with replacement *\n</think>\n{\"pattern\": \"\\\\d(?=\\\\d{4})\", \"replacement\": \"*\", \"flags\": \"\"}"
+    }
+  ]
+}

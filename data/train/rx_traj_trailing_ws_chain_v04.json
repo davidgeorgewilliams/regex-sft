@@ -1,0 +1,179 @@
+{
+  "id": "rx_traj_trailing_ws_chain_v04",
+  "kind": "trajectory",
+  "concept": "trailing_ws_chain",
+  "arc": "FLAG->PIVOT",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE flag",
+    "end-of-string anchoring only",
+    "every line not just the last",
+    "lazy quantifier before the anchor",
+    "switch to capturing"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "Remove spaces and tabs at the very end of the text. Trailing whitespace on earlier lines should be left alone.",
+      "traps": [
+        "end-of-string anchoring only"
+      ],
+      "visible": [
+        [
+          "a  \nb  ",
+          "a  \nb"
+        ]
+      ],
+      "hidden": [
+        [
+          "hello   ",
+          "hello"
+        ],
+        [
+          "x\t\t",
+          "x"
+        ],
+        [
+          "clean",
+          "clean"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": ""
+      },
+      "user": "Task: Remove spaces and tabs at the very end of the text. Trailing whitespace on earlier lines should be left alone.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a  \\nb  ' -> 'a  \\nb'",
+      "thinking": "Adding MULTILINE here would clean every line, which this turn explicitly does not want. Pattern: [ \\t]+$",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "FLAG",
+      "instruction": "Now do that at the end of every line, not just the end of the text.",
+      "traps": [
+        "MULTILINE flag",
+        "every line not just the last"
+      ],
+      "visible": [
+        [
+          "one \ntwo\t\n",
+          "one\ntwo\n"
+        ]
+      ],
+      "hidden": [
+        [
+          "a  \nb  ",
+          "a\nb"
+        ],
+        [
+          "  keep  \n",
+          "  keep\n"
+        ],
+        [
+          "clean\n",
+          "clean\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": "m"
+      },
+      "user": "Task: Now do that at the end of every line, not just the end of the text.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'one \\ntwo\\t\\n' -> 'one\\ntwo\\n'",
+      "thinking": "The pattern is already right; only its scope is wrong. MULTILINE redefines the anchor as end-of-line. Pattern: [ \\t]+$",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "PIVOT",
+      "instruction": "Stop rewriting. Capture the text of the first line with its trailing spaces and tabs excluded.",
+      "traps": [
+        "switch to capturing",
+        "lazy quantifier before the anchor"
+      ],
+      "visible": [
+        [
+          "hello  ",
+          "hello"
+        ]
+      ],
+      "hidden": [
+        [
+          "a   \nb\n",
+          "a"
+        ],
+        [
+          "  keep  \nx",
+          "  keep"
+        ],
+        [
+          "clean\n",
+          "clean"
+        ]
+      ],
+      "gold": {
+        "pattern": "^([^\\n]*?)[ \\t]*$",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^([^\\n]*?)[ \\t]*$",
+        "flags": "m"
+      },
+      "user": "Task: Stop rewriting. Capture the text of the first line with its trailing spaces and tabs excluded.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'hello  ' -> 'hello'",
+      "thinking": "A greedy quantifier would swallow the trailing whitespace into the capture before the optional class could take it. Pattern: ^([^\\n]*?)[ \\t]*$",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove spaces and tabs at the very end of the text. Trailing whitespace on earlier lines should be left alone.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a  \\nb  ' -> 'a  \\nb'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nAdding MULTILINE here would clean every line, which this turn explicitly does not want. Pattern: [ \\t]+$\n</think>\n{\"pattern\": \"[ \\\\t]+$\", \"replacement\": \"\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now do that at the end of every line, not just the end of the text.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'one \\ntwo\\t\\n' -> 'one\\ntwo\\n'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe pattern is already right; only its scope is wrong. MULTILINE redefines the anchor as end-of-line. Pattern: [ \\t]+$\n</think>\n{\"pattern\": \"[ \\\\t]+$\", \"replacement\": \"\", \"flags\": \"m\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Stop rewriting. Capture the text of the first line with its trailing spaces and tabs excluded.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'hello  ' -> 'hello'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA greedy quantifier would swallow the trailing whitespace into the capture before the optional class could take it. Pattern: ^([^\\n]*?)[ \\t]*$\n</think>\n{\"pattern\": \"^([^\\\\n]*?)[ \\\\t]*$\", \"flags\": \"m\"}"
+    }
+  ]
+}

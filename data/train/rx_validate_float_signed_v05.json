@@ -1,0 +1,78 @@
+{
+  "id": "rx_validate_float_signed_v05",
+  "kind": "single",
+  "concept": "float_signed",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "optional sign",
+    "optional integer part",
+    "trailing dot rejected"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a decimal number: an optional leading + or -, then either digits with an optional fractional part, or a bare fractional part starting with a dot. A trailing dot with no digits after it is not allowed.",
+      "traps": [
+        "optional sign",
+        "optional integer part",
+        "trailing dot rejected"
+      ],
+      "visible": {
+        "positives": [
+          "123.456",
+          "1",
+          "-2.5"
+        ],
+        "negatives": [
+          "+-1"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "+0.75",
+          ".5",
+          "-.5"
+        ],
+        "negatives": [
+          "1.2.3",
+          "abc",
+          "1.",
+          "-",
+          "",
+          "1 000"
+        ]
+      },
+      "gold": {
+        "pattern": "[+-]?(?:\\d*\\.)?\\d+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[+-]?(?:\\d*\\.)?\\d+",
+        "flags": ""
+      },
+      "user": "Task: Match a decimal number: an optional leading + or -, then either digits with an optional fractional part, or a bare fractional part starting with a dot. A trailing dot with no digits after it is not allowed.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '123.456'\n  '1'\n  '-2.5'\nMust not match:\n  '+-1'",
+      "thinking": "The sign is optional, and so is the integer part, so a bare fractional form is legal while a trailing dot with nothing after it is not. Pattern: [+-]?(?:\\d*\\.)?\\d+",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a decimal number: an optional leading + or -, then either digits with an optional fractional part, or a bare fractional part starting with a dot. A trailing dot with no digits after it is not allowed.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '123.456'\n  '1'\n  '-2.5'\nMust not match:\n  '+-1'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe sign is optional, and so is the integer part, so a bare fractional form is legal while a trailing dot with nothing after it is not. Pattern: [+-]?(?:\\d*\\.)?\\d+\n</think>\n{\"pattern\": \"[+-]?(?:\\\\d*\\\\.)?\\\\d+\", \"flags\": \"\"}"
+    }
+  ]
+}

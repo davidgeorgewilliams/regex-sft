@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_sku_code_v07",
+  "kind": "single",
+  "concept": "sku_code",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "fixed-width alphanumeric",
+    "word boundary"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the product SKU, which appears as 'SKU-' followed by exactly six uppercase letters or digits.",
+      "traps": [
+        "fixed-width alphanumeric",
+        "word boundary"
+      ],
+      "visible": [
+        [
+          "SKU-999999",
+          "999999"
+        ],
+        [
+          "no sku present",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "order SKU-AB12CD shipped",
+          "AB12CD"
+        ],
+        [
+          "SKU-AB12CDE extra",
+          null
+        ],
+        [
+          "two SKU-XYZ123 and SKU-AAA111",
+          "XYZ123"
+        ]
+      ],
+      "gold": {
+        "pattern": "SKU-([A-Z0-9]{6})\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "SKU-([A-Z0-9]{6})\\b",
+        "flags": ""
+      },
+      "user": "Task: Capture the product SKU, which appears as 'SKU-' followed by exactly six uppercase letters or digits.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'SKU-999999' -> '999999'\n  'no sku present' -> null",
+      "thinking": "Without the trailing boundary a longer code would match on its first six characters. Pattern: SKU-([A-Z0-9]{6})\\b",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the product SKU, which appears as 'SKU-' followed by exactly six uppercase letters or digits.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'SKU-999999' -> '999999'\n  'no sku present' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nWithout the trailing boundary a longer code would match on its first six characters. Pattern: SKU-([A-Z0-9]{6})\\b\n</think>\n{\"pattern\": \"SKU-([A-Z0-9]{6})\\\\b\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "rx_validate_time24_v03",
+  "kind": "single",
+  "concept": "time24",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "hour range 00-23",
+    "minute range 00-59",
+    "zero padding"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a 24-hour time HH:MM. Hours 00-23, minutes 00-59, both zero-padded to two digits.",
+      "traps": [
+        "hour range 00-23",
+        "minute range 00-59",
+        "zero padding"
+      ],
+      "visible": {
+        "positives": [
+          "19:45"
+        ],
+        "negatives": [
+          "12:60",
+          "24:00"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "00:00",
+          "09:30",
+          "23:59",
+          "12:00"
+        ],
+        "negatives": [
+          "9:30",
+          "23:5",
+          "25:00",
+          "12:99",
+          "0000"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:[01]\\d|2[0-3]):[0-5]\\d",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:[01]\\d|2[0-3]):[0-5]\\d",
+        "flags": ""
+      },
+      "user": "Task: Match a 24-hour time HH:MM. Hours 00-23, minutes 00-59, both zero-padded to two digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '19:45'\nMust not match:\n  '12:60'\n  '24:00'",
+      "thinking": "Both halves are exactly two characters wide, so the zero padding falls out of the range branches rather than needing its own rule. Pattern: (?:[01]\\d|2[0-3]):[0-5]\\d",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a 24-hour time HH:MM. Hours 00-23, minutes 00-59, both zero-padded to two digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '19:45'\nMust not match:\n  '12:60'\n  '24:00'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nBoth halves are exactly two characters wide, so the zero padding falls out of the range branches rather than needing its own rule. Pattern: (?:[01]\\d|2[0-3]):[0-5]\\d\n</think>\n{\"pattern\": \"(?:[01]\\\\d|2[0-3]):[0-5]\\\\d\", \"flags\": \"\"}"
+    }
+  ]
+}

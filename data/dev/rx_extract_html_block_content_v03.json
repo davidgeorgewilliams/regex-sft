@@ -1,0 +1,74 @@
+{
+  "id": "rx_extract_html_block_content_v03",
+  "kind": "single",
+  "concept": "html_block_content",
+  "family": "extract",
+  "difficulty": "hard",
+  "traps": [
+    "DOTALL flag",
+    "greedy vs lazy",
+    "match the closing tag exactly"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the contents of the first <div> element, which may span several lines. div elements are never nested.",
+      "traps": [
+        "DOTALL flag",
+        "greedy vs lazy",
+        "match the closing tag exactly"
+      ],
+      "visible": [
+        [
+          "<p>no div</p>",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "<div>x</div>",
+          "x"
+        ],
+        [
+          "<div>\nhi\n</div>",
+          "\nhi\n"
+        ],
+        [
+          "<div>a</div><div>b</div>",
+          "a"
+        ],
+        [
+          "<div>\n  <span>s</span>\n</div>",
+          "\n  <span>s</span>\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "<div>(.*?)</div>",
+        "flags": "s"
+      },
+      "target": {
+        "pattern": "<div>(.*?)</div>",
+        "flags": "s"
+      },
+      "user": "Task: Capture the contents of the first <div> element, which may span several lines. div elements are never nested.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '<p>no div</p>' -> null"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the contents of the first <div> element, which may span several lines. div elements are never nested.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '<p>no div</p>' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"<div>(.*?)</div>\", \"flags\": \"s\"}"
+    }
+  ]
+}

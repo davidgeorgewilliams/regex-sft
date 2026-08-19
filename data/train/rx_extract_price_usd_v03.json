@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_price_usd_v03",
+  "kind": "single",
+  "concept": "price_usd",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "optional cents",
+    "do not capture the dollar sign"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the first US dollar amount in the text without the '$': digits, optionally followed by a dot and two decimal digits.",
+      "traps": [
+        "optional cents",
+        "do not capture the dollar sign"
+      ],
+      "visible": [
+        [
+          "only $5 left",
+          "5"
+        ]
+      ],
+      "hidden": [
+        [
+          "it costs $19.99 today",
+          "19.99"
+        ],
+        [
+          "no prices here",
+          null
+        ],
+        [
+          "$1234.50 and $2",
+          "1234.50"
+        ],
+        [
+          "price: $0.99!",
+          "0.99"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\$(\\d+(?:\\.\\d{2})?)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\$(\\d+(?:\\.\\d{2})?)",
+        "flags": ""
+      },
+      "user": "Task: Capture the first US dollar amount in the text without the '$': digits, optionally followed by a dot and two decimal digits.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'only $5 left' -> '5'",
+      "thinking": "Literal symbol outside the capture, digit run inside, optional two-digit fractional tail. Pattern: \\$(\\d+(?:\\.\\d{2})?)",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the first US dollar amount in the text without the '$': digits, optionally followed by a dot and two decimal digits.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'only $5 left' -> '5'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nLiteral symbol outside the capture, digit run inside, optional two-digit fractional tail. Pattern: \\$(\\d+(?:\\.\\d{2})?)\n</think>\n{\"pattern\": \"\\\\$(\\\\d+(?:\\\\.\\\\d{2})?)\", \"flags\": \"\"}"
+    }
+  ]
+}

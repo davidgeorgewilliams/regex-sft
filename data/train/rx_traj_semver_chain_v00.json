@@ -1,0 +1,173 @@
+{
+  "id": "rx_traj_semver_chain_v00",
+  "kind": "trajectory",
+  "concept": "semver_chain",
+  "arc": "BROADEN->REPAIR",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "component count",
+    "fix a cited failure",
+    "leading-zero rejection",
+    "optional suffix"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a version number with exactly three dot-separated numeric components and nothing else.",
+      "traps": [
+        "component count"
+      ],
+      "visible": {
+        "positives": [
+          "1.2.3"
+        ],
+        "negatives": [
+          "1.2"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0.0.1",
+          "10.20.30",
+          "99.0.12"
+        ],
+        "negatives": [
+          "1.2.3.4",
+          "v1.2.3",
+          "abc"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d+\\.\\d+\\.\\d+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d+\\.\\d+\\.\\d+",
+        "flags": ""
+      },
+      "user": "Task: Match a version number with exactly three dot-separated numeric components and nothing else.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1.2.3'\nMust not match:\n  '1.2'",
+      "thinking": "Component count is the only rule in play yet, so plain digit runs are enough. Pattern: \\d+\\.\\d+\\.\\d+",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "BROADEN",
+      "instruction": "Now also allow an optional pre-release suffix: a hyphen followed by one or more letters, digits, dots or hyphens.",
+      "traps": [
+        "optional suffix"
+      ],
+      "visible": {
+        "positives": [
+          "1.2.3",
+          "1.0.0-beta.1"
+        ],
+        "negatives": [
+          "1.2.3-"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "2.3.4-rc1",
+          "1.0.0-alpha.beta.2"
+        ],
+        "negatives": [
+          "1.2",
+          "1.2.3.4",
+          "-1.2.3"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?",
+        "flags": ""
+      },
+      "user": "Task: Now also allow an optional pre-release suffix: a hyphen followed by one or more letters, digits, dots or hyphens.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1.2.3'\n  '1.0.0-beta.1'\nMust not match:\n  '1.2.3-'",
+      "thinking": "Using '*' inside the suffix group would accept a hyphen with nothing after it. Pattern: \\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "REPAIR",
+      "instruction": "Bug: it accepted '01.2.3', but our registry rejects leading zeros in any numeric component. A component that is just '0' is still fine. Fix that.",
+      "traps": [
+        "leading-zero rejection",
+        "fix a cited failure"
+      ],
+      "visible": {
+        "positives": [
+          "0.0.1"
+        ],
+        "negatives": [
+          "01.2.3"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "1.2.3",
+          "1.0.0-beta.1",
+          "10.20.30"
+        ],
+        "negatives": [
+          "1.2.03",
+          "1.02.3",
+          "00.1.2"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?",
+        "flags": ""
+      },
+      "user": "Task: Bug: it accepted '01.2.3', but our registry rejects leading zeros in any numeric component. A component that is just '0' is still fine. Fix that.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0.0.1'\nMust not match:\n  '01.2.3'",
+      "thinking": "The reported failure is a padded component being accepted, because a plain digit run does not care about a leading zero. Pattern: (?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a version number with exactly three dot-separated numeric components and nothing else.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1.2.3'\nMust not match:\n  '1.2'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nComponent count is the only rule in play yet, so plain digit runs are enough. Pattern: \\d+\\.\\d+\\.\\d+\n</think>\n{\"pattern\": \"\\\\d+\\\\.\\\\d+\\\\.\\\\d+\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now also allow an optional pre-release suffix: a hyphen followed by one or more letters, digits, dots or hyphens.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1.2.3'\n  '1.0.0-beta.1'\nMust not match:\n  '1.2.3-'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUsing '*' inside the suffix group would accept a hyphen with nothing after it. Pattern: \\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?\n</think>\n{\"pattern\": \"\\\\d+\\\\.\\\\d+\\\\.\\\\d+(?:-[0-9A-Za-z.-]+)?\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Bug: it accepted '01.2.3', but our registry rejects leading zeros in any numeric component. A component that is just '0' is still fine. Fix that.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0.0.1'\nMust not match:\n  '01.2.3'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe reported failure is a padded component being accepted, because a plain digit run does not care about a leading zero. Pattern: (?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?\n</think>\n{\"pattern\": \"(?:0|[1-9]\\\\d*)\\\\.(?:0|[1-9]\\\\d*)\\\\.(?:0|[1-9]\\\\d*)(?:-[0-9A-Za-z.-]+)?\", \"flags\": \"\"}"
+    }
+  ]
+}

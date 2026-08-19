@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_ini_value_v07",
+  "kind": "single",
+  "concept": "ini_value",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "tolerate whitespace around the equals",
+    "MULTILINE anchoring"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the value assigned to the key 'timeout' in an INI-style config, ignoring whitespace around the equals sign. The value runs to the end of the line.",
+      "traps": [
+        "tolerate whitespace around the equals",
+        "MULTILINE anchoring"
+      ],
+      "visible": [
+        [
+          "host=localhost\ntimeout=60",
+          "60"
+        ],
+        [
+          "timeout = 30",
+          "30"
+        ]
+      ],
+      "hidden": [
+        [
+          "host=localhost",
+          null
+        ],
+        [
+          "timeout   =   90",
+          "90"
+        ],
+        [
+          "[sec]\ntimeout = 5\nother = 1",
+          "5"
+        ]
+      ],
+      "gold": {
+        "pattern": "^timeout\\s*=\\s*(.*)$",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^timeout\\s*=\\s*(.*)$",
+        "flags": "m"
+      },
+      "user": "Task: Capture the value assigned to the key 'timeout' in an INI-style config, ignoring whitespace around the equals sign. The value runs to the end of the line.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'host=localhost\\ntimeout=60' -> '60'\n  'timeout = 30' -> '30'",
+      "thinking": "Without anchoring to the line start, a longer key ending in these letters would match. Pattern: ^timeout\\s*=\\s*(.*)$",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the value assigned to the key 'timeout' in an INI-style config, ignoring whitespace around the equals sign. The value runs to the end of the line.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'host=localhost\\ntimeout=60' -> '60'\n  'timeout = 30' -> '30'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nWithout anchoring to the line start, a longer key ending in these letters would match. Pattern: ^timeout\\s*=\\s*(.*)$\n</think>\n{\"pattern\": \"^timeout\\\\s*=\\\\s*(.*)$\", \"flags\": \"m\"}"
+    }
+  ]
+}

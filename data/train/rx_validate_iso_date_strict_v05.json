@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_iso_date_strict_v05",
+  "kind": "single",
+  "concept": "iso_date_strict",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "month range 01-12",
+    "day range 01-31",
+    "zero padding"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match an ISO date YYYY-MM-DD where the month is 01-12 and the day is 01-31. All fields zero-padded.",
+      "traps": [
+        "month range 01-12",
+        "day range 01-31",
+        "zero padding"
+      ],
+      "visible": {
+        "positives": [
+          "1999-12-31"
+        ],
+        "negatives": [
+          "2024-13-01"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "2026-08-19",
+          "2000-02-29",
+          "2024-01-15"
+        ],
+        "negatives": [
+          "2024-00-10",
+          "2024-1-15",
+          "2024-01-32",
+          "2024-01-00",
+          "24-01-15",
+          "2024-01-1"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])",
+        "flags": ""
+      },
+      "user": "Task: Match an ISO date YYYY-MM-DD where the month is 01-12 and the day is 01-31. All fields zero-padded.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1999-12-31'\nMust not match:\n  '2024-13-01'",
+      "thinking": "Unlike the shape-only variant, the ranges matter. Month 01-12 splits into '0' with 1-9 or '1' with 0-2; day 01-31 into 0[1-9], then [12] with any digit, then 30 and 31. Pattern: \\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match an ISO date YYYY-MM-DD where the month is 01-12 and the day is 01-31. All fields zero-padded.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1999-12-31'\nMust not match:\n  '2024-13-01'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUnlike the shape-only variant, the ranges matter. Month 01-12 splits into '0' with 1-9 or '1' with 0-2; day 01-31 into 0[1-9], then [12] with any digit, then 30 and 31. Pattern: \\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])\n</think>\n{\"pattern\": \"\\\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\\\d|3[01])\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_hex_color_v00",
+  "kind": "single",
+  "concept": "hex_color",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "two valid lengths",
+    "hex alphabet only"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a CSS hex colour: a '#' followed by either exactly three or exactly six hexadecimal digits, in either case.",
+      "traps": [
+        "two valid lengths",
+        "hex alphabet only"
+      ],
+      "visible": {
+        "positives": [
+          "#a1b2c3",
+          "#FFFFFF",
+          "#AbCdEf"
+        ],
+        "negatives": [
+          "fff",
+          "#ffff"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "#000",
+          "#fff"
+        ],
+        "negatives": [
+          "#gg0000",
+          "#12345",
+          "#1234567",
+          "#",
+          "##fff",
+          "0xfff"
+        ]
+      },
+      "gold": {
+        "pattern": "#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})",
+        "flags": ""
+      },
+      "user": "Task: Match a CSS hex colour: a '#' followed by either exactly three or exactly six hexadecimal digits, in either case.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#a1b2c3'\n  '#FFFFFF'\n  '#AbCdEf'\nMust not match:\n  'fff'\n  '#ffff'",
+      "thinking": "I branch on the two legal lengths and share the hex class between them. Pattern: #(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a CSS hex colour: a '#' followed by either exactly three or exactly six hexadecimal digits, in either case.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#a1b2c3'\n  '#FFFFFF'\n  '#AbCdEf'\nMust not match:\n  'fff'\n  '#ffff'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nI branch on the two legal lengths and share the hex class between them. Pattern: #(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})\n</think>\n{\"pattern\": \"#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})\", \"flags\": \"\"}"
+    }
+  ]
+}

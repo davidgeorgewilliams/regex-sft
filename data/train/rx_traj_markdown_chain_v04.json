@@ -1,0 +1,179 @@
+{
+  "id": "rx_traj_markdown_chain_v04",
+  "kind": "trajectory",
+  "concept": "markdown_chain",
+  "arc": "RETARGET->FLAG",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE flag",
+    "anchor to the very start of the text",
+    "apply to every line",
+    "different header level"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "The text begins with a Markdown level-1 header. Convert that leading '# ' line into <h1>text</h1>. Only the header at the very start of the text should change.",
+      "traps": [
+        "anchor to the very start of the text"
+      ],
+      "visible": [
+        [
+          "# Title",
+          "<h1>Title</h1>"
+        ]
+      ],
+      "hidden": [
+        [
+          "# Top\nbody",
+          "<h1>Top</h1>\nbody"
+        ],
+        [
+          "body\n# Later",
+          "body\n# Later"
+        ],
+        [
+          "no header",
+          "no header"
+        ]
+      ],
+      "gold": {
+        "pattern": "^# (.+)",
+        "replacement": "<h1>\\1</h1>",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "^# (.+)",
+        "replacement": "<h1>\\1</h1>",
+        "flags": ""
+      },
+      "user": "Task: The text begins with a Markdown level-1 header. Convert that leading '# ' line into <h1>text</h1>. Only the header at the very start of the text should change.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# Title' -> '<h1>Title</h1>'",
+      "thinking": "Adding MULTILINE here would convert headers further down the document, which is out of scope for this turn. Pattern: ^# (.+) with replacement <h1>\\1</h1>",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "RETARGET",
+      "instruction": "Do level-2 headers instead: a leading '## ' line becomes <h2>text</h2>, still only at the very start of the text.",
+      "traps": [
+        "different header level"
+      ],
+      "visible": [
+        [
+          "## Top\nbody",
+          "<h2>Top</h2>\nbody"
+        ]
+      ],
+      "hidden": [
+        [
+          "## Sub",
+          "<h2>Sub</h2>"
+        ],
+        [
+          "# One\n## Two",
+          "# One\n## Two"
+        ],
+        [
+          "plain",
+          "plain"
+        ]
+      ],
+      "gold": {
+        "pattern": "^## (.+)",
+        "replacement": "<h2>\\1</h2>",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "^## (.+)",
+        "replacement": "<h2>\\1</h2>",
+        "flags": ""
+      },
+      "user": "Task: Do level-2 headers instead: a leading '## ' line becomes <h2>text</h2>, still only at the very start of the text.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '## Top\\nbody' -> '<h2>Top</h2>\\nbody'",
+      "thinking": "Only the marker changes: two hashes instead of one. The required space still prevents a deeper header matching. Pattern: ^## (.+) with replacement <h2>\\1</h2>",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "FLAG",
+      "instruction": "Apply that to every level-2 header in the document, not just one at the start.",
+      "traps": [
+        "MULTILINE flag",
+        "apply to every line"
+      ],
+      "visible": [
+        [
+          "intro\n## Sub\n",
+          "intro\n<h2>Sub</h2>\n"
+        ]
+      ],
+      "hidden": [
+        [
+          "## A\n## B",
+          "<h2>A</h2>\n<h2>B</h2>"
+        ],
+        [
+          "# One\n## Two\n",
+          "# One\n<h2>Two</h2>\n"
+        ],
+        [
+          "### Deep\n",
+          "### Deep\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "^## (.+)$",
+        "replacement": "<h2>\\1</h2>",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^## (.+)$",
+        "replacement": "<h2>\\1</h2>",
+        "flags": "m"
+      },
+      "user": "Task: Apply that to every level-2 header in the document, not just one at the start.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'intro\\n## Sub\\n' -> 'intro\\n<h2>Sub</h2>\\n'",
+      "thinking": "The pattern gains an end-of-line anchor and the flag; the marker and capture are unchanged. Pattern: ^## (.+)$ with replacement <h2>\\1</h2>",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: The text begins with a Markdown level-1 header. Convert that leading '# ' line into <h1>text</h1>. Only the header at the very start of the text should change.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '# Title' -> '<h1>Title</h1>'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nAdding MULTILINE here would convert headers further down the document, which is out of scope for this turn. Pattern: ^# (.+) with replacement <h1>\\1</h1>\n</think>\n{\"pattern\": \"^# (.+)\", \"replacement\": \"<h1>\\\\1</h1>\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Do level-2 headers instead: a leading '## ' line becomes <h2>text</h2>, still only at the very start of the text.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '## Top\\nbody' -> '<h2>Top</h2>\\nbody'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOnly the marker changes: two hashes instead of one. The required space still prevents a deeper header matching. Pattern: ^## (.+) with replacement <h2>\\1</h2>\n</think>\n{\"pattern\": \"^## (.+)\", \"replacement\": \"<h2>\\\\1</h2>\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Apply that to every level-2 header in the document, not just one at the start.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'intro\\n## Sub\\n' -> 'intro\\n<h2>Sub</h2>\\n'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe pattern gains an end-of-line anchor and the flag; the marker and capture are unchanged. Pattern: ^## (.+)$ with replacement <h2>\\1</h2>\n</think>\n{\"pattern\": \"^## (.+)$\", \"replacement\": \"<h2>\\\\1</h2>\", \"flags\": \"m\"}"
+    }
+  ]
+}

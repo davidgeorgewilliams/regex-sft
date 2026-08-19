@@ -1,0 +1,72 @@
+{
+  "id": "rx_substitute_normalize_header_case_v00",
+  "kind": "single",
+  "concept": "normalize_header_case",
+  "family": "substitute",
+  "difficulty": "hard",
+  "traps": [
+    "IGNORECASE flag",
+    "MULTILINE flag",
+    "preserve the value"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Rewrite the Content-Type HTTP header name at the start of a line into exactly 'Content-Type:', whatever letter case it was written in, leaving the value after the colon untouched.",
+      "traps": [
+        "IGNORECASE flag",
+        "MULTILINE flag",
+        "preserve the value"
+      ],
+      "visible": [
+        [
+          "content-type: text/html",
+          "Content-Type: text/html"
+        ]
+      ],
+      "hidden": [
+        [
+          "CONTENT-TYPE: a\nX: b",
+          "Content-Type: a\nX: b"
+        ],
+        [
+          "Content-Type: keep",
+          "Content-Type: keep"
+        ],
+        [
+          "x-content-type: no",
+          "x-content-type: no"
+        ]
+      ],
+      "gold": {
+        "pattern": "^content-type:",
+        "replacement": "Content-Type:",
+        "flags": "mi"
+      },
+      "target": {
+        "pattern": "^content-type:",
+        "replacement": "Content-Type:",
+        "flags": "mi"
+      },
+      "user": "Task: Rewrite the Content-Type HTTP header name at the start of a line into exactly 'Content-Type:', whatever letter case it was written in, leaving the value after the colon untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'content-type: text/html' -> 'Content-Type: text/html'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Rewrite the Content-Type HTTP header name at the start of a line into exactly 'Content-Type:', whatever letter case it was written in, leaving the value after the colon untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'content-type: text/html' -> 'Content-Type: text/html'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"^content-type:\", \"replacement\": \"Content-Type:\", \"flags\": \"mi\"}"
+    }
+  ]
+}

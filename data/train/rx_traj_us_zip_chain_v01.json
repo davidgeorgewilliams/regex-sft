@@ -1,0 +1,170 @@
+{
+  "id": "rx_traj_us_zip_chain_v01",
+  "kind": "trajectory",
+  "concept": "us_zip_chain",
+  "arc": "INVERT->GENERALIZE",
+  "family": "mixed",
+  "difficulty": "easy",
+  "traps": [
+    "exact length",
+    "match the rejected lengths",
+    "parameterise the length bound"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a US ZIP code: exactly five digits and nothing else.",
+      "traps": [
+        "exact length"
+      ],
+      "visible": {
+        "positives": [
+          "00000"
+        ],
+        "negatives": [
+          "1234"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "12345",
+          "90210"
+        ],
+        "negatives": [
+          "123456",
+          "abcde",
+          "1234a"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{5}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{5}",
+        "flags": ""
+      },
+      "user": "Task: Match a US ZIP code: exactly five digits and nothing else.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '00000'\nMust not match:\n  '1234'",
+      "thinking": "Using '+' would accept any length, which the fixed length rules out. Pattern: \\d{5}",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "INVERT",
+      "instruction": "Now match the digit strings that rule rejects on length: all-digit strings that are one to four digits, or six or more.",
+      "traps": [
+        "match the rejected lengths"
+      ],
+      "visible": {
+        "positives": [
+          "1234"
+        ],
+        "negatives": [
+          "abcde"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "123456",
+          "1",
+          "1234567890"
+        ],
+        "negatives": [
+          "12345",
+          "00000",
+          "1234a"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{1,4}|\\d{6,}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{1,4}|\\d{6,}",
+        "flags": ""
+      },
+      "user": "Task: Now match the digit strings that rule rejects on length: all-digit strings that are one to four digits, or six or more.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1234'\nMust not match:\n  'abcde'",
+      "thinking": "The rejected lengths fall either side of five, so this is two branches: one to four digits, or six and above. Pattern: \\d{1,4}|\\d{6,}",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "GENERALIZE",
+      "instruction": "We are going international. Generalise the original rule to a postal code of any length from four to ten digits.",
+      "traps": [
+        "parameterise the length bound"
+      ],
+      "visible": {
+        "positives": [
+          "1234567890"
+        ],
+        "negatives": [
+          "123"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "12345",
+          "1234",
+          "123456"
+        ],
+        "negatives": [
+          "12345678901",
+          "abcde",
+          "1234a"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{4,10}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{4,10}",
+        "flags": ""
+      },
+      "user": "Task: We are going international. Generalise the original rule to a postal code of any length from four to ten digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1234567890'\nMust not match:\n  '123'",
+      "thinking": "One bounded quantifier replaces the fixed count from the original rule. Pattern: \\d{4,10}",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a US ZIP code: exactly five digits and nothing else.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '00000'\nMust not match:\n  '1234'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUsing '+' would accept any length, which the fixed length rules out. Pattern: \\d{5}\n</think>\n{\"pattern\": \"\\\\d{5}\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now match the digit strings that rule rejects on length: all-digit strings that are one to four digits, or six or more.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1234'\nMust not match:\n  'abcde'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe rejected lengths fall either side of five, so this is two branches: one to four digits, or six and above. Pattern: \\d{1,4}|\\d{6,}\n</think>\n{\"pattern\": \"\\\\d{1,4}|\\\\d{6,}\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: We are going international. Generalise the original rule to a postal code of any length from four to ten digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1234567890'\nMust not match:\n  '123'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOne bounded quantifier replaces the fixed count from the original rule. Pattern: \\d{4,10}\n</think>\n{\"pattern\": \"\\\\d{4,10}\", \"flags\": \"\"}"
+    }
+  ]
+}

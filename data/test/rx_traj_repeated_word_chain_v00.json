@@ -1,0 +1,168 @@
+{
+  "id": "rx_traj_repeated_word_chain_v00",
+  "kind": "trajectory",
+  "concept": "repeated_word_chain",
+  "arc": "GENERALIZE->ROLLBACK",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "IGNORECASE affects the backreference",
+    "backreference to a capture group",
+    "parameterise the separator",
+    "revert the separator rule"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture a word that is immediately repeated, separated by exactly one space. Return the repeated word once.",
+      "traps": [
+        "backreference to a capture group"
+      ],
+      "visible": [
+        [
+          "no repeats here",
+          null
+        ],
+        [
+          "a bb bb c",
+          "bb"
+        ]
+      ],
+      "hidden": [
+        [
+          "the the cat",
+          "the"
+        ],
+        [
+          "say say again",
+          "say"
+        ],
+        [
+          "one two three",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(\\w+) \\1\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(\\w+) \\1\\b",
+        "flags": ""
+      },
+      "user": "Task: Capture a word that is immediately repeated, separated by exactly one space. Return the repeated word once.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'no repeats here' -> null\n  'a bb bb c' -> 'bb'"
+    },
+    {
+      "index": 2,
+      "family": "extract",
+      "move": "GENERALIZE",
+      "instruction": "Generalise the gap: allow any run of whitespace between the two copies, not just a single space.",
+      "traps": [
+        "parameterise the separator"
+      ],
+      "visible": [
+        [
+          "a bb\tbb c",
+          "bb"
+        ]
+      ],
+      "hidden": [
+        [
+          "the   the cat",
+          "the"
+        ],
+        [
+          "say\nsay again",
+          "say"
+        ],
+        [
+          "one two three",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(\\w+)\\s+\\1\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(\\w+)\\s+\\1\\b",
+        "flags": ""
+      },
+      "user": "Task: Generalise the gap: allow any run of whitespace between the two copies, not just a single space.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'a bb\\tbb c' -> 'bb'"
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "ROLLBACK",
+      "instruction": "Go back to requiring exactly one space, but ignore letter case so 'The the' counts as a repeat.",
+      "traps": [
+        "revert the separator rule",
+        "IGNORECASE affects the backreference"
+      ],
+      "visible": [
+        [
+          "The the cat",
+          "The"
+        ]
+      ],
+      "hidden": [
+        [
+          "a BB bb c",
+          "BB"
+        ],
+        [
+          "Say say again",
+          "Say"
+        ],
+        [
+          "the   the",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(\\w+) \\1\\b",
+        "flags": "i"
+      },
+      "target": {
+        "pattern": "\\b(\\w+) \\1\\b",
+        "flags": "i"
+      },
+      "user": "Task: Go back to requiring exactly one space, but ignore letter case so 'The the' counts as a repeat.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'The the cat' -> 'The'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture a word that is immediately repeated, separated by exactly one space. Return the repeated word once.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'no repeats here' -> null\n  'a bb bb c' -> 'bb'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(\\\\w+) \\\\1\\\\b\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Generalise the gap: allow any run of whitespace between the two copies, not just a single space.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'a bb\\tbb c' -> 'bb'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(\\\\w+)\\\\s+\\\\1\\\\b\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Go back to requiring exactly one space, but ignore letter case so 'The the' counts as a repeat.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'The the cat' -> 'The'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(\\\\w+) \\\\1\\\\b\", \"flags\": \"i\"}"
+    }
+  ]
+}

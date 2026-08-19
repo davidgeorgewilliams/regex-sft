@@ -1,0 +1,72 @@
+{
+  "id": "rx_substitute_swap_name_v03",
+  "kind": "single",
+  "concept": "swap_name",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "group reordering in the replacement"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Rewrite every 'Firstname Lastname' pair (two capitalised words separated by one space) as 'Lastname, Firstname'.",
+      "traps": [
+        "group reordering in the replacement"
+      ],
+      "visible": [
+        [
+          "Ada Lovelace and Alan Turing",
+          "Lovelace, Ada and Turing, Alan"
+        ],
+        [
+          "all lowercase words",
+          "all lowercase words"
+        ]
+      ],
+      "hidden": [
+        [
+          "John Smith",
+          "Smith, John"
+        ],
+        [
+          "Grace Hopper",
+          "Hopper, Grace"
+        ],
+        [
+          "Marie Curie, Niels Bohr",
+          "Curie, Marie, Bohr, Niels"
+        ]
+      ],
+      "gold": {
+        "pattern": "([A-Z][a-z]+) ([A-Z][a-z]+)",
+        "replacement": "\\2, \\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "([A-Z][a-z]+) ([A-Z][a-z]+)",
+        "replacement": "\\2, \\1",
+        "flags": ""
+      },
+      "user": "Task: Rewrite every 'Firstname Lastname' pair (two capitalised words separated by one space) as 'Lastname, Firstname'.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'Ada Lovelace and Alan Turing' -> 'Lovelace, Ada and Turing, Alan'\n  'all lowercase words' -> 'all lowercase words'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Rewrite every 'Firstname Lastname' pair (two capitalised words separated by one space) as 'Lastname, Firstname'.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'Ada Lovelace and Alan Turing' -> 'Lovelace, Ada and Turing, Alan'\n  'all lowercase words' -> 'all lowercase words'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"([A-Z][a-z]+) ([A-Z][a-z]+)\", \"replacement\": \"\\\\2, \\\\1\", \"flags\": \"\"}"
+    }
+  ]
+}

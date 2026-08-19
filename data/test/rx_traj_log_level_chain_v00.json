@@ -1,0 +1,170 @@
+{
+  "id": "rx_traj_log_level_chain_v00",
+  "kind": "trajectory",
+  "concept": "log_level_chain",
+  "arc": "NARROW->COMPOSE",
+  "family": "mixed",
+  "difficulty": "easy",
+  "traps": [
+    "add a case to the alternation",
+    "alternation of literals",
+    "restrict the alternation"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the log level from a line. Levels are DEBUG, INFO, WARN, ERROR or FATAL.",
+      "traps": [
+        "alternation of literals"
+      ],
+      "visible": [
+        [
+          "2024-01-01 ERROR failed",
+          "ERROR"
+        ],
+        [
+          "2024-01-01 INFO started",
+          "INFO"
+        ]
+      ],
+      "hidden": [
+        [
+          "no level here",
+          null
+        ],
+        [
+          "x DEBUG y",
+          "DEBUG"
+        ],
+        [
+          "a FATAL b",
+          "FATAL"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(DEBUG|INFO|WARN|ERROR|FATAL)\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(DEBUG|INFO|WARN|ERROR|FATAL)\\b",
+        "flags": ""
+      },
+      "user": "Task: Capture the log level from a line. Levels are DEBUG, INFO, WARN, ERROR or FATAL.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '2024-01-01 ERROR failed' -> 'ERROR'\n  '2024-01-01 INFO started' -> 'INFO'"
+    },
+    {
+      "index": 2,
+      "family": "extract",
+      "move": "NARROW",
+      "instruction": "I only care about serious ones. Capture the level only when it is ERROR or FATAL.",
+      "traps": [
+        "restrict the alternation"
+      ],
+      "visible": [
+        [
+          "2024-01-01 INFO started",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "2024-01-01 ERROR failed",
+          "ERROR"
+        ],
+        [
+          "a FATAL b",
+          "FATAL"
+        ],
+        [
+          "x DEBUG y",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(ERROR|FATAL)\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(ERROR|FATAL)\\b",
+        "flags": ""
+      },
+      "user": "Task: I only care about serious ones. Capture the level only when it is ERROR or FATAL.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '2024-01-01 INFO started' -> null"
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "COMPOSE",
+      "instruction": "Add WARN to that set as well -- WARN, ERROR or FATAL.",
+      "traps": [
+        "add a case to the alternation"
+      ],
+      "visible": [
+        [
+          "a INFO b",
+          null
+        ],
+        [
+          "a WARN b",
+          "WARN"
+        ]
+      ],
+      "hidden": [
+        [
+          "a ERROR b",
+          "ERROR"
+        ],
+        [
+          "a FATAL b",
+          "FATAL"
+        ],
+        [
+          "a DEBUG b",
+          null
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(WARN|ERROR|FATAL)\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(WARN|ERROR|FATAL)\\b",
+        "flags": ""
+      },
+      "user": "Task: Add WARN to that set as well -- WARN, ERROR or FATAL.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'a INFO b' -> null\n  'a WARN b' -> 'WARN'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the log level from a line. Levels are DEBUG, INFO, WARN, ERROR or FATAL.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '2024-01-01 ERROR failed' -> 'ERROR'\n  '2024-01-01 INFO started' -> 'INFO'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(DEBUG|INFO|WARN|ERROR|FATAL)\\\\b\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: I only care about serious ones. Capture the level only when it is ERROR or FATAL.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '2024-01-01 INFO started' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(ERROR|FATAL)\\\\b\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Add WARN to that set as well -- WARN, ERROR or FATAL.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'a INFO b' -> null\n  'a WARN b' -> 'WARN'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(WARN|ERROR|FATAL)\\\\b\", \"flags\": \"\"}"
+    }
+  ]
+}

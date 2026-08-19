@@ -1,0 +1,172 @@
+{
+  "id": "rx_traj_url_chain_v03",
+  "kind": "trajectory",
+  "concept": "url_chain",
+  "arc": "RETARGET->PIVOT",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "capture a different field",
+    "escaping dots in a literal host",
+    "optional www",
+    "path may be just a slash",
+    "stop at the path"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the host of the first http or https URL, excluding any leading www. and excluding the path.",
+      "traps": [
+        "optional www",
+        "stop at the path"
+      ],
+      "visible": [
+        [
+          "visit https://www.example.com/page",
+          "example.com"
+        ]
+      ],
+      "hidden": [
+        [
+          "no url",
+          null
+        ],
+        [
+          "http://sub.a.org/x",
+          "sub.a.org"
+        ],
+        [
+          "https://example.com",
+          "example.com"
+        ],
+        [
+          "https://www.a.co.uk/",
+          "a.co.uk"
+        ]
+      ],
+      "gold": {
+        "pattern": "https?://(?:www\\.)?([^/\\s?]+)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "https?://(?:www\\.)?([^/\\s?]+)",
+        "flags": ""
+      },
+      "user": "Task: Capture the host of the first http or https URL, excluding any leading www. and excluding the path.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'visit https://www.example.com/page' -> 'example.com'"
+    },
+    {
+      "index": 2,
+      "family": "extract",
+      "move": "RETARGET",
+      "instruction": "Now capture the path instead -- everything from the first slash after the host up to any query string.",
+      "traps": [
+        "capture a different field",
+        "path may be just a slash"
+      ],
+      "visible": [
+        [
+          "http://a.org/x/y?z=1",
+          "/x/y"
+        ]
+      ],
+      "hidden": [
+        [
+          "https://www.example.com/page",
+          "/page"
+        ],
+        [
+          "https://example.com/",
+          "/"
+        ],
+        [
+          "https://a.com/deep/path/here",
+          "/deep/path/here"
+        ]
+      ],
+      "gold": {
+        "pattern": "https?://[^/\\s?]+(/[^\\s?]*)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "https?://[^/\\s?]+(/[^\\s?]*)",
+        "flags": ""
+      },
+      "user": "Task: Now capture the path instead -- everything from the first slash after the host up to any query string.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'http://a.org/x/y?z=1' -> '/x/y'"
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "PIVOT",
+      "instruction": "Now rewrite URLs to point at our mirror: replace the host old.example.com with mirror.example.net, keeping scheme and path.",
+      "traps": [
+        "escaping dots in a literal host"
+      ],
+      "visible": [
+        [
+          "https://old.example.com/a",
+          "https://mirror.example.net/a"
+        ]
+      ],
+      "hidden": [
+        [
+          "http://old.example.com",
+          "http://mirror.example.net"
+        ],
+        [
+          "https://other.com/a",
+          "https://other.com/a"
+        ],
+        [
+          "see https://old.example.com/x/y now",
+          "see https://mirror.example.net/x/y now"
+        ]
+      ],
+      "gold": {
+        "pattern": "old\\.example\\.com",
+        "replacement": "mirror.example.net",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "old\\.example\\.com",
+        "replacement": "mirror.example.net",
+        "flags": ""
+      },
+      "user": "Task: Now rewrite URLs to point at our mirror: replace the host old.example.com with mirror.example.net, keeping scheme and path.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'https://old.example.com/a' -> 'https://mirror.example.net/a'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the host of the first http or https URL, excluding any leading www. and excluding the path.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'visit https://www.example.com/page' -> 'example.com'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"https?://(?:www\\\\.)?([^/\\\\s?]+)\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now capture the path instead -- everything from the first slash after the host up to any query string.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'http://a.org/x/y?z=1' -> '/x/y'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"https?://[^/\\\\s?]+(/[^\\\\s?]*)\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now rewrite URLs to point at our mirror: replace the host old.example.com with mirror.example.net, keeping scheme and path.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'https://old.example.com/a' -> 'https://mirror.example.net/a'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"old\\\\.example\\\\.com\", \"replacement\": \"mirror.example.net\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "rx_substitute_relative_to_absolute_v05",
+  "kind": "single",
+  "concept": "relative_to_absolute",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "capture the path",
+    "preserve the attribute syntax"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Rewrite root-relative href attributes into absolute URLs on https://example.com, so href=\"/a/b\" becomes href=\"https://example.com/a/b\".",
+      "traps": [
+        "capture the path",
+        "preserve the attribute syntax"
+      ],
+      "visible": [
+        [
+          "<a href=\"/docs\">x</a>",
+          "<a href=\"https://example.com/docs\">x</a>"
+        ]
+      ],
+      "hidden": [
+        [
+          "href=\"/\"",
+          "href=\"https://example.com/\""
+        ],
+        [
+          "<a href=\"https://other.com/x\">y</a>",
+          "<a href=\"https://other.com/x\">y</a>"
+        ],
+        [
+          "href=\"/a/b/c\"",
+          "href=\"https://example.com/a/b/c\""
+        ],
+        [
+          "href=\"relative\"",
+          "href=\"relative\""
+        ]
+      ],
+      "gold": {
+        "pattern": "href=\"(/[^\"]*)\"",
+        "replacement": "href=\"https://example.com\\1\"",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "href=\"(/[^\"]*)\"",
+        "replacement": "href=\"https://example.com\\1\"",
+        "flags": ""
+      },
+      "user": "Task: Rewrite root-relative href attributes into absolute URLs on https://example.com, so href=\"/a/b\" becomes href=\"https://example.com/a/b\".\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '<a href=\"/docs\">x</a>' -> '<a href=\"https://example.com/docs\">x</a>'",
+      "thinking": "Only the path varies, so it is captured while the attribute syntax around it is matched and rewritten. Pattern: href=\"(/[^\"]*)\" with replacement href=\"https://example.com\\1\"",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Rewrite root-relative href attributes into absolute URLs on https://example.com, so href=\"/a/b\" becomes href=\"https://example.com/a/b\".\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '<a href=\"/docs\">x</a>' -> '<a href=\"https://example.com/docs\">x</a>'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nOnly the path varies, so it is captured while the attribute syntax around it is matched and rewritten. Pattern: href=\"(/[^\"]*)\" with replacement href=\"https://example.com\\1\"\n</think>\n{\"pattern\": \"href=\\\"(/[^\\\"]*)\\\"\", \"replacement\": \"href=\\\"https://example.com\\\\1\\\"\", \"flags\": \"\"}"
+    }
+  ]
+}

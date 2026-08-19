@@ -1,0 +1,72 @@
+{
+  "id": "rx_extract_http_status_v04",
+  "kind": "single",
+  "concept": "http_status",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "anchor to the right field",
+    "avoid matching the byte count"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the three-digit HTTP status code from an access log line. It follows the quoted request, e.g. '\"GET / HTTP/1.1\" 404 512' -> 404. Do not capture the byte count after it.",
+      "traps": [
+        "anchor to the right field",
+        "avoid matching the byte count"
+      ],
+      "visible": [
+        [
+          "malformed line without request",
+          null
+        ],
+        [
+          "127.0.0.1 - \"GET / HTTP/1.1\" 404 512",
+          "404"
+        ]
+      ],
+      "hidden": [
+        [
+          "10.0.0.1 - \"POST /a HTTP/1.0\" 200 1234",
+          "200"
+        ],
+        [
+          "1.2.3.4 - \"GET /500 HTTP/1.1\" 200 500",
+          "200"
+        ],
+        [
+          "1.2.3.4 - \"DELETE /y HTTP/1.1\" 503 0",
+          "503"
+        ]
+      ],
+      "gold": {
+        "pattern": "HTTP/\\d\\.\\d\"\\s+(\\d{3})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "HTTP/\\d\\.\\d\"\\s+(\\d{3})",
+        "flags": ""
+      },
+      "user": "Task: Capture the three-digit HTTP status code from an access log line. It follows the quoted request, e.g. '\"GET / HTTP/1.1\" 404 512' -> 404. Do not capture the byte count after it.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'malformed line without request' -> null\n  '127.0.0.1 - \"GET / HTTP/1.1\" 404 512' -> '404'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the three-digit HTTP status code from an access log line. It follows the quoted request, e.g. '\"GET / HTTP/1.1\" 404 512' -> 404. Do not capture the byte count after it.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'malformed line without request' -> null\n  '127.0.0.1 - \"GET / HTTP/1.1\" 404 512' -> '404'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"HTTP/\\\\d\\\\.\\\\d\\\"\\\\s+(\\\\d{3})\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "id": "rx_traj_hex_color_chain_v01",
+  "kind": "trajectory",
+  "concept": "hex_color_chain",
+  "arc": "BROADEN->ROLLBACK",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "alpha channel",
+    "four valid lengths",
+    "restrict the alphabet to lower case",
+    "revert to turn 1's rule",
+    "two valid lengths"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a CSS hex colour: '#' then exactly three or exactly six hex digits, in either case.",
+      "traps": [
+        "two valid lengths"
+      ],
+      "visible": {
+        "positives": [
+          "#fff",
+          "#FFFFFF"
+        ],
+        "negatives": [
+          "#gg0000"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "#a1b2c3",
+          "#000"
+        ],
+        "negatives": [
+          "#ffff",
+          "fff",
+          "#12345"
+        ]
+      },
+      "gold": {
+        "pattern": "#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})",
+        "flags": ""
+      },
+      "user": "Task: Match a CSS hex colour: '#' then exactly three or exactly six hex digits, in either case.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#fff'\n  '#FFFFFF'\nMust not match:\n  '#gg0000'"
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "BROADEN",
+      "instruction": "Also allow the alpha forms: four or eight hex digits as well.",
+      "traps": [
+        "four valid lengths",
+        "alpha channel"
+      ],
+      "visible": {
+        "positives": [
+          "#fff"
+        ],
+        "negatives": [
+          "#fffff"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "#ffff",
+          "#ffffffff",
+          "#a1b2c3d4"
+        ],
+        "negatives": [
+          "#gg0000",
+          "#f",
+          "#1234567"
+        ]
+      },
+      "gold": {
+        "pattern": "#(?:[0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "#(?:[0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})",
+        "flags": ""
+      },
+      "user": "Task: Also allow the alpha forms: four or eight hex digits as well.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#fff'\nMust not match:\n  '#fffff'"
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "ROLLBACK",
+      "instruction": "Scrap the alpha forms -- go back to the original three-or-six-digit rule, but now accept lowercase hex digits only.",
+      "traps": [
+        "revert to turn 1's rule",
+        "restrict the alphabet to lower case"
+      ],
+      "visible": {
+        "positives": [
+          "#a1b2c3"
+        ],
+        "negatives": [
+          "#FFF"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "#fff",
+          "#000000"
+        ],
+        "negatives": [
+          "#ffff",
+          "#A1B2C3",
+          "#ffffffff"
+        ]
+      },
+      "gold": {
+        "pattern": "#(?:[0-9a-f]{3}|[0-9a-f]{6})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "#(?:[0-9a-f]{3}|[0-9a-f]{6})",
+        "flags": ""
+      },
+      "user": "Task: Scrap the alpha forms -- go back to the original three-or-six-digit rule, but now accept lowercase hex digits only.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#a1b2c3'\nMust not match:\n  '#FFF'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a CSS hex colour: '#' then exactly three or exactly six hex digits, in either case.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#fff'\n  '#FFFFFF'\nMust not match:\n  '#gg0000'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Also allow the alpha forms: four or eight hex digits as well.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#fff'\nMust not match:\n  '#fffff'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"#(?:[0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Scrap the alpha forms -- go back to the original three-or-six-digit rule, but now accept lowercase hex digits only.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '#a1b2c3'\nMust not match:\n  '#FFF'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"#(?:[0-9a-f]{3}|[0-9a-f]{6})\", \"flags\": \"\"}"
+    }
+  ]
+}

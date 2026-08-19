@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_time12_v04",
+  "kind": "single",
+  "concept": "time12",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "hour range 1-12",
+    "optional leading zero",
+    "AM/PM suffix"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a 12-hour time: hour 1-12 (optional leading zero), a colon, minutes 00-59, a space, then AM or PM in uppercase.",
+      "traps": [
+        "hour range 1-12",
+        "optional leading zero",
+        "AM/PM suffix"
+      ],
+      "visible": {
+        "positives": [
+          "12:00 AM"
+        ],
+        "negatives": [
+          "13:00 PM",
+          "1:60 AM"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "1:30 PM",
+          "09:45 PM",
+          "11:59 AM"
+        ],
+        "negatives": [
+          "1:30",
+          "0:30 PM",
+          "1:30 pm",
+          "1:30PM",
+          "13:30 AM"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:0?[1-9]|1[0-2]):[0-5]\\d (?:AM|PM)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:0?[1-9]|1[0-2]):[0-5]\\d (?:AM|PM)",
+        "flags": ""
+      },
+      "user": "Task: Match a 12-hour time: hour 1-12 (optional leading zero), a colon, minutes 00-59, a space, then AM or PM in uppercase.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '12:00 AM'\nMust not match:\n  '13:00 PM'\n  '1:60 AM'",
+      "thinking": "Reusing the 24-hour construction would accept hours above 12, and forgetting the suffix would accept a bare time. Pattern: (?:0?[1-9]|1[0-2]):[0-5]\\d (?:AM|PM)",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a 12-hour time: hour 1-12 (optional leading zero), a colon, minutes 00-59, a space, then AM or PM in uppercase.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '12:00 AM'\nMust not match:\n  '13:00 PM'\n  '1:60 AM'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nReusing the 24-hour construction would accept hours above 12, and forgetting the suffix would accept a bare time. Pattern: (?:0?[1-9]|1[0-2]):[0-5]\\d (?:AM|PM)\n</think>\n{\"pattern\": \"(?:0?[1-9]|1[0-2]):[0-5]\\\\d (?:AM|PM)\", \"flags\": \"\"}"
+    }
+  ]
+}

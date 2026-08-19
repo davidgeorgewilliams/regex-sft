@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_binary_multiple_of_four_v03",
+  "kind": "single",
+  "concept": "binary_multiple_of_four",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "structural arithmetic property",
+    "special-case zero"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a binary string that represents a number divisible by four: it must be '0', or start with 1 and end with two zeros.",
+      "traps": [
+        "structural arithmetic property",
+        "special-case zero"
+      ],
+      "visible": {
+        "positives": [
+          "1100",
+          "1000",
+          "100"
+        ],
+        "negatives": [
+          "1",
+          "101"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "10100",
+          "0",
+          "11000"
+        ],
+        "negatives": [
+          "10",
+          "0100",
+          "110",
+          "",
+          "2"
+        ]
+      },
+      "gold": {
+        "pattern": "0|1[01]*00",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "0|1[01]*00",
+        "flags": ""
+      },
+      "user": "Task: Match a binary string that represents a number divisible by four: it must be '0', or start with 1 and end with two zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1100'\n  '1000'\n  '100'\nMust not match:\n  '1'\n  '101'",
+      "thinking": "Two branches, the special case and a leading 1 with any middle and two trailing zeros. Pattern: 0|1[01]*00",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a binary string that represents a number divisible by four: it must be '0', or start with 1 and end with two zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1100'\n  '1000'\n  '100'\nMust not match:\n  '1'\n  '101'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nTwo branches, the special case and a leading 1 with any middle and two trailing zeros. Pattern: 0|1[01]*00\n</think>\n{\"pattern\": \"0|1[01]*00\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "rx_substitute_remove_non_ascii_v01",
+  "kind": "single",
+  "concept": "remove_non_ascii",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "character class negation with a range"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Remove every character outside the ASCII range (code points above 127), leaving ASCII characters untouched.",
+      "traps": [
+        "character class negation with a range"
+      ],
+      "visible": [
+        [
+          "café",
+          "caf"
+        ]
+      ],
+      "hidden": [
+        [
+          "hello",
+          "hello"
+        ],
+        [
+          "a—b",
+          "ab"
+        ],
+        [
+          "😀 emoji gone",
+          " emoji gone"
+        ],
+        [
+          "naïve résumé",
+          "nave rsum"
+        ]
+      ],
+      "gold": {
+        "pattern": "[^\\x00-\\x7F]",
+        "replacement": "",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[^\\x00-\\x7F]",
+        "replacement": "",
+        "flags": ""
+      },
+      "user": "Task: Remove every character outside the ASCII range (code points above 127), leaving ASCII characters untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'café' -> 'caf'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove every character outside the ASCII range (code points above 127), leaving ASCII characters untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'café' -> 'caf'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[^\\\\x00-\\\\x7F]\", \"replacement\": \"\", \"flags\": \"\"}"
+    }
+  ]
+}

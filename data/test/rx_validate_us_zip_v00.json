@@ -1,0 +1,71 @@
+{
+  "id": "rx_validate_us_zip_v00",
+  "kind": "single",
+  "concept": "us_zip",
+  "family": "validate",
+  "difficulty": "easy",
+  "traps": [
+    "exact length"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a US ZIP code: exactly five digits and nothing else.",
+      "traps": [
+        "exact length"
+      ],
+      "visible": {
+        "positives": [
+          "10001"
+        ],
+        "negatives": [
+          "123456"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "00000",
+          "12345",
+          "90210",
+          "99999"
+        ],
+        "negatives": [
+          "1234",
+          "1234a",
+          "abcde",
+          "12345-6789",
+          " 12345",
+          "12345 ",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{5}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{5}",
+        "flags": ""
+      },
+      "user": "Task: Match a US ZIP code: exactly five digits and nothing else.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '10001'\nMust not match:\n  '123456'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a US ZIP code: exactly five digits and nothing else.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '10001'\nMust not match:\n  '123456'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\d{5}\", \"flags\": \"\"}"
+    }
+  ]
+}

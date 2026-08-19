@@ -1,0 +1,74 @@
+{
+  "id": "rx_validate_leap_day_v02",
+  "kind": "single",
+  "concept": "leap_day",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "divisible by 4",
+    "century rule: divisible by 100 is not a leap year unless divisible by 400"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match February 29th of a real leap year in YYYY-02-29 form. A leap year is divisible by 4, except years divisible by 100 are not leap years unless also divisible by 400.",
+      "traps": [
+        "divisible by 4",
+        "century rule: divisible by 100 is not a leap year unless divisible by 400"
+      ],
+      "visible": {
+        "positives": [
+          "2024-02-29",
+          "1996-02-29",
+          "2400-02-29"
+        ],
+        "negatives": [
+          "2024-03-29",
+          "2024-02-28"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "2000-02-29",
+          "1600-02-29"
+        ],
+        "negatives": [
+          "2023-02-29",
+          "1900-02-29",
+          "2100-02-29",
+          "1800-02-29"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26]))|(?:(?:0[048]|[2468][048]|[13579][26])00))-02-29",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26]))|(?:(?:0[048]|[2468][048]|[13579][26])00))-02-29",
+        "flags": ""
+      },
+      "user": "Task: Match February 29th of a real leap year in YYYY-02-29 form. A leap year is divisible by 4, except years divisible by 100 are not leap years unless also divisible by 400.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '2024-02-29'\n  '1996-02-29'\n  '2400-02-29'\nMust not match:\n  '2024-03-29'\n  '2024-02-28'",
+      "thinking": "The century rule is what bites. Divisible by 4 is a leap year unless divisible by 100, in which case it must also be divisible by 400. Pattern: (?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26]))|(?:(?:0[048]|[2468][048]|[13579][26])00))-02-29",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match February 29th of a real leap year in YYYY-02-29 form. A leap year is divisible by 4, except years divisible by 100 are not leap years unless also divisible by 400.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '2024-02-29'\n  '1996-02-29'\n  '2400-02-29'\nMust not match:\n  '2024-03-29'\n  '2024-02-28'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe century rule is what bites. Divisible by 4 is a leap year unless divisible by 100, in which case it must also be divisible by 400. Pattern: (?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26]))|(?:(?:0[048]|[2468][048]|[13579][26])00))-02-29\n</think>\n{\"pattern\": \"(?:(?:\\\\d{2}(?:0[48]|[2468][048]|[13579][26]))|(?:(?:0[048]|[2468][048]|[13579][26])00))-02-29\", \"flags\": \"\"}"
+    }
+  ]
+}

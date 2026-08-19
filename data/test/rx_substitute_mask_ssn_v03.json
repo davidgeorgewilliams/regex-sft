@@ -1,0 +1,74 @@
+{
+  "id": "rx_substitute_mask_ssn_v03",
+  "kind": "single",
+  "concept": "mask_ssn",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "preserve the last group",
+    "group reference in replacement"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Redact US Social Security numbers of the form NNN-NN-NNNN by replacing the first two groups with asterisks, keeping the final four digits.",
+      "traps": [
+        "preserve the last group",
+        "group reference in replacement"
+      ],
+      "visible": [
+        [
+          "ssn 123-45-6789 on file",
+          "ssn ***-**-6789 on file"
+        ],
+        [
+          "000-00-0000",
+          "***-**-0000"
+        ]
+      ],
+      "hidden": [
+        [
+          "no ssn here",
+          "no ssn here"
+        ],
+        [
+          "a 111-22-3333 b 444-55-6666",
+          "a ***-**-3333 b ***-**-6666"
+        ],
+        [
+          "12-34-5678",
+          "12-34-5678"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\d{3}-\\d{2}-(\\d{4})",
+        "replacement": "***-**-\\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{3}-\\d{2}-(\\d{4})",
+        "replacement": "***-**-\\1",
+        "flags": ""
+      },
+      "user": "Task: Redact US Social Security numbers of the form NNN-NN-NNNN by replacing the first two groups with asterisks, keeping the final four digits.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'ssn 123-45-6789 on file' -> 'ssn ***-**-6789 on file'\n  '000-00-0000' -> '***-**-0000'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Redact US Social Security numbers of the form NNN-NN-NNNN by replacing the first two groups with asterisks, keeping the final four digits.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'ssn 123-45-6789 on file' -> 'ssn ***-**-6789 on file'\n  '000-00-0000' -> '***-**-0000'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\d{3}-\\\\d{2}-(\\\\d{4})\", \"replacement\": \"***-**-\\\\1\", \"flags\": \"\"}"
+    }
+  ]
+}

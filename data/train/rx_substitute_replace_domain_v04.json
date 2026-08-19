@@ -1,0 +1,75 @@
+{
+  "id": "rx_substitute_replace_domain_v04",
+  "kind": "single",
+  "concept": "replace_domain",
+  "family": "substitute",
+  "difficulty": "easy",
+  "traps": [
+    "escaping dots in the literal"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Replace every occurrence of the host 'old.example.com' with 'new.example.org'. Dots must match literally.",
+      "traps": [
+        "escaping dots in the literal"
+      ],
+      "visible": [
+        [
+          "other.host.com",
+          "other.host.com"
+        ],
+        [
+          "https://old.example.com/a",
+          "https://new.example.org/a"
+        ]
+      ],
+      "hidden": [
+        [
+          "old.example.com",
+          "new.example.org"
+        ],
+        [
+          "oldXexampleYcom",
+          "oldXexampleYcom"
+        ],
+        [
+          "a old.example.com b old.example.com",
+          "a new.example.org b new.example.org"
+        ]
+      ],
+      "gold": {
+        "pattern": "old\\.example\\.com",
+        "replacement": "new.example.org",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "old\\.example\\.com",
+        "replacement": "new.example.org",
+        "flags": ""
+      },
+      "user": "Task: Replace every occurrence of the host 'old.example.com' with 'new.example.org'. Dots must match literally.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'other.host.com' -> 'other.host.com'\n  'https://old.example.com/a' -> 'https://new.example.org/a'",
+      "thinking": "Unescaped dots would let the pattern fire on a similar-looking host with different separator characters. Pattern: old\\.example\\.com",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Replace every occurrence of the host 'old.example.com' with 'new.example.org'. Dots must match literally.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'other.host.com' -> 'other.host.com'\n  'https://old.example.com/a' -> 'https://new.example.org/a'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUnescaped dots would let the pattern fire on a similar-looking host with different separator characters. Pattern: old\\.example\\.com\n</think>\n{\"pattern\": \"old\\\\.example\\\\.com\", \"replacement\": \"new.example.org\", \"flags\": \"\"}"
+    }
+  ]
+}

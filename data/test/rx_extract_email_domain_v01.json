@@ -1,0 +1,76 @@
+{
+  "id": "rx_extract_email_domain_v01",
+  "kind": "single",
+  "concept": "email_domain",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "stop at the domain boundary",
+    "trailing punctuation"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the domain of the first email address in the text: everything after the '@' up to but not including any trailing punctuation or whitespace.",
+      "traps": [
+        "stop at the domain boundary",
+        "trailing punctuation"
+      ],
+      "visible": [
+        [
+          "contact bob@example.com now",
+          "example.com"
+        ],
+        [
+          "x@a.io",
+          "a.io"
+        ]
+      ],
+      "hidden": [
+        [
+          "ana@sub.domain.co.uk wrote",
+          "sub.domain.co.uk"
+        ],
+        [
+          "no address here",
+          null
+        ],
+        [
+          "first@one.com and second@two.com",
+          "one.com"
+        ],
+        [
+          "user@mail.example.org.",
+          "mail.example.org"
+        ]
+      ],
+      "gold": {
+        "pattern": "@([A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "@([A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,})",
+        "flags": ""
+      },
+      "user": "Task: Capture the domain of the first email address in the text: everything after the '@' up to but not including any trailing punctuation or whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'contact bob@example.com now' -> 'example.com'\n  'x@a.io' -> 'a.io'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the domain of the first email address in the text: everything after the '@' up to but not including any trailing punctuation or whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'contact bob@example.com now' -> 'example.com'\n  'x@a.io' -> 'a.io'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"@([A-Za-z0-9-]+(?:\\\\.[A-Za-z0-9-]+)*\\\\.[A-Za-z]{2,})\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "rx_substitute_strip_trailing_ws_v02",
+  "kind": "single",
+  "concept": "strip_trailing_ws",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE flag required",
+    "end-of-line anchoring"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Remove trailing spaces and tabs at the end of every line, without touching the line breaks or leading whitespace.",
+      "traps": [
+        "MULTILINE flag required",
+        "end-of-line anchoring"
+      ],
+      "visible": [
+        [
+          "x\t\ny  ",
+          "x\ny"
+        ]
+      ],
+      "hidden": [
+        [
+          "a   \nb\n",
+          "a\nb\n"
+        ],
+        [
+          "clean\nlines\n",
+          "clean\nlines\n"
+        ],
+        [
+          "one \ntwo  \nthree\t",
+          "one\ntwo\nthree"
+        ],
+        [
+          "  keep leading  \n",
+          "  keep leading\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": "m"
+      },
+      "user": "Task: Remove trailing spaces and tabs at the end of every line, without touching the line breaks or leading whitespace.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x\\t\\ny  ' -> 'x\\ny'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove trailing spaces and tabs at the end of every line, without touching the line breaks or leading whitespace.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x\\t\\ny  ' -> 'x\\ny'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[ \\\\t]+$\", \"replacement\": \"\", \"flags\": \"m\"}"
+    }
+  ]
+}

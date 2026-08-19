@@ -1,0 +1,77 @@
+{
+  "id": "rx_substitute_crlf_to_lf_v06",
+  "kind": "single",
+  "concept": "crlf_to_lf",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "escape sequences",
+    "do not touch bare LF"
+  ],
+  "variant": 6,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Convert Windows line endings to Unix ones by replacing every carriage-return + line-feed pair with a single line feed.",
+      "traps": [
+        "escape sequences",
+        "do not touch bare LF"
+      ],
+      "visible": [
+        [
+          "already\nunix",
+          "already\nunix"
+        ]
+      ],
+      "hidden": [
+        [
+          "x\r\ny\r\nz",
+          "x\ny\nz"
+        ],
+        [
+          "a\r\nb",
+          "a\nb"
+        ],
+        [
+          "mixed\r\nand\nplain",
+          "mixed\nand\nplain"
+        ],
+        [
+          "\r\n",
+          "\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\r\\n",
+        "replacement": "\n",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\r\\n",
+        "replacement": "\n",
+        "flags": ""
+      },
+      "user": "Task: Convert Windows line endings to Unix ones by replacing every carriage-return + line-feed pair with a single line feed.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'already\\nunix' -> 'already\\nunix'",
+      "thinking": "Matching the carriage return explicitly as part of the pair means a line already ending in a bare newline is untouched. Pattern: \\r\\n",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Convert Windows line endings to Unix ones by replacing every carriage-return + line-feed pair with a single line feed.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'already\\nunix' -> 'already\\nunix'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nMatching the carriage return explicitly as part of the pair means a line already ending in a bare newline is untouched. Pattern: \\r\\n\n</think>\n{\"pattern\": \"\\\\r\\\\n\", \"replacement\": \"\\n\", \"flags\": \"\"}"
+    }
+  ]
+}

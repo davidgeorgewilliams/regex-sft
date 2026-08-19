@@ -1,0 +1,78 @@
+{
+  "id": "rx_extract_block_between_markers_v02",
+  "kind": "single",
+  "concept": "block_between_markers",
+  "family": "extract",
+  "difficulty": "hard",
+  "traps": [
+    "DOTALL flag",
+    "lazy quantifier",
+    "exclude the markers"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the text between the first BEGIN marker and the next END marker, excluding the markers themselves. The text may span several lines.",
+      "traps": [
+        "DOTALL flag",
+        "lazy quantifier",
+        "exclude the markers"
+      ],
+      "visible": [
+        [
+          "BEGIN x END",
+          " x "
+        ],
+        [
+          "no markers here",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "BEGIN\nhello\nEND",
+          "\nhello\n"
+        ],
+        [
+          "BEGIN a END BEGIN b END",
+          " a "
+        ],
+        [
+          "BEGIN\nmulti\nline\nEND",
+          "\nmulti\nline\n"
+        ],
+        [
+          "BEGINEND",
+          ""
+        ]
+      ],
+      "gold": {
+        "pattern": "BEGIN(.*?)END",
+        "flags": "s"
+      },
+      "target": {
+        "pattern": "BEGIN(.*?)END",
+        "flags": "s"
+      },
+      "user": "Task: Capture the text between the first BEGIN marker and the next END marker, excluding the markers themselves. The text may span several lines.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'BEGIN x END' -> ' x '\n  'no markers here' -> null"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the text between the first BEGIN marker and the next END marker, excluding the markers themselves. The text may span several lines.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'BEGIN x END' -> ' x '\n  'no markers here' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"BEGIN(.*?)END\", \"flags\": \"s\"}"
+    }
+  ]
+}

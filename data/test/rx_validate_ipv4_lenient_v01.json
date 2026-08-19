@@ -1,0 +1,71 @@
+{
+  "id": "rx_validate_ipv4_lenient_v01",
+  "kind": "single",
+  "concept": "ipv4_lenient",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "octet range 0-255",
+    "leading zeros ALLOWED"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a dotted IPv4 address: four octets 0-255 separated by dots. Leading zeros are permitted, so '01' and '001' are valid octets.",
+      "traps": [
+        "octet range 0-255",
+        "leading zeros ALLOWED"
+      ],
+      "visible": {
+        "positives": [
+          "0.0.0.0"
+        ],
+        "negatives": [
+          "1.2.3"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "255.255.255.255",
+          "192.168.01.1",
+          "010.001.1.1",
+          "001.002.003.004"
+        ],
+        "negatives": [
+          "256.1.1.1",
+          "1.2.3.4.5",
+          "1.2.3.",
+          "0001.1.1.1",
+          "1.2.3.4a"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)){3}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)){3}",
+        "flags": ""
+      },
+      "user": "Task: Match a dotted IPv4 address: four octets 0-255 separated by dots. Leading zeros are permitted, so '01' and '001' are valid octets.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0.0.0.0'\nMust not match:\n  '1.2.3'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a dotted IPv4 address: four octets 0-255 separated by dots. Leading zeros are permitted, so '01' and '001' are valid octets.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '0.0.0.0'\nMust not match:\n  '1.2.3'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(?:25[0-5]|2[0-4]\\\\d|[01]?\\\\d?\\\\d)(?:\\\\.(?:25[0-5]|2[0-4]\\\\d|[01]?\\\\d?\\\\d)){3}\", \"flags\": \"\"}"
+    }
+  ]
+}

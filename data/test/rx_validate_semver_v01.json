@@ -1,0 +1,76 @@
+{
+  "id": "rx_validate_semver_v01",
+  "kind": "single",
+  "concept": "semver",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "leading-zero rejection",
+    "component count",
+    "optional suffix"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a semantic version: exactly three dot-separated numeric components, optionally followed by a pre-release suffix starting with a hyphen. No component may have a leading zero (a bare '0' is fine).",
+      "traps": [
+        "leading-zero rejection",
+        "component count",
+        "optional suffix"
+      ],
+      "visible": {
+        "positives": [
+          "1.2.3"
+        ],
+        "negatives": [
+          "v1.2.3"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "1.0.0-beta.1",
+          "2.3.4-rc1",
+          "0.0.1",
+          "10.20.30",
+          "99.0.12"
+        ],
+        "negatives": [
+          "1.2",
+          "1.2.3.4",
+          "hello",
+          "01.2.3",
+          "1.2.03",
+          "1.02.3",
+          "1.2.3-"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]*[0-9A-Za-z])?",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)\\.(?:0|[1-9]\\d*)(?:-[0-9A-Za-z.-]*[0-9A-Za-z])?",
+        "flags": ""
+      },
+      "user": "Task: Match a semantic version: exactly three dot-separated numeric components, optionally followed by a pre-release suffix starting with a hyphen. No component may have a leading zero (a bare '0' is fine).\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1.2.3'\nMust not match:\n  'v1.2.3'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a semantic version: exactly three dot-separated numeric components, optionally followed by a pre-release suffix starting with a hyphen. No component may have a leading zero (a bare '0' is fine).\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1.2.3'\nMust not match:\n  'v1.2.3'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(?:0|[1-9]\\\\d*)\\\\.(?:0|[1-9]\\\\d*)\\\\.(?:0|[1-9]\\\\d*)(?:-[0-9A-Za-z.-]*[0-9A-Za-z])?\", \"flags\": \"\"}"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "rx_substitute_strip_code_comments_v04",
+  "kind": "single",
+  "concept": "strip_code_comments",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "end-of-line anchoring",
+    "do not eat the newline"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Remove trailing line comments that start with '#' and run to the end of the line, along with any spaces immediately before the '#'. Leave the line break in place.",
+      "traps": [
+        "end-of-line anchoring",
+        "do not eat the newline"
+      ],
+      "visible": [
+        [
+          "y = 2 # note\nz = 3",
+          "y = 2\nz = 3"
+        ],
+        [
+          "no comment",
+          "no comment"
+        ]
+      ],
+      "hidden": [
+        [
+          "x = 1  # set x",
+          "x = 1"
+        ],
+        [
+          "a = 1#c\nb = 2",
+          "a = 1\nb = 2"
+        ],
+        [
+          "# whole line",
+          ""
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]*#[^\\n]*",
+        "replacement": "",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[ \\t]*#[^\\n]*",
+        "replacement": "",
+        "flags": ""
+      },
+      "user": "Task: Remove trailing line comments that start with '#' and run to the end of the line, along with any spaces immediately before the '#'. Leave the line break in place.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'y = 2 # note\\nz = 3' -> 'y = 2\\nz = 3'\n  'no comment' -> 'no comment'",
+      "thinking": "Using a dot-star would stop at the line end anyway, but an explicit newline exclusion makes it safe if DOTALL is ever set. Pattern: [ \\t]*#[^\\n]*",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove trailing line comments that start with '#' and run to the end of the line, along with any spaces immediately before the '#'. Leave the line break in place.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'y = 2 # note\\nz = 3' -> 'y = 2\\nz = 3'\n  'no comment' -> 'no comment'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUsing a dot-star would stop at the line end anyway, but an explicit newline exclusion makes it safe if DOTALL is ever set. Pattern: [ \\t]*#[^\\n]*\n</think>\n{\"pattern\": \"[ \\\\t]*#[^\\\\n]*\", \"replacement\": \"\", \"flags\": \"\"}"
+    }
+  ]
+}

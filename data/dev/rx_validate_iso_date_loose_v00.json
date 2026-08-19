@@ -1,0 +1,69 @@
+{
+  "id": "rx_validate_iso_date_loose_v00",
+  "kind": "single",
+  "concept": "iso_date_loose",
+  "family": "validate",
+  "difficulty": "easy",
+  "traps": [
+    "fixed-width fields only"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a date in YYYY-MM-DD shape: four digits, a hyphen, two digits, a hyphen, two digits. Do not check whether the month or day is a real calendar value.",
+      "traps": [
+        "fixed-width fields only"
+      ],
+      "visible": {
+        "positives": [
+          "2024-01-15",
+          "1999-12-31"
+        ],
+        "negatives": [
+          "24-01-15"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0000-00-00",
+          "2024-99-99"
+        ],
+        "negatives": [
+          "2024/01/15",
+          "2024-1-15",
+          "2024-01-155",
+          "2024-01",
+          "20240115",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{4}-\\d{2}-\\d{2}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{4}-\\d{2}-\\d{2}",
+        "flags": ""
+      },
+      "user": "Task: Match a date in YYYY-MM-DD shape: four digits, a hyphen, two digits, a hyphen, two digits. Do not check whether the month or day is a real calendar value.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '2024-01-15'\n  '1999-12-31'\nMust not match:\n  '24-01-15'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a date in YYYY-MM-DD shape: four digits, a hyphen, two digits, a hyphen, two digits. Do not check whether the month or day is a real calendar value.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '2024-01-15'\n  '1999-12-31'\nMust not match:\n  '24-01-15'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\d{4}-\\\\d{2}-\\\\d{2}\", \"flags\": \"\"}"
+    }
+  ]
+}

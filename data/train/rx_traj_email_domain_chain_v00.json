@@ -1,0 +1,172 @@
+{
+  "id": "rx_traj_email_domain_chain_v00",
+  "kind": "trajectory",
+  "concept": "email_domain_chain",
+  "arc": "NARROW->FLAG",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "IGNORECASE flag",
+    "case-insensitive domain only",
+    "escaping the dot",
+    "fixed literal domain",
+    "no whitespace or @ in parts"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a simple email address: non-space non-@ characters, an @, more such characters, a dot, then more.",
+      "traps": [
+        "no whitespace or @ in parts"
+      ],
+      "visible": {
+        "positives": [
+          "a@b.co"
+        ],
+        "negatives": [
+          "a@b"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "bob@example.com",
+          "x.y@sub.d.org"
+        ],
+        "negatives": [
+          "no-at.com",
+          "a b@c.co",
+          "@b.co"
+        ]
+      },
+      "gold": {
+        "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+        "flags": ""
+      },
+      "user": "Task: Match a simple email address: non-space non-@ characters, an @, more such characters, a dot, then more.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'a@b.co'\nMust not match:\n  'a@b'",
+      "thinking": "Negated classes for the parts, literal separators between them. Pattern: [^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "NARROW",
+      "instruction": "Restrict it to our company: the domain must be exactly example.com.",
+      "traps": [
+        "fixed literal domain",
+        "escaping the dot"
+      ],
+      "visible": {
+        "positives": [
+          "bob@example.com"
+        ],
+        "negatives": [
+          "bob@example.org"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "a.b@example.com",
+          "x@example.com"
+        ],
+        "negatives": [
+          "bob@other.com",
+          "bob@sub.example.com",
+          "bob@exampleXcom"
+        ]
+      },
+      "gold": {
+        "pattern": "[^\\s@]+@example\\.com",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[^\\s@]+@example\\.com",
+        "flags": ""
+      },
+      "user": "Task: Restrict it to our company: the domain must be exactly example.com.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'bob@example.com'\nMust not match:\n  'bob@example.org'",
+      "thinking": "An unescaped dot in the literal domain would match any character and let a lookalike through. Pattern: [^\\s@]+@example\\.com",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "FLAG",
+      "instruction": "Our mail gateway uppercases domains, so bob@EXAMPLE.COM arrives too. Accept the domain in any letter case.",
+      "traps": [
+        "IGNORECASE flag",
+        "case-insensitive domain only"
+      ],
+      "visible": {
+        "positives": [
+          "bob@EXAMPLE.COM"
+        ],
+        "negatives": [
+          "bob@example.org"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "bob@example.com",
+          "a@Example.Com"
+        ],
+        "negatives": [
+          "bob@other.com",
+          "bob@EXAMPLEXCOM",
+          "@EXAMPLE.COM"
+        ]
+      },
+      "gold": {
+        "pattern": "[^\\s@]+@example\\.com",
+        "flags": "i"
+      },
+      "target": {
+        "pattern": "[^\\s@]+@example\\.com",
+        "flags": "i"
+      },
+      "user": "Task: Our mail gateway uppercases domains, so bob@EXAMPLE.COM arrives too. Accept the domain in any letter case.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'bob@EXAMPLE.COM'\nMust not match:\n  'bob@example.org'",
+      "thinking": "The pattern text does not change at all; what changes is how it is applied. IGNORECASE makes the literal domain match in any letter case. Pattern: [^\\s@]+@example\\.com",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a simple email address: non-space non-@ characters, an @, more such characters, a dot, then more.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'a@b.co'\nMust not match:\n  'a@b'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nNegated classes for the parts, literal separators between them. Pattern: [^\\s@]+@[^\\s@]+\\.[^\\s@]+\n</think>\n{\"pattern\": \"[^\\\\s@]+@[^\\\\s@]+\\\\.[^\\\\s@]+\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Restrict it to our company: the domain must be exactly example.com.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'bob@example.com'\nMust not match:\n  'bob@example.org'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nAn unescaped dot in the literal domain would match any character and let a lookalike through. Pattern: [^\\s@]+@example\\.com\n</think>\n{\"pattern\": \"[^\\\\s@]+@example\\\\.com\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Our mail gateway uppercases domains, so bob@EXAMPLE.COM arrives too. Accept the domain in any letter case.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'bob@EXAMPLE.COM'\nMust not match:\n  'bob@example.org'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe pattern text does not change at all; what changes is how it is applied. IGNORECASE makes the literal domain match in any letter case. Pattern: [^\\s@]+@example\\.com\n</think>\n{\"pattern\": \"[^\\\\s@]+@example\\\\.com\", \"flags\": \"i\"}"
+    }
+  ]
+}

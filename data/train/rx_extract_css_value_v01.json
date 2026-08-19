@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_css_value_v01",
+  "kind": "single",
+  "concept": "css_value",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "stop at the semicolon",
+    "tolerate whitespace"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the value of the 'color' CSS property, without the trailing semicolon and without surrounding whitespace after the colon.",
+      "traps": [
+        "stop at the semicolon",
+        "tolerate whitespace"
+      ],
+      "visible": [
+        [
+          "a { color:#fff; }",
+          "#fff"
+        ],
+        [
+          "background: blue;",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "color: red;",
+          "red"
+        ],
+        [
+          "color:   rgb(1, 2, 3);",
+          "rgb(1, 2, 3)"
+        ],
+        [
+          "div{color:green;font-size:1px;}",
+          "green"
+        ]
+      ],
+      "gold": {
+        "pattern": "color:\\s*([^;]+);",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "color:\\s*([^;]+);",
+        "flags": ""
+      },
+      "user": "Task: Capture the value of the 'color' CSS property, without the trailing semicolon and without surrounding whitespace after the colon.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'a { color:#fff; }' -> '#fff'\n  'background: blue;' -> null",
+      "thinking": "A dot-star before the semicolon would run to the last one in the block, capturing several declarations at once. Pattern: color:\\s*([^;]+);",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the value of the 'color' CSS property, without the trailing semicolon and without surrounding whitespace after the colon.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'a { color:#fff; }' -> '#fff'\n  'background: blue;' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA dot-star before the semicolon would run to the last one in the block, capturing several declarations at once. Pattern: color:\\s*([^;]+);\n</think>\n{\"pattern\": \"color:\\\\s*([^;]+);\", \"flags\": \"\"}"
+    }
+  ]
+}

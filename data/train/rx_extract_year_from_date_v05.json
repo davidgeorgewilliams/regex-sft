@@ -1,0 +1,73 @@
+{
+  "id": "rx_extract_year_from_date_v05",
+  "kind": "single",
+  "concept": "year_from_date",
+  "family": "extract",
+  "difficulty": "easy",
+  "traps": [
+    "capture a sub-field of a larger match"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture just the four-digit year from the first ISO date (YYYY-MM-DD) in the text.",
+      "traps": [
+        "capture a sub-field of a larger match"
+      ],
+      "visible": [
+        [
+          "due 2024-01-15 sharp",
+          "2024"
+        ],
+        [
+          "2019-12-31 was the deadline",
+          "2019"
+        ]
+      ],
+      "hidden": [
+        [
+          "no date here 2024",
+          null
+        ],
+        [
+          "from 2020-01-01 to 2021-01-01",
+          "2020"
+        ],
+        [
+          "ref 12345 on 1999-06-30",
+          "1999"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d{4})-\\d{2}-\\d{2}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d{4})-\\d{2}-\\d{2}",
+        "flags": ""
+      },
+      "user": "Task: Capture just the four-digit year from the first ISO date (YYYY-MM-DD) in the text.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'due 2024-01-15 sharp' -> '2024'\n  '2019-12-31 was the deadline' -> '2019'",
+      "thinking": "The match must cover the whole date so a stray four-digit number is not mistaken for a year, but only the year belongs in the group. Pattern: (\\d{4})-\\d{2}-\\d{2}",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture just the four-digit year from the first ISO date (YYYY-MM-DD) in the text.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'due 2024-01-15 sharp' -> '2024'\n  '2019-12-31 was the deadline' -> '2019'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe match must cover the whole date so a stray four-digit number is not mistaken for a year, but only the year belongs in the group. Pattern: (\\d{4})-\\d{2}-\\d{2}\n</think>\n{\"pattern\": \"(\\\\d{4})-\\\\d{2}-\\\\d{2}\", \"flags\": \"\"}"
+    }
+  ]
+}

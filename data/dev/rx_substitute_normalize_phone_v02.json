@@ -1,0 +1,74 @@
+{
+  "id": "rx_substitute_normalize_phone_v02",
+  "kind": "single",
+  "concept": "normalize_phone",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "group reordering",
+    "fixed-width groups"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Insert hyphens into ten-digit phone numbers so that 5551234567 becomes 555-123-4567.",
+      "traps": [
+        "group reordering",
+        "fixed-width groups"
+      ],
+      "visible": [
+        [
+          "1234567890",
+          "123-456-7890"
+        ],
+        [
+          "no number",
+          "no number"
+        ]
+      ],
+      "hidden": [
+        [
+          "call 5551234567 now",
+          "call 555-123-4567 now"
+        ],
+        [
+          "a 9998887777 b",
+          "a 999-888-7777 b"
+        ],
+        [
+          "55512345",
+          "55512345"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(\\d{3})(\\d{3})(\\d{4})\\b",
+        "replacement": "\\1-\\2-\\3",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(\\d{3})(\\d{3})(\\d{4})\\b",
+        "replacement": "\\1-\\2-\\3",
+        "flags": ""
+      },
+      "user": "Task: Insert hyphens into ten-digit phone numbers so that 5551234567 becomes 555-123-4567.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '1234567890' -> '123-456-7890'\n  'no number' -> 'no number'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Insert hyphens into ten-digit phone numbers so that 5551234567 becomes 555-123-4567.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '1234567890' -> '123-456-7890'\n  'no number' -> 'no number'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\b(\\\\d{3})(\\\\d{3})(\\\\d{4})\\\\b\", \"replacement\": \"\\\\1-\\\\2-\\\\3\", \"flags\": \"\"}"
+    }
+  ]
+}

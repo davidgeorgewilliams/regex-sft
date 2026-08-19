@@ -1,0 +1,73 @@
+{
+  "id": "rx_validate_mac_address_v01",
+  "kind": "single",
+  "concept": "mac_address",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "separator count",
+    "hex pairs"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a MAC address: six pairs of hexadecimal digits separated by colons.",
+      "traps": [
+        "separator count",
+        "hex pairs"
+      ],
+      "visible": {
+        "positives": [
+          "a1:b2:c3:d4:e5:f6"
+        ],
+        "negatives": [
+          "zz:1A:2B:3C:4D:5E"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "00:1A:2B:3C:4D:5E",
+          "ff:ff:ff:ff:ff:ff"
+        ],
+        "negatives": [
+          "00-1A-2B-3C-4D-5E",
+          "00:1A:2B:3C:4D",
+          "00:1A:2B:3C:4D:5E:6F",
+          "001A2B3C4D5E",
+          "00:1A:2B:3C:4D:5",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}",
+        "flags": ""
+      },
+      "user": "Task: Match a MAC address: six pairs of hexadecimal digits separated by colons.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'a1:b2:c3:d4:e5:f6'\nMust not match:\n  'zz:1A:2B:3C:4D:5E'",
+      "thinking": "Writing the pair six times with colons between is error-prone on the separator count; factoring it as five repeats plus a tail is safer. Pattern: (?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a MAC address: six pairs of hexadecimal digits separated by colons.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'a1:b2:c3:d4:e5:f6'\nMust not match:\n  'zz:1A:2B:3C:4D:5E'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nWriting the pair six times with colons between is error-prone on the separator count; factoring it as five repeats plus a tail is safer. Pattern: (?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\n</think>\n{\"pattern\": \"(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}\", \"flags\": \"\"}"
+    }
+  ]
+}

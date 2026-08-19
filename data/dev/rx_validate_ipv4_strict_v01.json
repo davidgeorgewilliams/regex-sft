@@ -1,0 +1,75 @@
+{
+  "id": "rx_validate_ipv4_strict_v01",
+  "kind": "single",
+  "concept": "ipv4_strict",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "octet range 0-255",
+    "leading zeros rejected",
+    "escaping the dot"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a dotted IPv4 address: four octets 0-255 separated by dots, with no leading zeros, and nothing else in the string.",
+      "traps": [
+        "octet range 0-255",
+        "leading zeros rejected",
+        "escaping the dot"
+      ],
+      "visible": {
+        "positives": [
+          "8.8.8.8",
+          "192.168.1.1",
+          "255.255.255.255"
+        ],
+        "negatives": [
+          "256.1.1.1",
+          "1.2.3"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0.0.0.0",
+          "172.16.254.1"
+        ],
+        "negatives": [
+          "1.2.3.4.5",
+          "192.168.01.1",
+          "999.1.1.1",
+          "1.2.3.",
+          ".1.2.3",
+          "1.2.3.4a"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}",
+        "flags": ""
+      },
+      "user": "Task: Match a dotted IPv4 address: four octets 0-255 separated by dots, with no leading zeros, and nothing else in the string.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '8.8.8.8'\n  '192.168.1.1'\n  '255.255.255.255'\nMust not match:\n  '256.1.1.1'\n  '1.2.3'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a dotted IPv4 address: four octets 0-255 separated by dots, with no leading zeros, and nothing else in the string.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '8.8.8.8'\n  '192.168.1.1'\n  '255.255.255.255'\nMust not match:\n  '256.1.1.1'\n  '1.2.3'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(?:25[0-5]|2[0-4]\\\\d|1\\\\d\\\\d|[1-9]\\\\d|\\\\d)(?:\\\\.(?:25[0-5]|2[0-4]\\\\d|1\\\\d\\\\d|[1-9]\\\\d|\\\\d)){3}\", \"flags\": \"\"}"
+    }
+  ]
+}

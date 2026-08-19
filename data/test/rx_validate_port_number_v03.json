@@ -1,0 +1,74 @@
+{
+  "id": "rx_validate_port_number_v03",
+  "kind": "single",
+  "concept": "port_number",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "upper bound 65535",
+    "no leading zeros"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a TCP port number: an integer from 0 to 65535 with no leading zeros.",
+      "traps": [
+        "upper bound 65535",
+        "no leading zeros"
+      ],
+      "visible": {
+        "positives": [
+          "8080"
+        ],
+        "negatives": [
+          "-1"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "65535",
+          "80",
+          "0",
+          "443",
+          "65534",
+          "9999"
+        ],
+        "negatives": [
+          "99999",
+          "65536",
+          "070",
+          "65540",
+          "100000",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "(?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0)",
+        "flags": ""
+      },
+      "user": "Task: Match a TCP port number: an integer from 0 to 65535 with no leading zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '8080'\nMust not match:\n  '-1'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a TCP port number: an integer from 0 to 65535 with no leading zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '8080'\nMust not match:\n  '-1'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(?:6553[0-5]|655[0-2]\\\\d|65[0-4]\\\\d\\\\d|6[0-4]\\\\d{3}|[1-5]\\\\d{4}|[1-9]\\\\d{0,3}|0)\", \"flags\": \"\"}"
+    }
+  ]
+}

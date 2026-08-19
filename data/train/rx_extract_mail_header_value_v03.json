@@ -1,0 +1,77 @@
+{
+  "id": "rx_extract_mail_header_value_v03",
+  "kind": "single",
+  "concept": "mail_header_value",
+  "family": "extract",
+  "difficulty": "hard",
+  "traps": [
+    "IGNORECASE flag",
+    "MULTILINE flag",
+    "value runs to end of line"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the value of the Subject header of an email. The header name may appear in any letter case and on any line. The value runs to the end of that line, excluding any spaces or tabs directly after the colon.",
+      "traps": [
+        "IGNORECASE flag",
+        "MULTILINE flag",
+        "value runs to end of line"
+      ],
+      "visible": [
+        [
+          "From: a\nTo: b",
+          null
+        ],
+        [
+          "SUBJECT:Hi",
+          "Hi"
+        ]
+      ],
+      "hidden": [
+        [
+          "From: a\nSubject: Hello there\nTo: b",
+          "Hello there"
+        ],
+        [
+          "subject:   spaced",
+          "spaced"
+        ],
+        [
+          "X: 1\nSubject: Re: test\n",
+          "Re: test"
+        ]
+      ],
+      "gold": {
+        "pattern": "^subject:[ \\t]*(.*)$",
+        "flags": "mi"
+      },
+      "target": {
+        "pattern": "^subject:[ \\t]*(.*)$",
+        "flags": "mi"
+      },
+      "user": "Task: Capture the value of the Subject header of an email. The header name may appear in any letter case and on any line. The value runs to the end of that line, excluding any spaces or tabs directly after the colon.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'From: a\\nTo: b' -> null\n  'SUBJECT:Hi' -> 'Hi'",
+      "thinking": "Line-anchored literal name, optional spaces consumed outside the group, value captured to the line end, with both flags set. Pattern: ^subject:[ \\t]*(.*)$",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the value of the Subject header of an email. The header name may appear in any letter case and on any line. The value runs to the end of that line, excluding any spaces or tabs directly after the colon.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'From: a\\nTo: b' -> null\n  'SUBJECT:Hi' -> 'Hi'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nLine-anchored literal name, optional spaces consumed outside the group, value captured to the line end, with both flags set. Pattern: ^subject:[ \\t]*(.*)$\n</think>\n{\"pattern\": \"^subject:[ \\\\t]*(.*)$\", \"flags\": \"mi\"}"
+    }
+  ]
+}

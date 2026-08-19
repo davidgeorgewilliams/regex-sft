@@ -1,0 +1,74 @@
+{
+  "id": "rx_substitute_csv_swap_columns_v03",
+  "kind": "single",
+  "concept": "csv_swap_columns",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE anchoring",
+    "field must not contain the delimiter"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Swap the two comma-separated fields on every line, so 'a,b' becomes 'b,a'. Fields never contain commas.",
+      "traps": [
+        "MULTILINE anchoring",
+        "field must not contain the delimiter"
+      ],
+      "visible": [
+        [
+          "a,b\nc,d",
+          "b,a\nd,c"
+        ]
+      ],
+      "hidden": [
+        [
+          "first,second",
+          "second,first"
+        ],
+        [
+          "nocomma",
+          "nocomma"
+        ],
+        [
+          "1,2\n3,4\n5,6",
+          "2,1\n4,3\n6,5"
+        ],
+        [
+          "x,y\n",
+          "y,x\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "^([^,\\n]+),([^,\\n]+)$",
+        "replacement": "\\2,\\1",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^([^,\\n]+),([^,\\n]+)$",
+        "replacement": "\\2,\\1",
+        "flags": "m"
+      },
+      "user": "Task: Swap the two comma-separated fields on every line, so 'a,b' becomes 'b,a'. Fields never contain commas.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a,b\\nc,d' -> 'b,a\\nd,c'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Swap the two comma-separated fields on every line, so 'a,b' becomes 'b,a'. Fields never contain commas.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a,b\\nc,d' -> 'b,a\\nd,c'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"^([^,\\\\n]+),([^,\\\\n]+)$\", \"replacement\": \"\\\\2,\\\\1\", \"flags\": \"m\"}"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "rx_validate_us_zip_plus4_v02",
+  "kind": "single",
+  "concept": "us_zip_plus4",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "optional suffix",
+    "exact lengths"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a US ZIP code: five digits, optionally followed by a hyphen and exactly four more digits.",
+      "traps": [
+        "optional suffix",
+        "exact lengths"
+      ],
+      "visible": {
+        "positives": [
+          "90210-1234",
+          "12345-6789",
+          "00000-0000"
+        ],
+        "negatives": [
+          "12345-678",
+          "abcde",
+          "12345-"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "12345"
+        ],
+        "negatives": [
+          "1234",
+          "12345-67890",
+          "12345 6789",
+          "-6789",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{5}(?:-\\d{4})?",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{5}(?:-\\d{4})?",
+        "flags": ""
+      },
+      "user": "Task: Match a US ZIP code: five digits, optionally followed by a hyphen and exactly four more digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '90210-1234'\n  '12345-6789'\n  '00000-0000'\nMust not match:\n  '12345-678'\n  'abcde'\n  '12345-'",
+      "thinking": "Two shapes are legal: five digits, or five digits plus a hyphen and four more. That is a required part and an optional suffix in a non-capturing group. Pattern: \\d{5}(?:-\\d{4})?",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a US ZIP code: five digits, optionally followed by a hyphen and exactly four more digits.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '90210-1234'\n  '12345-6789'\n  '00000-0000'\nMust not match:\n  '12345-678'\n  'abcde'\n  '12345-'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nTwo shapes are legal: five digits, or five digits plus a hyphen and four more. That is a required part and an optional suffix in a non-capturing group. Pattern: \\d{5}(?:-\\d{4})?\n</think>\n{\"pattern\": \"\\\\d{5}(?:-\\\\d{4})?\", \"flags\": \"\"}"
+    }
+  ]
+}

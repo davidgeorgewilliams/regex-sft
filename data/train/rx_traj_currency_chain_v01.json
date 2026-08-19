@@ -1,0 +1,172 @@
+{
+  "id": "rx_traj_currency_chain_v01",
+  "kind": "trajectory",
+  "concept": "currency_chain",
+  "arc": "COMPOSE->NARROW",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "alternation of symbols",
+    "make the decimal part mandatory",
+    "optional decimals",
+    "thousands separators"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a US dollar amount: '$', then digits optionally grouped with commas in threes, optionally then a dot and exactly two decimals.",
+      "traps": [
+        "thousands separators",
+        "optional decimals"
+      ],
+      "visible": {
+        "positives": [
+          "$1,234.56"
+        ],
+        "negatives": [
+          "$1.234"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "$5",
+          "$1,000",
+          "$0.99"
+        ],
+        "negatives": [
+          "5",
+          "$1,00",
+          "$"
+        ]
+      },
+      "gold": {
+        "pattern": "\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\$\\d+(?:\\.\\d{2})?",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\$\\d+(?:\\.\\d{2})?",
+        "flags": ""
+      },
+      "user": "Task: Match a US dollar amount: '$', then digits optionally grouped with commas in threes, optionally then a dot and exactly two decimals.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '$1,234.56'\nMust not match:\n  '$1.234'",
+      "thinking": "A range on the decimals would accept one or three digits, which are not valid cents. Pattern: \\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\$\\d+(?:\\.\\d{2})?",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "COMPOSE",
+      "instruction": "We now bill in euros too. Accept a leading euro sign as well as a dollar sign.",
+      "traps": [
+        "alternation of symbols"
+      ],
+      "visible": {
+        "positives": [
+          "€1,234.56",
+          "$5"
+        ],
+        "negatives": [
+          "£5"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "€0.99",
+          "$1,000"
+        ],
+        "negatives": [
+          "5",
+          "€1.234",
+          "€"
+        ]
+      },
+      "gold": {
+        "pattern": "[$€](?:\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\d+(?:\\.\\d{2})?)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[$€](?:\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\d+(?:\\.\\d{2})?)",
+        "flags": ""
+      },
+      "user": "Task: We now bill in euros too. Accept a leading euro sign as well as a dollar sign.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '€1,234.56'\n  '$5'\nMust not match:\n  '£5'",
+      "thinking": "The two symbols go into a class at the front, and I factor the number into one group so the alternation applies to the amount. Pattern: [$€](?:\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\d+(?:\\.\\d{2})?)",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "NARROW",
+      "instruction": "The ledger requires cents. Now the decimal part is mandatory -- exactly two digits after a dot, always.",
+      "traps": [
+        "make the decimal part mandatory"
+      ],
+      "visible": {
+        "positives": [
+          "€0.99"
+        ],
+        "negatives": [
+          "€1,000"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "$1,234.56",
+          "$12.00"
+        ],
+        "negatives": [
+          "$5",
+          "$1.234",
+          "€1,234"
+        ]
+      },
+      "gold": {
+        "pattern": "[$€](?:\\d{1,3}(?:,\\d{3})*|\\d+)\\.\\d{2}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[$€](?:\\d{1,3}(?:,\\d{3})*|\\d+)\\.\\d{2}",
+        "flags": ""
+      },
+      "user": "Task: The ledger requires cents. Now the decimal part is mandatory -- exactly two digits after a dot, always.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '€0.99'\nMust not match:\n  '€1,000'",
+      "thinking": "The grouped and ungrouped integer branches stay; only the optionality of the cents changes. Pattern: [$€](?:\\d{1,3}(?:,\\d{3})*|\\d+)\\.\\d{2}",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a US dollar amount: '$', then digits optionally grouped with commas in threes, optionally then a dot and exactly two decimals.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '$1,234.56'\nMust not match:\n  '$1.234'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA range on the decimals would accept one or three digits, which are not valid cents. Pattern: \\$\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\$\\d+(?:\\.\\d{2})?\n</think>\n{\"pattern\": \"\\\\$\\\\d{1,3}(?:,\\\\d{3})*(?:\\\\.\\\\d{2})?|\\\\$\\\\d+(?:\\\\.\\\\d{2})?\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: We now bill in euros too. Accept a leading euro sign as well as a dollar sign.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '€1,234.56'\n  '$5'\nMust not match:\n  '£5'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe two symbols go into a class at the front, and I factor the number into one group so the alternation applies to the amount. Pattern: [$€](?:\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?|\\d+(?:\\.\\d{2})?)\n</think>\n{\"pattern\": \"[$\\u20ac](?:\\\\d{1,3}(?:,\\\\d{3})*(?:\\\\.\\\\d{2})?|\\\\d+(?:\\\\.\\\\d{2})?)\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: The ledger requires cents. Now the decimal part is mandatory -- exactly two digits after a dot, always.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '€0.99'\nMust not match:\n  '€1,000'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe grouped and ungrouped integer branches stay; only the optionality of the cents changes. Pattern: [$€](?:\\d{1,3}(?:,\\d{3})*|\\d+)\\.\\d{2}\n</think>\n{\"pattern\": \"[$\\u20ac](?:\\\\d{1,3}(?:,\\\\d{3})*|\\\\d+)\\\\.\\\\d{2}\", \"flags\": \"\"}"
+    }
+  ]
+}

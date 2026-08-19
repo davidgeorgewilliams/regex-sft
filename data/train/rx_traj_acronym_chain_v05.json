@@ -1,0 +1,185 @@
+{
+  "id": "rx_traj_acronym_chain_v05",
+  "kind": "trajectory",
+  "concept": "acronym_chain",
+  "arc": "RETARGET->COMPOSE",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "alternation over two classes",
+    "minimum length two",
+    "switch to the opposite case class",
+    "word boundaries"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the first all-uppercase acronym of two or more letters.",
+      "traps": [
+        "minimum length two",
+        "word boundaries"
+      ],
+      "visible": [
+        [
+          "all lowercase",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "the NASA mission",
+          "NASA"
+        ],
+        [
+          "using an API today",
+          "API"
+        ],
+        [
+          "XML and JSON",
+          "XML"
+        ],
+        [
+          "a single then HTTP",
+          "HTTP"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b([A-Z]{2,})\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b([A-Z]{2,})\\b",
+        "flags": ""
+      },
+      "user": "Task: Capture the first all-uppercase acronym of two or more letters.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'all lowercase' -> null",
+      "thinking": "A run of two or more uppercase letters, bounded so it is not pulled from the middle of a mixed-case word. Pattern: \\b([A-Z]{2,})\\b",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 2,
+      "family": "extract",
+      "move": "RETARGET",
+      "instruction": "Different field: capture the first all-lowercase word of four or more letters instead.",
+      "traps": [
+        "switch to the opposite case class"
+      ],
+      "visible": [
+        [
+          "API and json here",
+          "json"
+        ]
+      ],
+      "hidden": [
+        [
+          "ALL CAPS ONLY",
+          null
+        ],
+        [
+          "the NASA mission",
+          "mission"
+        ],
+        [
+          "a bb ccc dddd",
+          "dddd"
+        ],
+        [
+          "HTTP works well",
+          "works"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b([a-z]{4,})\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b([a-z]{4,})\\b",
+        "flags": ""
+      },
+      "user": "Task: Different field: capture the first all-lowercase word of four or more letters instead.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'API and json here' -> 'json'",
+      "thinking": "Retargeting to lowercase words: same boundaries, different class and count. Pattern: \\b([a-z]{4,})\\b",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 3,
+      "family": "extract",
+      "move": "COMPOSE",
+      "instruction": "Capture whichever comes first: an all-uppercase acronym of two or more letters, or an all-lowercase word of four or more letters.",
+      "traps": [
+        "alternation over two classes"
+      ],
+      "visible": [
+        [
+          "mission for NASA",
+          "mission"
+        ]
+      ],
+      "hidden": [
+        [
+          "a bb NASA",
+          "NASA"
+        ],
+        [
+          "the NASA mission",
+          "NASA"
+        ],
+        [
+          "xyz ABC",
+          "ABC"
+        ],
+        [
+          "hello world",
+          "hello"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b([A-Z]{2,}|[a-z]{4,})\\b",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b([A-Z]{2,}|[a-z]{4,})\\b",
+        "flags": ""
+      },
+      "user": "Task: Capture whichever comes first: an all-uppercase acronym of two or more letters, or an all-lowercase word of four or more letters.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'mission for NASA' -> 'mission'",
+      "thinking": "Two separate patterns would need combining afterwards; a single alternation lets the engine pick the earlier match. Pattern: \\b([A-Z]{2,}|[a-z]{4,})\\b",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the first all-uppercase acronym of two or more letters.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'all lowercase' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA run of two or more uppercase letters, bounded so it is not pulled from the middle of a mixed-case word. Pattern: \\b([A-Z]{2,})\\b\n</think>\n{\"pattern\": \"\\\\b([A-Z]{2,})\\\\b\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Different field: capture the first all-lowercase word of four or more letters instead.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'API and json here' -> 'json'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nRetargeting to lowercase words: same boundaries, different class and count. Pattern: \\b([a-z]{4,})\\b\n</think>\n{\"pattern\": \"\\\\b([a-z]{4,})\\\\b\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture whichever comes first: an all-uppercase acronym of two or more letters, or an all-lowercase word of four or more letters.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'mission for NASA' -> 'mission'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nTwo separate patterns would need combining afterwards; a single alternation lets the engine pick the earlier match. Pattern: \\b([A-Z]{2,}|[a-z]{4,})\\b\n</think>\n{\"pattern\": \"\\\\b([A-Z]{2,}|[a-z]{4,})\\\\b\", \"flags\": \"\"}"
+    }
+  ]
+}

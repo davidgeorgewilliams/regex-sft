@@ -1,0 +1,80 @@
+{
+  "id": "rx_extract_file_extension_v00",
+  "kind": "single",
+  "concept": "file_extension",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "last dot not first",
+    "end anchoring"
+  ],
+  "variant": 0,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the file extension of a filename: the characters after the FINAL dot, not including the dot. There is no trailing whitespace.",
+      "traps": [
+        "last dot not first",
+        "end anchoring"
+      ],
+      "visible": [
+        [
+          "archive.tar.gz",
+          "gz"
+        ],
+        [
+          "noextension",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "report.pdf",
+          "pdf"
+        ],
+        [
+          "photo.JPEG",
+          "JPEG"
+        ],
+        [
+          "a.b.c.d.txt",
+          "txt"
+        ],
+        [
+          ".hidden",
+          "hidden"
+        ],
+        [
+          "path/to/file.py",
+          "py"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\.([^.]+)$",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\.([^.]+)$",
+        "flags": ""
+      },
+      "user": "Task: Capture the file extension of a filename: the characters after the FINAL dot, not including the dot. There is no trailing whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'archive.tar.gz' -> 'gz'\n  'noextension' -> null"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the file extension of a filename: the characters after the FINAL dot, not including the dot. There is no trailing whitespace.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'archive.tar.gz' -> 'gz'\n  'noextension' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\.([^.]+)$\", \"flags\": \"\"}"
+    }
+  ]
+}

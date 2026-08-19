@@ -1,0 +1,77 @@
+{
+  "id": "rx_substitute_date_us_to_iso_v06",
+  "kind": "single",
+  "concept": "date_us_to_iso",
+  "family": "substitute",
+  "difficulty": "medium",
+  "traps": [
+    "group reordering",
+    "fixed-width fields"
+  ],
+  "variant": 6,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Convert dates from MM/DD/YYYY to YYYY-MM-DD.",
+      "traps": [
+        "group reordering",
+        "fixed-width fields"
+      ],
+      "visible": [
+        [
+          "12/31/1999",
+          "1999-12-31"
+        ],
+        [
+          "due 01/15/2024 sharp",
+          "due 2024-01-15 sharp"
+        ]
+      ],
+      "hidden": [
+        [
+          "no dates",
+          "no dates"
+        ],
+        [
+          "03/04/2020 and 05/06/2021",
+          "2020-03-04 and 2021-05-06"
+        ],
+        [
+          "08/19/2026",
+          "2026-08-19"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d{2})/(\\d{2})/(\\d{4})",
+        "replacement": "\\3-\\1-\\2",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d{2})/(\\d{2})/(\\d{4})",
+        "replacement": "\\3-\\1-\\2",
+        "flags": ""
+      },
+      "user": "Task: Convert dates from MM/DD/YYYY to YYYY-MM-DD.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '12/31/1999' -> '1999-12-31'\n  'due 01/15/2024 sharp' -> 'due 2024-01-15 sharp'",
+      "thinking": "Nothing needs validating here, only reordering, so counted digit runs suffice. Pattern: (\\d{2})/(\\d{2})/(\\d{4}) with replacement \\3-\\1-\\2",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Convert dates from MM/DD/YYYY to YYYY-MM-DD.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '12/31/1999' -> '1999-12-31'\n  'due 01/15/2024 sharp' -> 'due 2024-01-15 sharp'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nNothing needs validating here, only reordering, so counted digit runs suffice. Pattern: (\\d{2})/(\\d{2})/(\\d{4}) with replacement \\3-\\1-\\2\n</think>\n{\"pattern\": \"(\\\\d{2})/(\\\\d{2})/(\\\\d{4})\", \"replacement\": \"\\\\3-\\\\1-\\\\2\", \"flags\": \"\"}"
+    }
+  ]
+}

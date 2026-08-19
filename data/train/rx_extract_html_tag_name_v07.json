@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_html_tag_name_v07",
+  "kind": "single",
+  "concept": "html_tag_name",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "stop before attributes",
+    "ignore closing tags"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the tag name of the first opening HTML tag. The name starts with a letter and may contain letters and digits. Closing tags (starting '</') do not count.",
+      "traps": [
+        "stop before attributes",
+        "ignore closing tags"
+      ],
+      "visible": [
+        [
+          "<div class=\"x\">hi</div>",
+          "div"
+        ],
+        [
+          "<p>text</p>",
+          "p"
+        ]
+      ],
+      "hidden": [
+        [
+          "no tags",
+          null
+        ],
+        [
+          "</div><span>x</span>",
+          "span"
+        ],
+        [
+          "<h1 id='a'>",
+          "h1"
+        ]
+      ],
+      "gold": {
+        "pattern": "<([A-Za-z][A-Za-z0-9]*)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "<([A-Za-z][A-Za-z0-9]*)",
+        "flags": ""
+      },
+      "user": "Task: Capture the tag name of the first opening HTML tag. The name starts with a letter and may contain letters and digits. Closing tags (starting '</') do not count.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '<div class=\"x\">hi</div>' -> 'div'\n  '<p>text</p>' -> 'p'",
+      "thinking": "Capturing everything up to the closing bracket would drag the attributes in with the name. Pattern: <([A-Za-z][A-Za-z0-9]*)",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the tag name of the first opening HTML tag. The name starts with a letter and may contain letters and digits. Closing tags (starting '</') do not count.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  '<div class=\"x\">hi</div>' -> 'div'\n  '<p>text</p>' -> 'p'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nCapturing everything up to the closing bracket would drag the attributes in with the name. Pattern: <([A-Za-z][A-Za-z0-9]*)\n</think>\n{\"pattern\": \"<([A-Za-z][A-Za-z0-9]*)\", \"flags\": \"\"}"
+    }
+  ]
+}

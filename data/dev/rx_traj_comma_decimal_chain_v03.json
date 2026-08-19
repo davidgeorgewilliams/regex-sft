@@ -1,0 +1,172 @@
+{
+  "id": "rx_traj_comma_decimal_chain_v03",
+  "kind": "trajectory",
+  "concept": "comma_decimal_chain",
+  "arc": "PIVOT->NARROW",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "locate before transform",
+    "narrow a previous answer",
+    "negative lookahead",
+    "restructure into capture groups"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "move": "ESTABLISH",
+      "instruction": "Capture the first number that uses a comma as its decimal point.",
+      "traps": [
+        "locate before transform"
+      ],
+      "visible": [
+        [
+          "Prices: 1,50 and 2,75 EUR",
+          "1,50"
+        ]
+      ],
+      "hidden": [
+        [
+          "weight 10,5 kg",
+          "10,5"
+        ],
+        [
+          "no decimals here 42",
+          null
+        ],
+        [
+          "a 0,99 b 12,00 c",
+          "0,99"
+        ],
+        [
+          "3,141592 approx",
+          "3,141592"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d+,\\d+)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d+,\\d+)",
+        "flags": ""
+      },
+      "user": "Task: Capture the first number that uses a comma as its decimal point.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'Prices: 1,50 and 2,75 EUR' -> '1,50'"
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "PIVOT",
+      "instruction": "Ok great, rewrite that to replace the commas with dots.",
+      "traps": [
+        "restructure into capture groups"
+      ],
+      "visible": [
+        [
+          "weight 10,5 kg",
+          "weight 10.5 kg"
+        ]
+      ],
+      "hidden": [
+        [
+          "Prices: 1,50 and 2,75 EUR",
+          "Prices: 1.50 and 2.75 EUR"
+        ],
+        [
+          "3,141592 approx",
+          "3.141592 approx"
+        ],
+        [
+          "a 0,99 b 12,00 c",
+          "a 0.99 b 12.00 c"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d+),(\\d+)",
+        "replacement": "\\1.\\2",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d+),(\\d+)",
+        "replacement": "\\1.\\2",
+        "flags": ""
+      },
+      "user": "Task: Ok great, rewrite that to replace the commas with dots.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'weight 10,5 kg' -> 'weight 10.5 kg'"
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "NARROW",
+      "instruction": "Careful -- some of those are thousands separators. Only convert when there are exactly one or two digits after the comma.",
+      "traps": [
+        "negative lookahead",
+        "narrow a previous answer"
+      ],
+      "visible": [
+        [
+          "10,5 kg",
+          "10.5 kg"
+        ]
+      ],
+      "hidden": [
+        [
+          "Total 1,234,567 items at 2,75 each",
+          "Total 1,234,567 items at 2.75 each"
+        ],
+        [
+          "3,141592 approx",
+          "3,141592 approx"
+        ],
+        [
+          "mixed 1,234 and 5,67",
+          "mixed 1,234 and 5.67"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d+),(\\d{1,2})(?!\\d)",
+        "replacement": "\\1.\\2",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d+),(\\d{1,2})(?!\\d)",
+        "replacement": "\\1.\\2",
+        "flags": ""
+      },
+      "user": "Task: Careful -- some of those are thousands separators. Only convert when there are exactly one or two digits after the comma.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '10,5 kg' -> '10.5 kg'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the first number that uses a comma as its decimal point.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'Prices: 1,50 and 2,75 EUR' -> '1,50'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(\\\\d+,\\\\d+)\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Ok great, rewrite that to replace the commas with dots.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'weight 10,5 kg' -> 'weight 10.5 kg'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(\\\\d+),(\\\\d+)\", \"replacement\": \"\\\\1.\\\\2\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Careful -- some of those are thousands separators. Only convert when there are exactly one or two digits after the comma.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '10,5 kg' -> '10.5 kg'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"(\\\\d+),(\\\\d{1,2})(?!\\\\d)\", \"replacement\": \"\\\\1.\\\\2\", \"flags\": \"\"}"
+    }
+  ]
+}

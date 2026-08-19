@@ -1,0 +1,176 @@
+{
+  "id": "rx_traj_us_date_chain_v02",
+  "kind": "trajectory",
+  "concept": "us_date_chain",
+  "arc": "PIVOT->RETARGET",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "day range",
+    "different field order",
+    "group reordering",
+    "month range"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a US date MM/DD/YYYY where the month is 01-12 and the day is 01-31, all zero-padded.",
+      "traps": [
+        "month range",
+        "day range"
+      ],
+      "visible": {
+        "positives": [
+          "12/31/1999"
+        ],
+        "negatives": [
+          "1/15/2024"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "01/15/2024",
+          "08/19/2026"
+        ],
+        "negatives": [
+          "13/01/2024",
+          "01/32/2024",
+          "00/10/2024"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:0[1-9]|1[0-2])/(?:0[1-9]|[12]\\d|3[01])/\\d{4}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:0[1-9]|1[0-2])/(?:0[1-9]|[12]\\d|3[01])/\\d{4}",
+        "flags": ""
+      },
+      "user": "Task: Match a US date MM/DD/YYYY where the month is 01-12 and the day is 01-31, all zero-padded.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '12/31/1999'\nMust not match:\n  '1/15/2024'",
+      "thinking": "Month and day both need explicit range branches rather than two loose digits, and every branch is two characters so the padding is structural. Pattern: (?:0[1-9]|1[0-2])/(?:0[1-9]|[12]\\d|3[01])/\\d{4}",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "PIVOT",
+      "instruction": "Now convert those dates into ISO form YYYY-MM-DD.",
+      "traps": [
+        "group reordering"
+      ],
+      "visible": [
+        [
+          "due 01/15/2024 sharp",
+          "due 2024-01-15 sharp"
+        ]
+      ],
+      "hidden": [
+        [
+          "12/31/1999",
+          "1999-12-31"
+        ],
+        [
+          "03/04/2020 and 05/06/2021",
+          "2020-03-04 and 2021-05-06"
+        ],
+        [
+          "no dates",
+          "no dates"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d{2})/(\\d{2})/(\\d{4})",
+        "replacement": "\\3-\\1-\\2",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d{2})/(\\d{2})/(\\d{4})",
+        "replacement": "\\3-\\1-\\2",
+        "flags": ""
+      },
+      "user": "Task: Now convert those dates into ISO form YYYY-MM-DD.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'due 01/15/2024 sharp' -> 'due 2024-01-15 sharp'",
+      "thinking": "No range checking is needed for a pure reordering, so counted runs suffice. Pattern: (\\d{2})/(\\d{2})/(\\d{4}) with replacement \\3-\\1-\\2",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "RETARGET",
+      "instruction": "These logs are European, so the input is actually DD/MM/YYYY. Convert those to ISO YYYY-MM-DD instead.",
+      "traps": [
+        "different field order"
+      ],
+      "visible": [
+        [
+          "31/12/1999",
+          "1999-12-31"
+        ]
+      ],
+      "hidden": [
+        [
+          "due 15/01/2024 sharp",
+          "due 2024-01-15 sharp"
+        ],
+        [
+          "04/03/2020 and 06/05/2021",
+          "2020-03-04 and 2021-05-06"
+        ],
+        [
+          "no dates",
+          "no dates"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\d{2})/(\\d{2})/(\\d{4})",
+        "replacement": "\\3-\\2-\\1",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\d{2})/(\\d{2})/(\\d{4})",
+        "replacement": "\\3-\\2-\\1",
+        "flags": ""
+      },
+      "user": "Task: These logs are European, so the input is actually DD/MM/YYYY. Convert those to ISO YYYY-MM-DD instead.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '31/12/1999' -> '1999-12-31'",
+      "thinking": "Changing the pattern here would be the wrong instinct; the input format is identical and only the interpretation changed. Pattern: (\\d{2})/(\\d{2})/(\\d{4}) with replacement \\3-\\2-\\1",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a US date MM/DD/YYYY where the month is 01-12 and the day is 01-31, all zero-padded.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '12/31/1999'\nMust not match:\n  '1/15/2024'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nMonth and day both need explicit range branches rather than two loose digits, and every branch is two characters so the padding is structural. Pattern: (?:0[1-9]|1[0-2])/(?:0[1-9]|[12]\\d|3[01])/\\d{4}\n</think>\n{\"pattern\": \"(?:0[1-9]|1[0-2])/(?:0[1-9]|[12]\\\\d|3[01])/\\\\d{4}\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now convert those dates into ISO form YYYY-MM-DD.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'due 01/15/2024 sharp' -> 'due 2024-01-15 sharp'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nNo range checking is needed for a pure reordering, so counted runs suffice. Pattern: (\\d{2})/(\\d{2})/(\\d{4}) with replacement \\3-\\1-\\2\n</think>\n{\"pattern\": \"(\\\\d{2})/(\\\\d{2})/(\\\\d{4})\", \"replacement\": \"\\\\3-\\\\1-\\\\2\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: These logs are European, so the input is actually DD/MM/YYYY. Convert those to ISO YYYY-MM-DD instead.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '31/12/1999' -> '1999-12-31'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nChanging the pattern here would be the wrong instinct; the input format is identical and only the interpretation changed. Pattern: (\\d{2})/(\\d{2})/(\\d{4}) with replacement \\3-\\2-\\1\n</think>\n{\"pattern\": \"(\\\\d{2})/(\\\\d{2})/(\\\\d{4})\", \"replacement\": \"\\\\3-\\\\2-\\\\1\", \"flags\": \"\"}"
+    }
+  ]
+}

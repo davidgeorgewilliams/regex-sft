@@ -1,0 +1,578 @@
+{
+  "dev_sweep": {
+    "instruct": {
+      "1": {
+        "variant": "instruct",
+        "split": "dev",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/instruct/epoch1",
+        "mode": "gold",
+        "n_turns": 161,
+        "seconds": 111,
+        "hidden_pass": 51.6,
+        "visible_pass": 60.9,
+        "overfit": 17.4,
+        "json_valid": 99.4,
+        "truncated": 0.6,
+        "by_difficulty": {
+          "easy": 43.2,
+          "medium": 58.5,
+          "hard": 27.8
+        },
+        "by_family": {
+          "validate": 63.5,
+          "extract": 35.7,
+          "substitute": 47.1
+        },
+        "by_kind": {
+          "single": 43.7,
+          "trajectory": 57.8
+        },
+        "by_turn": {
+          "1": 51.5,
+          "2": 53.3,
+          "3": 50.0
+        },
+        "by_move": {
+          "BROADEN": 83.3,
+          "COMPOSE": 0.0,
+          "ESTABLISH": 70.0,
+          "FLAG": 50.0,
+          "GENERALIZE": 100.0,
+          "INVERT": 0.0,
+          "NARROW": 0.0,
+          "PIVOT": 83.3,
+          "REPAIR": 0.0,
+          "RETARGET": 100.0,
+          "ROLLBACK": 100.0,
+          "SINGLE": 43.7
+        }
+      },
+      "2": {
+        "variant": "instruct",
+        "split": "dev",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/instruct/epoch2",
+        "mode": "gold",
+        "n_turns": 161,
+        "seconds": 108,
+        "hidden_pass": 62.1,
+        "visible_pass": 73.3,
+        "overfit": 13.7,
+        "json_valid": 100.0,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 67.6,
+          "medium": 66.0,
+          "hard": 27.8
+        },
+        "by_family": {
+          "validate": 69.8,
+          "extract": 42.9,
+          "substitute": 62.9
+        },
+        "by_kind": {
+          "single": 57.7,
+          "trajectory": 65.6
+        },
+        "by_turn": {
+          "1": 64.4,
+          "2": 76.7,
+          "3": 40.0
+        },
+        "by_move": {
+          "BROADEN": 83.3,
+          "COMPOSE": 0.0,
+          "ESTABLISH": 80.0,
+          "FLAG": 0.0,
+          "GENERALIZE": 100.0,
+          "INVERT": 0.0,
+          "NARROW": 0.0,
+          "PIVOT": 100.0,
+          "REPAIR": 100.0,
+          "RETARGET": 100.0,
+          "ROLLBACK": 100.0,
+          "SINGLE": 57.7
+        }
+      },
+      "3": {
+        "variant": "instruct",
+        "split": "dev",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/instruct/epoch3",
+        "mode": "gold",
+        "n_turns": 161,
+        "seconds": 106,
+        "hidden_pass": 60.9,
+        "visible_pass": 72.0,
+        "overfit": 13.7,
+        "json_valid": 100.0,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 62.2,
+          "medium": 66.0,
+          "hard": 27.8
+        },
+        "by_family": {
+          "validate": 69.8,
+          "extract": 42.9,
+          "substitute": 60.0
+        },
+        "by_kind": {
+          "single": 57.7,
+          "trajectory": 63.3
+        },
+        "by_turn": {
+          "1": 64.4,
+          "2": 70.0,
+          "3": 40.0
+        },
+        "by_move": {
+          "BROADEN": 83.3,
+          "COMPOSE": 0.0,
+          "ESTABLISH": 80.0,
+          "FLAG": 0.0,
+          "GENERALIZE": 66.7,
+          "INVERT": 0.0,
+          "NARROW": 0.0,
+          "PIVOT": 100.0,
+          "REPAIR": 100.0,
+          "RETARGET": 100.0,
+          "ROLLBACK": 100.0,
+          "SINGLE": 57.7
+        }
+      }
+    },
+    "thinking": {
+      "1": {
+        "variant": "thinking",
+        "split": "dev",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/thinking/epoch1",
+        "mode": "gold",
+        "n_turns": 161,
+        "seconds": 191,
+        "hidden_pass": 47.2,
+        "visible_pass": 60.9,
+        "overfit": 15.5,
+        "json_valid": 100.0,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 51.4,
+          "medium": 46.2,
+          "hard": 44.4
+        },
+        "by_family": {
+          "validate": 50.8,
+          "extract": 39.3,
+          "substitute": 47.1
+        },
+        "by_kind": {
+          "single": 42.3,
+          "trajectory": 51.1
+        },
+        "by_turn": {
+          "1": 50.5,
+          "2": 46.7,
+          "3": 36.7
+        },
+        "by_move": {
+          "BROADEN": 100.0,
+          "COMPOSE": 16.7,
+          "ESTABLISH": 70.0,
+          "FLAG": 100.0,
+          "GENERALIZE": 33.3,
+          "INVERT": 0.0,
+          "NARROW": 0.0,
+          "PIVOT": 0.0,
+          "REPAIR": 100.0,
+          "RETARGET": 66.7,
+          "ROLLBACK": 0.0,
+          "SINGLE": 42.3
+        }
+      },
+      "2": {
+        "variant": "thinking",
+        "split": "dev",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/thinking/epoch2",
+        "mode": "gold",
+        "n_turns": 161,
+        "seconds": 238,
+        "hidden_pass": 58.4,
+        "visible_pass": 65.2,
+        "overfit": 6.8,
+        "json_valid": 99.4,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 73.0,
+          "medium": 52.8,
+          "hard": 61.1
+        },
+        "by_family": {
+          "validate": 57.1,
+          "extract": 64.3,
+          "substitute": 57.1
+        },
+        "by_kind": {
+          "single": 53.5,
+          "trajectory": 62.2
+        },
+        "by_turn": {
+          "1": 64.4,
+          "2": 50.0,
+          "3": 46.7
+        },
+        "by_move": {
+          "BROADEN": 100.0,
+          "COMPOSE": 33.3,
+          "ESTABLISH": 90.0,
+          "FLAG": 83.3,
+          "GENERALIZE": 100.0,
+          "INVERT": 0.0,
+          "NARROW": 0.0,
+          "PIVOT": 0.0,
+          "REPAIR": 50.0,
+          "RETARGET": 100.0,
+          "ROLLBACK": 16.7,
+          "SINGLE": 53.5
+        }
+      },
+      "3": {
+        "variant": "thinking",
+        "split": "dev",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/thinking/epoch3",
+        "mode": "gold",
+        "n_turns": 161,
+        "seconds": 235,
+        "hidden_pass": 62.7,
+        "visible_pass": 71.4,
+        "overfit": 8.7,
+        "json_valid": 100.0,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 75.7,
+          "medium": 59.4,
+          "hard": 55.6
+        },
+        "by_family": {
+          "validate": 58.7,
+          "extract": 64.3,
+          "substitute": 65.7
+        },
+        "by_kind": {
+          "single": 56.3,
+          "trajectory": 67.8
+        },
+        "by_turn": {
+          "1": 64.4,
+          "2": 60.0,
+          "3": 60.0
+        },
+        "by_move": {
+          "BROADEN": 100.0,
+          "COMPOSE": 66.7,
+          "ESTABLISH": 83.3,
+          "FLAG": 100.0,
+          "GENERALIZE": 100.0,
+          "INVERT": 0.0,
+          "NARROW": 0.0,
+          "PIVOT": 0.0,
+          "REPAIR": 100.0,
+          "RETARGET": 100.0,
+          "ROLLBACK": 33.3,
+          "SINGLE": 56.3
+        }
+      }
+    }
+  },
+  "selected": {
+    "instruct": {
+      "epoch": 2,
+      "dev_hidden_pass": 62.1
+    },
+    "thinking": {
+      "epoch": 3,
+      "dev_hidden_pass": 62.7
+    }
+  },
+  "test": {
+    "instruct": {
+      "gold": {
+        "variant": "instruct",
+        "split": "test",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/instruct/epoch2",
+        "mode": "gold",
+        "n_turns": 160,
+        "seconds": 90,
+        "hidden_pass": 61.9,
+        "visible_pass": 75.6,
+        "overfit": 15.0,
+        "json_valid": 100.0,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 60.6,
+          "medium": 65.5,
+          "hard": 41.2
+        },
+        "by_family": {
+          "validate": 63.6,
+          "extract": 63.6,
+          "substitute": 53.6
+        },
+        "by_kind": {
+          "single": 55.7,
+          "trajectory": 66.7
+        },
+        "by_turn": {
+          "1": 63.0,
+          "2": 80.0,
+          "3": 40.0
+        },
+        "by_move": {
+          "BROADEN": 0.0,
+          "COMPOSE": 100.0,
+          "ESTABLISH": 80.0,
+          "FLAG": 100.0,
+          "GENERALIZE": 100.0,
+          "INVERT": 100.0,
+          "NARROW": 100.0,
+          "PIVOT": 0.0,
+          "REPAIR": 0.0,
+          "RETARGET": 0.0,
+          "ROLLBACK": 100.0,
+          "SINGLE": 55.7
+        }
+      },
+      "free": {
+        "variant": "instruct",
+        "split": "test",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/instruct/epoch2",
+        "mode": "free",
+        "n_turns": 160,
+        "seconds": 91,
+        "hidden_pass": 53.1,
+        "visible_pass": 67.5,
+        "overfit": 16.2,
+        "json_valid": 100.0,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 24.2,
+          "medium": 63.6,
+          "hard": 41.2
+        },
+        "by_family": {
+          "validate": 63.6,
+          "extract": 46.6,
+          "substitute": 57.1
+        },
+        "by_kind": {
+          "single": 55.7,
+          "trajectory": 51.1
+        },
+        "by_turn": {
+          "1": 63.0,
+          "2": 46.7,
+          "3": 26.7
+        },
+        "by_move": {
+          "BROADEN": 16.7,
+          "COMPOSE": 0.0,
+          "ESTABLISH": 80.0,
+          "FLAG": 100.0,
+          "GENERALIZE": 33.3,
+          "INVERT": 100.0,
+          "NARROW": 0.0,
+          "PIVOT": 16.7,
+          "REPAIR": 0.0,
+          "RETARGET": 0.0,
+          "ROLLBACK": 100.0,
+          "SINGLE": 55.7
+        }
+      }
+    },
+    "thinking": {
+      "gold": {
+        "variant": "thinking",
+        "split": "test",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/thinking/epoch3",
+        "mode": "gold",
+        "n_turns": 160,
+        "seconds": 220,
+        "hidden_pass": 60.6,
+        "visible_pass": 70.6,
+        "overfit": 11.9,
+        "json_valid": 97.5,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 75.8,
+          "medium": 62.7,
+          "hard": 17.6
+        },
+        "by_family": {
+          "validate": 61.4,
+          "extract": 64.8,
+          "substitute": 46.4
+        },
+        "by_kind": {
+          "single": 40.0,
+          "trajectory": 76.7
+        },
+        "by_turn": {
+          "1": 54.0,
+          "2": 80.0,
+          "3": 63.3
+        },
+        "by_move": {
+          "BROADEN": 66.7,
+          "COMPOSE": 100.0,
+          "ESTABLISH": 86.7,
+          "FLAG": 100.0,
+          "GENERALIZE": 100.0,
+          "INVERT": 100.0,
+          "NARROW": 100.0,
+          "PIVOT": 0.0,
+          "REPAIR": 100.0,
+          "RETARGET": 0.0,
+          "ROLLBACK": 50.0,
+          "SINGLE": 40.0
+        }
+      },
+      "free": {
+        "variant": "thinking",
+        "split": "test",
+        "checkpoint": "/Users/david/PyCharmProjects/Toloka/SupervisedFineTuningExample/models/checkpoints/thinking/epoch3",
+        "mode": "free",
+        "n_turns": 160,
+        "seconds": 203,
+        "hidden_pass": 58.1,
+        "visible_pass": 71.9,
+        "overfit": 13.8,
+        "json_valid": 97.5,
+        "truncated": 0.0,
+        "by_difficulty": {
+          "easy": 75.8,
+          "medium": 59.1,
+          "hard": 17.6
+        },
+        "by_family": {
+          "validate": 61.4,
+          "extract": 58.0,
+          "substitute": 53.6
+        },
+        "by_kind": {
+          "single": 40.0,
+          "trajectory": 72.2
+        },
+        "by_turn": {
+          "1": 54.0,
+          "2": 76.7,
+          "3": 53.3
+        },
+        "by_move": {
+          "BROADEN": 16.7,
+          "COMPOSE": 100.0,
+          "ESTABLISH": 86.7,
+          "FLAG": 83.3,
+          "GENERALIZE": 100.0,
+          "INVERT": 100.0,
+          "NARROW": 100.0,
+          "PIVOT": 33.3,
+          "REPAIR": 100.0,
+          "RETARGET": 0.0,
+          "ROLLBACK": 16.7,
+          "SINGLE": 40.0
+        }
+      }
+    }
+  },
+  "baseline": {
+    "instruct": {
+      "variant": "instruct",
+      "split": "test",
+      "checkpoint": "base",
+      "mode": "gold",
+      "n_turns": 160,
+      "seconds": 92,
+      "hidden_pass": 46.9,
+      "visible_pass": 66.9,
+      "overfit": 20.6,
+      "json_valid": 98.8,
+      "truncated": 0.0,
+      "by_difficulty": {
+        "easy": 87.9,
+        "medium": 39.1,
+        "hard": 17.6
+      },
+      "by_family": {
+        "validate": 50.0,
+        "extract": 51.1,
+        "substitute": 28.6
+      },
+      "by_kind": {
+        "single": 34.3,
+        "trajectory": 56.7
+      },
+      "by_turn": {
+        "1": 42.0,
+        "2": 80.0,
+        "3": 30.0
+      },
+      "by_move": {
+        "BROADEN": 33.3,
+        "COMPOSE": 100.0,
+        "ESTABLISH": 60.0,
+        "FLAG": 100.0,
+        "GENERALIZE": 100.0,
+        "INVERT": 100.0,
+        "NARROW": 100.0,
+        "PIVOT": 16.7,
+        "REPAIR": 0.0,
+        "RETARGET": 0.0,
+        "ROLLBACK": 0.0,
+        "SINGLE": 34.3
+      }
+    },
+    "thinking": {
+      "variant": "thinking",
+      "split": "test",
+      "checkpoint": "base",
+      "mode": "gold",
+      "n_turns": 160,
+      "seconds": 726,
+      "hidden_pass": 0.6,
+      "visible_pass": 0.6,
+      "overfit": 0.0,
+      "json_valid": 1.9,
+      "truncated": 100.0,
+      "by_difficulty": {
+        "easy": 3.0,
+        "medium": 0.0,
+        "hard": 0.0
+      },
+      "by_family": {
+        "validate": 0.0,
+        "extract": 1.1,
+        "substitute": 0.0
+      },
+      "by_kind": {
+        "single": 0.0,
+        "trajectory": 1.1
+      },
+      "by_turn": {
+        "1": 0.0,
+        "2": 0.0,
+        "3": 3.3
+      },
+      "by_move": {
+        "BROADEN": 0.0,
+        "COMPOSE": 16.7,
+        "ESTABLISH": 0.0,
+        "FLAG": 0.0,
+        "GENERALIZE": 0.0,
+        "INVERT": 0.0,
+        "NARROW": 0.0,
+        "PIVOT": 0.0,
+        "REPAIR": 0.0,
+        "RETARGET": 0.0,
+        "ROLLBACK": 0.0,
+        "SINGLE": 0.0
+      }
+    }
+  }
+}

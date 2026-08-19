@@ -1,0 +1,72 @@
+{
+  "id": "rx_validate_visa_card_v07",
+  "kind": "single",
+  "concept": "visa_card",
+  "family": "validate",
+  "difficulty": "medium",
+  "traps": [
+    "prefix constraint",
+    "two valid lengths"
+  ],
+  "variant": 7,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a Visa card number: starts with 4, and is either 13 or 16 digits long in total.",
+      "traps": [
+        "prefix constraint",
+        "two valid lengths"
+      ],
+      "visible": {
+        "positives": [
+          "4111111111111111"
+        ],
+        "negatives": [
+          "411111111111"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "4222222222222",
+          "4000000000000000"
+        ],
+        "negatives": [
+          "5111111111111111",
+          "41111111111111",
+          "4111 1111 1111 1111",
+          "41111111111111111",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "4(?:\\d{12}|\\d{15})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "4(?:\\d{12}|\\d{15})",
+        "flags": ""
+      },
+      "user": "Task: Match a Visa card number: starts with 4, and is either 13 or 16 digits long in total.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '4111111111111111'\nMust not match:\n  '411111111111'",
+      "thinking": "A range quantifier would accept every length between the two valid ones, so the branches have to be explicit. Pattern: 4(?:\\d{12}|\\d{15})",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a Visa card number: starts with 4, and is either 13 or 16 digits long in total.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '4111111111111111'\nMust not match:\n  '411111111111'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA range quantifier would accept every length between the two valid ones, so the branches have to be explicit. Pattern: 4(?:\\d{12}|\\d{15})\n</think>\n{\"pattern\": \"4(?:\\\\d{12}|\\\\d{15})\", \"flags\": \"\"}"
+    }
+  ]
+}

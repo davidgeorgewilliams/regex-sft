@@ -1,0 +1,74 @@
+{
+  "id": "rx_validate_uk_postcode_v03",
+  "kind": "single",
+  "concept": "uk_postcode",
+  "family": "validate",
+  "difficulty": "hard",
+  "traps": [
+    "variable-length outward code",
+    "uppercase only",
+    "mandatory single space"
+  ],
+  "variant": 3,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a UK postcode in uppercase: one or two letters, a digit, an optional extra letter or digit, a single space, then a digit and two letters.",
+      "traps": [
+        "variable-length outward code",
+        "uppercase only",
+        "mandatory single space"
+      ],
+      "visible": {
+        "positives": [
+          "B33 8TH",
+          "DN55 1PT"
+        ],
+        "negatives": [
+          "12345",
+          "SW1A1AA"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "SW1A 1AA",
+          "M1 1AE",
+          "CR2 6XH"
+        ],
+        "negatives": [
+          "sw1a 1aa",
+          "SW1A  1AA",
+          "1W1 1AA",
+          "SW1A 1A",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "[A-Z]{1,2}\\d[A-Z\\d]? \\d[A-Z]{2}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[A-Z]{1,2}\\d[A-Z\\d]? \\d[A-Z]{2}",
+        "flags": ""
+      },
+      "user": "Task: Match a UK postcode in uppercase: one or two letters, a digit, an optional extra letter or digit, a single space, then a digit and two letters.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'B33 8TH'\n  'DN55 1PT'\nMust not match:\n  '12345'\n  'SW1A1AA'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a UK postcode in uppercase: one or two letters, a digit, an optional extra letter or digit, a single space, then a digit and two letters.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'B33 8TH'\n  'DN55 1PT'\nMust not match:\n  '12345'\n  'SW1A1AA'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[A-Z]{1,2}\\\\d[A-Z\\\\d]? \\\\d[A-Z]{2}\", \"flags\": \"\"}"
+    }
+  ]
+}

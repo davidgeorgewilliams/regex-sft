@@ -1,0 +1,180 @@
+{
+  "id": "rx_traj_port_chain_v02",
+  "kind": "trajectory",
+  "concept": "port_chain",
+  "arc": "NARROW->ROLLBACK",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "boundary at 1023",
+    "exclude a single boundary value",
+    "narrow to 1-1023",
+    "no leading zeros",
+    "revert to the full range",
+    "upper bound 65535"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a TCP port: an integer 0 to 65535 with no leading zeros.",
+      "traps": [
+        "upper bound 65535",
+        "no leading zeros"
+      ],
+      "visible": {
+        "positives": [
+          "8080"
+        ],
+        "negatives": [
+          "99999"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "80",
+          "65535",
+          "0",
+          "443"
+        ],
+        "negatives": [
+          "65536",
+          "070",
+          "-1"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0)",
+        "flags": ""
+      },
+      "user": "Task: Match a TCP port: an integer 0 to 65535 with no leading zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '8080'\nMust not match:\n  '99999'",
+      "thinking": "The bound does not sit on a digit boundary, so I peel it off in descending ranges down to the unpadded low numbers, with a bare zero as its own branch. Pattern: (?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0)",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "NARROW",
+      "instruction": "Only privileged ports now: 1 through 1023 inclusive, still with no leading zeros.",
+      "traps": [
+        "narrow to 1-1023",
+        "boundary at 1023"
+      ],
+      "visible": {
+        "positives": [
+          "80"
+        ],
+        "negatives": [
+          "0"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "1023",
+          "1",
+          "999",
+          "443"
+        ],
+        "negatives": [
+          "1024",
+          "65535",
+          "01"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:10(?:[01]\\d|2[0-3])|[1-9]\\d{0,2})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:10(?:[01]\\d|2[0-3])|[1-9]\\d{0,2})",
+        "flags": ""
+      },
+      "user": "Task: Only privileged ports now: 1 through 1023 inclusive, still with no leading zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '80'\nMust not match:\n  '0'",
+      "thinking": "Two branches replace the previous six, and the standalone zero branch goes. Pattern: (?:10(?:[01]\\d|2[0-3])|[1-9]\\d{0,2})",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "ROLLBACK",
+      "instruction": "Go back to the full port range from turn one, but exclude 0 -- port 0 is not assignable.",
+      "traps": [
+        "revert to the full range",
+        "exclude a single boundary value"
+      ],
+      "visible": {
+        "positives": [
+          "65535",
+          "1"
+        ],
+        "negatives": [
+          "0"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "8080",
+          "1023",
+          "1024"
+        ],
+        "negatives": [
+          "65536",
+          "070",
+          "99999"
+        ]
+      },
+      "gold": {
+        "pattern": "(?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3})",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3})",
+        "flags": ""
+      },
+      "user": "Task: Go back to the full port range from turn one, but exclude 0 -- port 0 is not assignable.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '65535'\n  '1'\nMust not match:\n  '0'",
+      "thinking": "Extending the narrowed pattern upward would be the wrong move; the instruction points back to the earlier answer. Pattern: (?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3})",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a TCP port: an integer 0 to 65535 with no leading zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '8080'\nMust not match:\n  '99999'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe bound does not sit on a digit boundary, so I peel it off in descending ranges down to the unpadded low numbers, with a bare zero as its own branch. Pattern: (?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0)\n</think>\n{\"pattern\": \"(?:6553[0-5]|655[0-2]\\\\d|65[0-4]\\\\d\\\\d|6[0-4]\\\\d{3}|[1-5]\\\\d{4}|[1-9]\\\\d{0,3}|0)\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Only privileged ports now: 1 through 1023 inclusive, still with no leading zeros.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '80'\nMust not match:\n  '0'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nTwo branches replace the previous six, and the standalone zero branch goes. Pattern: (?:10(?:[01]\\d|2[0-3])|[1-9]\\d{0,2})\n</think>\n{\"pattern\": \"(?:10(?:[01]\\\\d|2[0-3])|[1-9]\\\\d{0,2})\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Go back to the full port range from turn one, but exclude 0 -- port 0 is not assignable.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '65535'\n  '1'\nMust not match:\n  '0'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nExtending the narrowed pattern upward would be the wrong move; the instruction points back to the earlier answer. Pattern: (?:6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3})\n</think>\n{\"pattern\": \"(?:6553[0-5]|655[0-2]\\\\d|65[0-4]\\\\d\\\\d|6[0-4]\\\\d{3}|[1-5]\\\\d{4}|[1-9]\\\\d{0,3})\", \"flags\": \"\"}"
+    }
+  ]
+}

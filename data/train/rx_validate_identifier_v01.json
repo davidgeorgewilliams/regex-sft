@@ -1,0 +1,73 @@
+{
+  "id": "rx_validate_identifier_v01",
+  "kind": "single",
+  "concept": "identifier",
+  "family": "validate",
+  "difficulty": "easy",
+  "traps": [
+    "first-character class differs from the rest"
+  ],
+  "variant": 1,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "instruction": "Match a Python identifier: starts with a letter or underscore, then any number of letters, digits or underscores.",
+      "traps": [
+        "first-character class differs from the rest"
+      ],
+      "visible": {
+        "positives": [
+          "__init__",
+          "camelCase9"
+        ],
+        "negatives": [
+          "foo bar"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "_bar",
+          "foo",
+          "a1"
+        ],
+        "negatives": [
+          "1foo",
+          "foo-bar",
+          "9lives",
+          "",
+          "foo.bar",
+          "foo!"
+        ]
+      },
+      "gold": {
+        "pattern": "[A-Za-z_][A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[A-Za-z_][A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "user": "Task: Match a Python identifier: starts with a letter or underscore, then any number of letters, digits or underscores.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '__init__'\n  'camelCase9'\nMust not match:\n  'foo bar'",
+      "thinking": "Using one class for the whole string would accept a leading digit, which the rule forbids. The head has to be separated out. Pattern: [A-Za-z_][A-Za-z0-9_]*",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a Python identifier: starts with a letter or underscore, then any number of letters, digits or underscores.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '__init__'\n  'camelCase9'\nMust not match:\n  'foo bar'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUsing one class for the whole string would accept a leading digit, which the rule forbids. The head has to be separated out. Pattern: [A-Za-z_][A-Za-z0-9_]*\n</think>\n{\"pattern\": \"[A-Za-z_][A-Za-z0-9_]*\", \"flags\": \"\"}"
+    }
+  ]
+}

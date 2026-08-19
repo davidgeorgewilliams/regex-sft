@@ -1,0 +1,176 @@
+{
+  "id": "rx_traj_whitespace_chain_v05",
+  "kind": "trajectory",
+  "concept": "whitespace_chain",
+  "arc": "REPAIR->FLAG",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "MULTILINE flag",
+    "end-of-line anchoring",
+    "exclude newline from the class",
+    "fix a cited failure",
+    "whitespace class"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "Collapse every run of whitespace into a single space.",
+      "traps": [
+        "whitespace class"
+      ],
+      "visible": [
+        [
+          "x\t\ty",
+          "x y"
+        ],
+        [
+          "a   b",
+          "a b"
+        ]
+      ],
+      "hidden": [
+        [
+          "p  q  r",
+          "p q r"
+        ],
+        [
+          "one\ntwo",
+          "one two"
+        ],
+        [
+          "  lead  ",
+          " lead "
+        ]
+      ],
+      "gold": {
+        "pattern": "\\s+",
+        "replacement": " ",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\s+",
+        "replacement": " ",
+        "flags": ""
+      },
+      "user": "Task: Collapse every run of whitespace into a single space.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x\\t\\ty' -> 'x y'\n  'a   b' -> 'a b'"
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "REPAIR",
+      "instruction": "Bug: on 'a   b\\nc   d' it flattened my line breaks into spaces. Keep newlines intact and only collapse spaces and tabs.",
+      "traps": [
+        "exclude newline from the class",
+        "fix a cited failure"
+      ],
+      "visible": [
+        [
+          "x\t\ty\nz",
+          "x y\nz"
+        ]
+      ],
+      "hidden": [
+        [
+          "a   b\nc   d",
+          "a b\nc d"
+        ],
+        [
+          "one\n\ntwo",
+          "one\n\ntwo"
+        ],
+        [
+          "p  q",
+          "p q"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]+",
+        "replacement": " ",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[ \\t]+",
+        "replacement": " ",
+        "flags": ""
+      },
+      "user": "Task: Bug: on 'a   b\\nc   d' it flattened my line breaks into spaces. Keep newlines intact and only collapse spaces and tabs.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x\\t\\ty\\nz' -> 'x y\\nz'"
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "FLAG",
+      "instruction": "Different job now: remove spaces and tabs only where they sit at the end of a line, leaving inner spacing alone.",
+      "traps": [
+        "MULTILINE flag",
+        "end-of-line anchoring"
+      ],
+      "visible": [
+        [
+          "a   b   \nc\n",
+          "a   b\nc\n"
+        ]
+      ],
+      "hidden": [
+        [
+          "one  \ntwo\t\n",
+          "one\ntwo\n"
+        ],
+        [
+          "  keep  \n",
+          "  keep\n"
+        ],
+        [
+          "clean\n",
+          "clean\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "[ \\t]+$",
+        "replacement": "",
+        "flags": "m"
+      },
+      "user": "Task: Different job now: remove spaces and tabs only where they sit at the end of a line, leaving inner spacing alone.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a   b   \\nc\\n' -> 'a   b\\nc\\n'"
+    }
+  ],
+  "split": "dev",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Collapse every run of whitespace into a single space.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x\\t\\ty' -> 'x y'\n  'a   b' -> 'a b'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\s+\", \"replacement\": \" \", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Bug: on 'a   b\\nc   d' it flattened my line breaks into spaces. Keep newlines intact and only collapse spaces and tabs.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x\\t\\ty\\nz' -> 'x y\\nz'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[ \\\\t]+\", \"replacement\": \" \", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Different job now: remove spaces and tabs only where they sit at the end of a line, leaving inner spacing alone.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a   b   \\nc\\n' -> 'a   b\\nc\\n'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[ \\\\t]+$\", \"replacement\": \"\", \"flags\": \"m\"}"
+    }
+  ]
+}

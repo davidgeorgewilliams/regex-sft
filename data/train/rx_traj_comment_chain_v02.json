@@ -1,0 +1,185 @@
+{
+  "id": "rx_traj_comment_chain_v02",
+  "kind": "trajectory",
+  "concept": "comment_chain",
+  "arc": "REPAIR->ROLLBACK",
+  "family": "mixed",
+  "difficulty": "hard",
+  "traps": [
+    "consume the newline",
+    "eat preceding spaces",
+    "end-of-line anchoring",
+    "fix a cited failure",
+    "negative lookahead on a shebang",
+    "revert to trailing-comment stripping",
+    "whole-line only"
+  ],
+  "variant": 2,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "move": "ESTABLISH",
+      "instruction": "Remove trailing '#' comments and any spaces immediately before them, keeping the line break.",
+      "traps": [
+        "end-of-line anchoring",
+        "eat preceding spaces"
+      ],
+      "visible": [
+        [
+          "x = 1  # set x",
+          "x = 1"
+        ]
+      ],
+      "hidden": [
+        [
+          "y = 2 # note\nz = 3",
+          "y = 2\nz = 3"
+        ],
+        [
+          "a = 1#c\nb = 2",
+          "a = 1\nb = 2"
+        ],
+        [
+          "no comment",
+          "no comment"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]*#[^\\n]*",
+        "replacement": "",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[ \\t]*#[^\\n]*",
+        "replacement": "",
+        "flags": ""
+      },
+      "user": "Task: Remove trailing '#' comments and any spaces immediately before them, keeping the line break.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x = 1  # set x' -> 'x = 1'",
+      "thinking": "The comment runs to the end of its line, so the class excludes newlines rather than using a dot, keeping the break in place. Pattern: [ \\t]*#[^\\n]*",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "REPAIR",
+      "instruction": "Bug: on '# header\\nx = 1' it left an empty first line behind. Only delete lines that are entirely a comment, taking their line break with them.",
+      "traps": [
+        "whole-line only",
+        "consume the newline",
+        "fix a cited failure"
+      ],
+      "visible": [
+        [
+          "a = 1\n# mid\nb = 2\n",
+          "a = 1\nb = 2\n"
+        ]
+      ],
+      "hidden": [
+        [
+          "# header\nx = 1\n",
+          "x = 1\n"
+        ],
+        [
+          "  # indented\nb = 2\n",
+          "b = 2\n"
+        ],
+        [
+          "x = 1  # keep\n",
+          "x = 1  # keep\n"
+        ]
+      ],
+      "gold": {
+        "pattern": "^[ \\t]*#[^\\n]*\\n?",
+        "replacement": "",
+        "flags": "m"
+      },
+      "target": {
+        "pattern": "^[ \\t]*#[^\\n]*\\n?",
+        "replacement": "",
+        "flags": "m"
+      },
+      "user": "Task: Bug: on '# header\\nx = 1' it left an empty first line behind. Only delete lines that are entirely a comment, taking their line break with them.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a = 1\\n# mid\\nb = 2\\n' -> 'a = 1\\nb = 2\\n'",
+      "thinking": "Consuming the trailing newline as well is what removes the blank line rather than leaving it. Pattern: ^[ \\t]*#[^\\n]*\\n?",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "ROLLBACK",
+      "instruction": "Go back to the turn-one behaviour of stripping trailing comments, but leave a shebang '#!' untouched.",
+      "traps": [
+        "revert to trailing-comment stripping",
+        "negative lookahead on a shebang"
+      ],
+      "visible": [
+        [
+          "x = 1  # note",
+          "x = 1"
+        ]
+      ],
+      "hidden": [
+        [
+          "#!/bin/sh\ny = 2",
+          "#!/bin/sh\ny = 2"
+        ],
+        [
+          "#!/usr/bin/env python\nz = 3  # c",
+          "#!/usr/bin/env python\nz = 3"
+        ],
+        [
+          "plain",
+          "plain"
+        ]
+      ],
+      "gold": {
+        "pattern": "[ \\t]*#(?!!)[^\\n]*",
+        "replacement": "",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[ \\t]*#(?!!)[^\\n]*",
+        "replacement": "",
+        "flags": ""
+      },
+      "user": "Task: Go back to the turn-one behaviour of stripping trailing comments, but leave a shebang '#!' untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x = 1  # note' -> 'x = 1'",
+      "thinking": "Keeping the line-start anchor would contradict the instruction to go back to the original behaviour. Pattern: [ \\t]*#(?!!)[^\\n]*",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove trailing '#' comments and any spaces immediately before them, keeping the line break.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x = 1  # set x' -> 'x = 1'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe comment runs to the end of its line, so the class excludes newlines rather than using a dot, keeping the break in place. Pattern: [ \\t]*#[^\\n]*\n</think>\n{\"pattern\": \"[ \\\\t]*#[^\\\\n]*\", \"replacement\": \"\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Bug: on '# header\\nx = 1' it left an empty first line behind. Only delete lines that are entirely a comment, taking their line break with them.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'a = 1\\n# mid\\nb = 2\\n' -> 'a = 1\\nb = 2\\n'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nConsuming the trailing newline as well is what removes the blank line rather than leaving it. Pattern: ^[ \\t]*#[^\\n]*\\n?\n</think>\n{\"pattern\": \"^[ \\\\t]*#[^\\\\n]*\\\\n?\", \"replacement\": \"\", \"flags\": \"m\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Go back to the turn-one behaviour of stripping trailing comments, but leave a shebang '#!' untouched.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x = 1  # note' -> 'x = 1'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nKeeping the line-start anchor would contradict the instruction to go back to the original behaviour. Pattern: [ \\t]*#(?!!)[^\\n]*\n</think>\n{\"pattern\": \"[ \\\\t]*#(?!!)[^\\\\n]*\", \"replacement\": \"\", \"flags\": \"\"}"
+    }
+  ]
+}

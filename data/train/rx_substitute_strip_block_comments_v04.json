@@ -1,0 +1,79 @@
+{
+  "id": "rx_substitute_strip_block_comments_v04",
+  "kind": "single",
+  "concept": "strip_block_comments",
+  "family": "substitute",
+  "difficulty": "hard",
+  "traps": [
+    "DOTALL flag",
+    "lazy quantifier",
+    "escaping the asterisk"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "substitute",
+      "instruction": "Remove C-style block comments delimited by /* and */, which may span several lines. Comments are never nested.",
+      "traps": [
+        "DOTALL flag",
+        "lazy quantifier",
+        "escaping the asterisk"
+      ],
+      "visible": [
+        [
+          "x /*\nmulti\n*/ y",
+          "x  y"
+        ],
+        [
+          "no comments",
+          "no comments"
+        ]
+      ],
+      "hidden": [
+        [
+          "a /* c */ b",
+          "a  b"
+        ],
+        [
+          "/*a*/ mid /*b*/",
+          " mid "
+        ],
+        [
+          "/**/",
+          ""
+        ]
+      ],
+      "gold": {
+        "pattern": "/\\*.*?\\*/",
+        "replacement": "",
+        "flags": "s"
+      },
+      "target": {
+        "pattern": "/\\*.*?\\*/",
+        "replacement": "",
+        "flags": "s"
+      },
+      "user": "Task: Remove C-style block comments delimited by /* and */, which may span several lines. Comments are never nested.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x /*\\nmulti\\n*/ y' -> 'x  y'\n  'no comments' -> 'no comments'",
+      "thinking": "A greedy quantifier would delete everything between the first opener and the last closer, taking the real code with it. Pattern: /\\*.*?\\*/",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Remove C-style block comments delimited by /* and */, which may span several lines. Comments are never nested.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'x /*\\nmulti\\n*/ y' -> 'x  y'\n  'no comments' -> 'no comments'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nA greedy quantifier would delete everything between the first opener and the last closer, taking the real code with it. Pattern: /\\*.*?\\*/\n</think>\n{\"pattern\": \"/\\\\*.*?\\\\*/\", \"replacement\": \"\", \"flags\": \"s\"}"
+    }
+  ]
+}

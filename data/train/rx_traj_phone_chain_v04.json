@@ -1,0 +1,176 @@
+{
+  "id": "rx_traj_phone_chain_v04",
+  "kind": "trajectory",
+  "concept": "phone_chain",
+  "arc": "PIVOT->BROADEN",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "exact length",
+    "group reordering",
+    "optional group in the replacement",
+    "word boundaries"
+  ],
+  "variant": 4,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a bare ten-digit phone number with no separators.",
+      "traps": [
+        "exact length"
+      ],
+      "visible": {
+        "positives": [
+          "5551234567"
+        ],
+        "negatives": [
+          "555123456"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "0000000000",
+          "9998887777"
+        ],
+        "negatives": [
+          "55512345678",
+          "555-123-4567",
+          ""
+        ]
+      },
+      "gold": {
+        "pattern": "\\d{10}",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d{10}",
+        "flags": ""
+      },
+      "user": "Task: Match a bare ten-digit phone number with no separators.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '5551234567'\nMust not match:\n  '555123456'",
+      "thinking": "Using '+' would accept any length of digit run, which the fixed length rules out. Pattern: \\d{10}",
+      "trace_source": "authored",
+      "trace_phrasing": 2
+    },
+    {
+      "index": 2,
+      "family": "substitute",
+      "move": "PIVOT",
+      "instruction": "Now insert hyphens so 5551234567 becomes 555-123-4567.",
+      "traps": [
+        "group reordering",
+        "word boundaries"
+      ],
+      "visible": [
+        [
+          "call 5551234567 now",
+          "call 555-123-4567 now"
+        ]
+      ],
+      "hidden": [
+        [
+          "1234567890",
+          "123-456-7890"
+        ],
+        [
+          "a 9998887777 b",
+          "a 999-888-7777 b"
+        ],
+        [
+          "55512345",
+          "55512345"
+        ]
+      ],
+      "gold": {
+        "pattern": "\\b(\\d{3})(\\d{3})(\\d{4})\\b",
+        "replacement": "\\1-\\2-\\3",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\b(\\d{3})(\\d{3})(\\d{4})\\b",
+        "replacement": "\\1-\\2-\\3",
+        "flags": ""
+      },
+      "user": "Task: Now insert hyphens so 5551234567 becomes 555-123-4567.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'call 5551234567 now' -> 'call 555-123-4567 now'",
+      "thinking": "Formatting inserts separators without reordering, so each of the three fields needs its own group. Pattern: \\b(\\d{3})(\\d{3})(\\d{4})\\b with replacement \\1-\\2-\\3",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    },
+    {
+      "index": 3,
+      "family": "substitute",
+      "move": "BROADEN",
+      "instruction": "Some numbers carry a +1 country code. Keep the +1 where present and still format the rest as 555-123-4567.",
+      "traps": [
+        "optional group in the replacement"
+      ],
+      "visible": [
+        [
+          "+15551234567",
+          "+1555-123-4567"
+        ]
+      ],
+      "hidden": [
+        [
+          "5551234567",
+          "555-123-4567"
+        ],
+        [
+          "call +19998887777 now",
+          "call +1999-888-7777 now"
+        ],
+        [
+          "nothing",
+          "nothing"
+        ]
+      ],
+      "gold": {
+        "pattern": "(\\+1)?(\\d{3})(\\d{3})(\\d{4})",
+        "replacement": "\\1\\2-\\3-\\4",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "(\\+1)?(\\d{3})(\\d{3})(\\d{4})",
+        "replacement": "\\1\\2-\\3-\\4",
+        "flags": ""
+      },
+      "user": "Task: Some numbers carry a +1 country code. Keep the +1 where present and still format the rest as 555-123-4567.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '+15551234567' -> '+1555-123-4567'",
+      "thinking": "Python substitutes an unmatched optional group as empty, so the same replacement handles both the prefixed and bare forms. Pattern: (\\+1)?(\\d{3})(\\d{3})(\\d{4}) with replacement \\1\\2-\\3-\\4",
+      "trace_source": "authored",
+      "trace_phrasing": 1
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a bare ten-digit phone number with no separators.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '5551234567'\nMust not match:\n  '555123456'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nUsing '+' would accept any length of digit run, which the fixed length rules out. Pattern: \\d{10}\n</think>\n{\"pattern\": \"\\\\d{10}\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now insert hyphens so 5551234567 becomes 555-123-4567.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  'call 5551234567 now' -> 'call 555-123-4567 now'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nFormatting inserts separators without reordering, so each of the three fields needs its own group. Pattern: \\b(\\d{3})(\\d{3})(\\d{4})\\b with replacement \\1-\\2-\\3\n</think>\n{\"pattern\": \"\\\\b(\\\\d{3})(\\\\d{3})(\\\\d{4})\\\\b\", \"replacement\": \"\\\\1-\\\\2-\\\\3\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Some numbers carry a +1 country code. Keep the +1 where present and still format the rest as 555-123-4567.\n\nWrite a pattern and replacement that produce the requested output.\n\nExamples (input -> output):\n  '+15551234567' -> '+1555-123-4567'"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nPython substitutes an unmatched optional group as empty, so the same replacement handles both the prefixed and bare forms. Pattern: (\\+1)?(\\d{3})(\\d{3})(\\d{4}) with replacement \\1\\2-\\3-\\4\n</think>\n{\"pattern\": \"(\\\\+1)?(\\\\d{3})(\\\\d{3})(\\\\d{4})\", \"replacement\": \"\\\\1\\\\2-\\\\3-\\\\4\", \"flags\": \"\"}"
+    }
+  ]
+}

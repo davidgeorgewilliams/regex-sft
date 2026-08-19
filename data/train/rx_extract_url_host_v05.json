@@ -1,0 +1,75 @@
+{
+  "id": "rx_extract_url_host_v05",
+  "kind": "single",
+  "concept": "url_host",
+  "family": "extract",
+  "difficulty": "medium",
+  "traps": [
+    "optional www",
+    "stop at the path"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "extract",
+      "instruction": "Capture the host of the first http or https URL, excluding any leading 'www.' and excluding the path.",
+      "traps": [
+        "optional www",
+        "stop at the path"
+      ],
+      "visible": [
+        [
+          "http://sub.a.org/x?y=1",
+          "sub.a.org"
+        ],
+        [
+          "no url here",
+          null
+        ]
+      ],
+      "hidden": [
+        [
+          "visit https://www.example.com/page",
+          "example.com"
+        ],
+        [
+          "https://example.com",
+          "example.com"
+        ],
+        [
+          "https://www.a.co.uk/",
+          "a.co.uk"
+        ]
+      ],
+      "gold": {
+        "pattern": "https?://(?:www\\.)?([^/\\s?]+)",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "https?://(?:www\\.)?([^/\\s?]+)",
+        "flags": ""
+      },
+      "user": "Task: Capture the host of the first http or https URL, excluding any leading 'www.' and excluding the path.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'http://sub.a.org/x?y=1' -> 'sub.a.org'\n  'no url here' -> null",
+      "thinking": "The scheme is matched but not captured, and the optional 'www.' is skipped by sitting in a non-capturing group ahead of the capture. Pattern: https?://(?:www\\.)?([^/\\s?]+)",
+      "trace_source": "authored",
+      "trace_phrasing": 0
+    }
+  ],
+  "split": "train",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Capture the host of the first http or https URL, excluding any leading 'www.' and excluding the path.\n\nWrite a pattern whose first capture group holds the requested text.\n\nExamples (input -> captured text, null means no match):\n  'http://sub.a.org/x?y=1' -> 'sub.a.org'\n  'no url here' -> null"
+    },
+    {
+      "role": "assistant",
+      "content": "<think>\nThe scheme is matched but not captured, and the optional 'www.' is skipped by sitting in a non-capturing group ahead of the capture. Pattern: https?://(?:www\\.)?([^/\\s?]+)\n</think>\n{\"pattern\": \"https?://(?:www\\\\.)?([^/\\\\s?]+)\", \"flags\": \"\"}"
+    }
+  ]
+}

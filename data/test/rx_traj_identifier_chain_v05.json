@@ -1,0 +1,164 @@
+{
+  "id": "rx_traj_identifier_chain_v05",
+  "kind": "trajectory",
+  "concept": "identifier_chain",
+  "arc": "INVERT->REPAIR",
+  "family": "mixed",
+  "difficulty": "medium",
+  "traps": [
+    "first-character class differs from the rest",
+    "fix a cited failure",
+    "match the rejected leading-digit case",
+    "require a letter or underscore somewhere"
+  ],
+  "variant": 5,
+  "system": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none.",
+  "turns": [
+    {
+      "index": 1,
+      "family": "validate",
+      "move": "ESTABLISH",
+      "instruction": "Match a Python identifier: starts with a letter or underscore, then any number of letters, digits or underscores.",
+      "traps": [
+        "first-character class differs from the rest"
+      ],
+      "visible": {
+        "positives": [
+          "foo"
+        ],
+        "negatives": [
+          "1foo"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "_bar",
+          "a1",
+          "__init__"
+        ],
+        "negatives": [
+          "foo-bar",
+          "9lives",
+          "foo bar"
+        ]
+      },
+      "gold": {
+        "pattern": "[A-Za-z_][A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "[A-Za-z_][A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "user": "Task: Match a Python identifier: starts with a letter or underscore, then any number of letters, digits or underscores.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'foo'\nMust not match:\n  '1foo'"
+    },
+    {
+      "index": 2,
+      "family": "validate",
+      "move": "INVERT",
+      "instruction": "Now match the opposite: strings made of identifier characters that are invalid precisely because they begin with a digit.",
+      "traps": [
+        "match the rejected leading-digit case"
+      ],
+      "visible": {
+        "positives": [
+          "1foo"
+        ],
+        "negatives": [
+          "_bar"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "9lives",
+          "0x",
+          "42a"
+        ],
+        "negatives": [
+          "foo",
+          "a1",
+          "foo-bar"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d[A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d[A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "user": "Task: Now match the opposite: strings made of identifier characters that are invalid precisely because they begin with a digit.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1foo'\nMust not match:\n  '_bar'"
+    },
+    {
+      "index": 3,
+      "family": "validate",
+      "move": "REPAIR",
+      "instruction": "Bug: it matched '99', but a bare run of digits is a number, not a malformed identifier. Require at least one letter or underscore somewhere after the leading digit.",
+      "traps": [
+        "require a letter or underscore somewhere",
+        "fix a cited failure"
+      ],
+      "visible": {
+        "positives": [
+          "1foo"
+        ],
+        "negatives": [
+          "foo"
+        ]
+      },
+      "hidden": {
+        "positives": [
+          "9lives",
+          "0x",
+          "42a"
+        ],
+        "negatives": [
+          "99",
+          "123456",
+          "_bar"
+        ]
+      },
+      "gold": {
+        "pattern": "\\d[A-Za-z0-9_]*[A-Za-z_][A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "target": {
+        "pattern": "\\d[A-Za-z0-9_]*[A-Za-z_][A-Za-z0-9_]*",
+        "flags": ""
+      },
+      "user": "Task: Bug: it matched '99', but a bare run of digits is a number, not a malformed identifier. Require at least one letter or underscore somewhere after the leading digit.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1foo'\nMust not match:\n  'foo'"
+    }
+  ],
+  "split": "test",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You write Python regular expressions.\nRespond with a single JSON object and nothing else.\n  validation tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}\n  extraction tasks:   {\"pattern\": \"...\", \"flags\": \"...\"}   (capture group 1 holds the answer)\n  substitution tasks: {\"pattern\": \"...\", \"replacement\": \"...\", \"flags\": \"...\"}\nPatterns are evaluated with re.fullmatch for validation, re.search for extraction, and re.sub for substitution.\nThe flags field may only contain the characters \"i\", \"m\" and \"s\"; use \"\" for none."
+    },
+    {
+      "role": "user",
+      "content": "Task: Match a Python identifier: starts with a letter or underscore, then any number of letters, digits or underscores.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  'foo'\nMust not match:\n  '1foo'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"[A-Za-z_][A-Za-z0-9_]*\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Now match the opposite: strings made of identifier characters that are invalid precisely because they begin with a digit.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1foo'\nMust not match:\n  '_bar'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\d[A-Za-z0-9_]*\", \"flags\": \"\"}"
+    },
+    {
+      "role": "user",
+      "content": "Task: Bug: it matched '99', but a bare run of digits is a number, not a malformed identifier. Require at least one letter or underscore somewhere after the leading digit.\n\nWrite a pattern that matches exactly the strings that should match.\n\nMust match:\n  '1foo'\nMust not match:\n  'foo'"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"pattern\": \"\\\\d[A-Za-z0-9_]*[A-Za-z_][A-Za-z0-9_]*\", \"flags\": \"\"}"
+    }
+  ]
+}
