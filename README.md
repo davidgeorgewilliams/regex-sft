@@ -9,6 +9,66 @@ labelling, no proxy metric.
 
 ---
 
+## Executive summary
+
+**What.** We fine-tuned two variants of the same 4-billion-parameter model —
+Qwen3-4B **Instruct** (answers directly) and **Thinking** (writes out its
+reasoning first) — to produce regular expressions from a plain-English
+description, then measured which is better and where. Identical data, identical
+hyperparameters, identical seed. The reasoning trace is the only difference.
+
+**Why regex.** Every answer is machine-checkable. We *run* the model's regex
+against test strings and see whether it behaves correctly, so scoring needs no
+human annotators and no LLM judge. That makes the pipeline self-verifying, fast
+to iterate, and free of the usual argument about whether the metric is measuring
+the right thing.
+
+**The data.** 76 hand-written *concepts* — one per distinct skill (match a UK
+postcode, extract a domain from a URL, redact an SSN) — across three task
+families:
+
+| family | what the model produces | how it is scored |
+|---|---|---|
+| `validate` | a pattern that accepts/rejects strings | run it, compare to a labelled list |
+| `extract` | a pattern that captures a substring | run it, compare the captured text |
+| `substitute` | a pattern plus a replacement | run it, compare the output string |
+
+From those we generated **700 conversations** (499 train / 101 dev / 100 test).
+The central trick: each prompt shows the model only **2–3 example strings**, but
+it is scored on a larger **hidden** set it never sees. A model that copies the
+visible examples instead of reading the instruction passes the prompt and fails
+the score — so overfitting becomes a directly measured number rather than a
+suspicion.
+
+**Difficulty** is not a label we guessed. Each concept declares the specific
+mistakes its hidden set is built to catch — a *trap* such as "rejects leading
+zeros" or "needs the DOTALL flag" — and the tier follows from how many traps a
+task carries: 1 = easy, 2 = medium, 3+ = hard. 30% of conversations are 3-turn,
+where the user refines the request ("that broke on `a,b,c` — handle three
+columns"), covering ten distinct kinds of follow-up.
+
+**What we found.**
+
+1. **Fine-tuning works.** Instruct went from **46.9% → 61.9%** correct on
+   held-out tasks (+15 points, statistically significant).
+2. **Reasoning traces bought nothing on one-shot questions.** Tuned Thinking
+   **60.6%** vs tuned Instruct **61.9%** — a statistical tie. The two models get
+   *different* items right, not one strictly more.
+3. **But traces mattered a lot in conversation.** When each model had to read
+   its **own** previous answers — as it would in production — Thinking scored
+   **72.2%** against Instruct's **51.1%** (+21 points, significant). Instruct
+   compounds its early mistakes; Thinking re-derives from the instruction each
+   turn and recovers. By turn 3 the gap is 53% vs 27%.
+
+**The practical takeaway.** Reasoning traces are not a general accuracy upgrade —
+they are error-recovery insurance, and they only pay off in multi-turn use. A
+conventional single-shot evaluation would have concluded they did nothing.
+
+**Cost.** ~28 minutes of training per model on a single MacBook (M4 Max), plus
+~1 hour of evaluation. Fully offline after the initial model download.
+
+---
+
 ## Charts
 
 `results/curves.html` — self-contained, no dependencies, opens in any browser.
