@@ -39,10 +39,18 @@ Re-running under the model card's documented conditions — sampling at
 budget — a single batch of 4 prompts did not terminate within 13 minutes,
 putting a full 160-turn baseline at roughly **10 hours** on this hardware.
 
-**The finding is about termination, not accuracy:** a large part of what SFT
-bought here is not better regexes but *the ability to stop*. The fine-tuned
-model answers in ~73 tokens; the untrained one does not converge on an answer
-within a budget 85× larger.
+**The finding is about termination, not capability.** Inspecting a raw
+generation (`results/untrained_thinking_sample.txt`, reproduce with
+`scripts/inspect_base_generation.py`) shows it is not looping or producing
+gibberish — distinct 8-gram ratio **0.97**, most-repeated phrase just 2x. It
+reasons coherently, correctly identifies that it needs the `s` flag, and
+derives the exact gold answer `BEGIN(.*?)END` — roughly **five times** in 1200
+tokens — without ever committing to it. The word "Wait" appears over a dozen
+times: self-verification with no natural stopping point on a task this small.
+
+So a large part of what SFT bought was not better regexes but *decisiveness*.
+The fine-tuned model answers in ~73 tokens; the untrained one knows the answer
+and will not stop restating it.
 
 An accuracy baseline at reduced *n* under full documented conditions is the
 outstanding work — see Known Limitations.
