@@ -268,7 +268,48 @@ never shown. Hover any point for its value; each chart has a data table beneath 
     out = RESULTS / "curves.html"
     out.write_text(html)
     print(f"wrote {out}  ({len(html) / 1024:.1f} KB, {len(charts)} charts)")
+    export_pngs(html)
     return 0
+
+
+def export_pngs(html: str) -> None:
+    """Render light and dark PNGs for the README.
+
+    GitHub strips scripts and does not render an HTML file inline, so the
+    interactive chart cannot be embedded directly. Two static renders plus a
+    <picture> element give a reader the charts at a glance in whichever theme
+    they browse in.
+    """
+    import shutil
+    import subprocess
+    import tempfile
+
+    chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    if not pathlib_exists(chrome):
+        print("  (Chrome not found — skipping PNG export)")
+        return
+
+    docs = ROOT / "docs"
+    docs.mkdir(exist_ok=True)
+    for theme in ("light", "dark"):
+        stamped = html.replace(
+            "<!doctype html>",
+            f'<!doctype html>\n<script>document.documentElement.'
+            f'setAttribute("data-theme","{theme}")</script>')
+        with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False) as f:
+            f.write(stamped)
+            tmp = f.name
+        dest = docs / f"curves-{theme}.png"
+        subprocess.run([chrome, "--headless", "--disable-gpu", "--hide-scrollbars",
+                        f"--screenshot={dest}", "--window-size=1440,1290",
+                        "--force-device-scale-factor=2", tmp],
+                       capture_output=True)
+        if dest.exists():
+            print(f"  wrote {dest.relative_to(ROOT)}  ({dest.stat().st_size / 1024:.0f} KB)")
+
+
+def pathlib_exists(p: str) -> bool:
+    return Path(p).exists()
 
 
 if __name__ == "__main__":

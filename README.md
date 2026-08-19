@@ -71,11 +71,20 @@ conventional single-shot evaluation would have concluded they did nothing.
 
 ## Charts
 
-`results/curves.html` — self-contained, no dependencies, opens in any browser.
-Training loss, the dev sweep used for checkpoint selection, the free-running
-turn-by-turn collapse, and gold-vs-free multi-turn. Hover any point for its
-value; every chart has a data table beneath it. Regenerate with
-`python scripts/make_charts.py`.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/curves-dark.png">
+  <img alt="Training loss, dev sweep, free-running collapse by turn, and gold-vs-free multi-turn accuracy for Qwen3-4B Instruct and Thinking" src="docs/curves-light.png">
+</picture>
+
+Top-left is the training loss; top-right is the dev sweep that chose each
+checkpoint. The bottom row is the finding: **Instruct collapses 80 → 47 → 27%
+across a three-turn conversation while Thinking degrades 87 → 77 → 53%**, and
+the bars show that gap appearing only once each model must read its own previous
+answers.
+
+An interactive version with hover values and a data table under every chart is
+at **`results/curves.html`** — self-contained, no dependencies, opens in any
+browser. Regenerate everything with `python scripts/make_charts.py`.
 
 ## Headline result
 
