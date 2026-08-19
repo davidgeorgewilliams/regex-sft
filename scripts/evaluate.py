@@ -68,6 +68,13 @@ def parse_output(text: str) -> dict | None:
     so the answer follows the LAST '</think>'. Falling back to brace matching
     keeps a stray prefix from breaking an otherwise valid answer.
     """
+    # A generation that never emitted EOS was cut off mid-stream and has no
+    # committed answer. Without this guard the brace scan below reaches into
+    # the model's REASONING and grades its scratch work: a thinking model
+    # restates candidate JSON while deliberating, so a truncated run scored
+    # 3/160 "valid JSON" that the model had not actually committed to.
+    if "<|im_end|>" not in text:
+        return None
     if "</think>" in text:
         text = text.rsplit("</think>", 1)[1]
     text = text.split("<|im_end|>")[0]

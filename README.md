@@ -32,10 +32,19 @@ somewhere more interesting than raw accuracy.
 The untrained Thinking model **does not finish answering**, so it has no
 comparable accuracy number. This is measured, not inferred:
 
-| at a 384-token budget, greedy, same 160 test prompts | truncated | valid JSON |
+| at a 384-token budget, greedy, same 160 test prompts | truncated | committed answer |
 |---|---|---|
-| untrained Thinking | **100%** | 1.9% |
+| untrained Thinking | **100%** | **0%** |
 | fine-tuned Thinking | **0%** | 97.5% |
+
+The stored run reports 1.9% "valid JSON" for the untrained model, which was a
+parser flaw rather than three real answers. With no `<|im_end|>` and no closing
+`</think>`, the brace scan reached into the model's *reasoning* and extracted
+candidate JSON it was still deliberating over — a thinking model restates its
+working. Two of the three did not even compile; the one that did accounts for
+the entire 0.6% figure. `parse_output` now returns `None` when a generation
+never emitted EOS, since an answer the model did not finish is not an answer.
+Every fine-tuned run had 0% truncation, so no reported result changes.
 
 Identical budget, identical prompts, identical base weights. Every single
 untrained generation ran to the cap without emitting `<|im_end|>`, so only 1.9%

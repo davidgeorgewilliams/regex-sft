@@ -24,8 +24,15 @@ number here can be recomputed from the raw judgements.
 It reports 0.6% hidden pass, which measures a bug in the evaluation config, not
 the model. The untrained Qwen3-Thinking reasons at length (Qwen suggests a 32k
 output budget), and this run capped generation at 384 tokens, so **100% of its
-generations were truncated before reaching an answer** and only 1.9% parsed as
-valid JSON.
+generations were truncated before reaching an answer**.
+
+The 1.9% "valid JSON" recorded in that file is itself a parser artifact, not
+three real answers: with no EOS and no closing `</think>`, the brace scan
+reached into the model's reasoning and pulled out candidate JSON it was still
+deliberating over. Two of the three did not compile. `parse_output` now
+returns None for any generation that never emitted EOS, which scores this run
+at 0% committed answers. Runs with 0% truncation -- every fine-tuned result --
+are unaffected.
 
 **There is currently no valid untrained-Thinking baseline at all.**
 
