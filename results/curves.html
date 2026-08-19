@@ -1,0 +1,131 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>regex-sft — learning curves</title>
+<style>
+:root { color-scheme: light dark; }
+body { margin:0; padding:32px 20px 64px; font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--surface-1); color:var(--text-primary); }
+.viz-root {
+  --surface-1:#fcfcfb; --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#75736c;
+  --grid:#e6e5e0; --axis:#c9c8c1; --s1:#2a78d6; --s2:#eb6834;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    --surface-1:#1a1a19; --text-primary:#fff; --text-secondary:#c3c2b7; --text-muted:#8f8e85;
+    --grid:#2e2e2c; --axis:#46453f; --s1:#3987e5; --s2:#d95926;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  --surface-1:#1a1a19; --text-primary:#fff; --text-secondary:#c3c2b7; --text-muted:#8f8e85;
+  --grid:#2e2e2c; --axis:#46453f; --s1:#3987e5; --s2:#d95926;
+}
+.wrap { max-width:1360px; margin:0 auto; }
+h1 { font-size:24px; margin:0 0 4px; letter-spacing:-.01em; }
+.sub { color:var(--text-secondary); margin:0 0 28px; max-width:70ch; }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(560px,1fr)); gap:28px; }
+.cell { min-width:0; }
+.chart { margin:0; background:var(--surface-1); }
+figcaption h3 { font-size:16px; margin:0 0 4px; }
+figcaption p { font-size:13px; color:var(--text-secondary); margin:0 0 6px; max-width:62ch; }
+svg { width:100%; height:auto; display:block; overflow:visible; }
+.grid { stroke:var(--grid); stroke-width:1; }
+.axis { stroke:var(--axis); stroke-width:1; }
+.tick { fill:var(--text-muted); font-size:11px; }
+.axlabel { fill:var(--text-secondary); font-size:12px; }
+.ln { fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.mk { stroke:var(--surface-1); stroke-width:2; }
+.br { stroke:var(--surface-1); stroke-width:2; }
+.dlabel, .blabel { font-size:12px; font-weight:600; fill:var(--text-primary); }
+.s1 { stroke:var(--s1); } .s1.mk, .s1.br { fill:var(--s1); }
+.s2 { stroke:var(--s2); } .s2.mk, .s2.br { fill:var(--s2); }
+.legend { display:flex; gap:16px; margin:2px 0 8px; font-size:12.5px; color:var(--text-secondary); }
+.lg { display:inline-flex; align-items:center; gap:6px; }
+.lg i { width:14px; height:3px; border-radius:2px; display:inline-block; }
+.lg i.s1 { background:var(--s1); } .lg i.s2 { background:var(--s2); }
+.tbl { margin-top:8px; font-size:12.5px; color:var(--text-secondary); }
+.tbl summary { cursor:pointer; }
+table { border-collapse:collapse; margin-top:8px; }
+th,td { text-align:right; padding:3px 12px 3px 0; }
+th:first-child, td:first-child { text-align:left; }
+th { color:var(--text-muted); font-weight:600; }
+circle:hover { r:7; } rect:hover { opacity:.85; }
+</style>
+<body class="viz-root"><div class="wrap">
+<h1>regex-sft — learning curves</h1>
+<p class="sub">Qwen3-4B Instruct vs Thinking, LoRA SFT on execution-verified text-to-regex.
+Accuracy is <em>hidden-pass</em>: the generated pattern is executed against strings the model was
+never shown. Hover any point for its value; each chart has a data table beneath it.</p>
+<div class="grid2">
+<div class="cell"><figure class="chart">
+  <figcaption><h3>Training loss</h3><p>Log scale. Instruct drives loss to ~0 by epoch 2 — its target is a short JSON blob it can memorise. Thinking plateaus near 0.27: a reasoning trace still carries real uncertainty.</p></figcaption>
+  <div class="legend"><span class="lg"><i class="s1"></i>instruct</span><span class="lg"><i class="s2"></i>thinking</span></div>
+  <svg viewBox="0 0 640 300" role="img" aria-label="Training loss"><line class="grid" x1="64" y1="256.0" x2="576" y2="256.0"/>
+<text class="tick" x="54" y="260.0" text-anchor="end">0.0001</text>
+<line class="grid" x1="64" y1="200.2" x2="576" y2="200.2"/>
+<text class="tick" x="54" y="204.2" text-anchor="end">0.001</text>
+<line class="grid" x1="64" y1="144.4" x2="576" y2="144.4"/>
+<text class="tick" x="54" y="148.4" text-anchor="end">0.01</text>
+<line class="grid" x1="64" y1="88.6" x2="576" y2="88.6"/>
+<text class="tick" x="54" y="92.6" text-anchor="end">0.1</text>
+<line class="grid" x1="64" y1="32.8" x2="576" y2="32.8"/>
+<text class="tick" x="54" y="36.8" text-anchor="end">1</text>
+<text class="tick" x="64.0" y="276" text-anchor="middle">0</text>
+<text class="tick" x="234.7" y="276" text-anchor="middle">50</text>
+<text class="tick" x="405.3" y="276" text-anchor="middle">100</text>
+<text class="tick" x="576.0" y="276" text-anchor="middle">150</text>
+<line class="axis" x1="64" y1="256" x2="576" y2="256"/>
+<text class="axlabel" x="320.0" y="294" text-anchor="middle">optimizer step</text>
+<text class="axlabel" transform="translate(14,136.0) rotate(-90)" text-anchor="middle">loss (log)</text><path class="ln s1" d="M67.4,32.1 L81.1,32.4 L98.1,38.9 L115.2,73.3 L132.3,58.4 L149.3,67.2 L166.4,99.8 L183.5,107.3 L200.5,85.3 L217.6,174.4 L234.7,101.4 L251.7,135.8 L268.8,215.7 L285.9,167.1 L302.9,190.2 L320.0,189.0 L337.1,211.0 L354.1,198.0 L371.2,242.4 L388.3,230.0 L405.3,218.8 L422.4,211.6 L439.5,202.5 L456.5,209.5 L473.6,211.0 L490.7,232.5 L507.7,193.8 L524.8,256.0 L541.9,215.0 L558.9,189.0 L576.0,225.9"/><path class="ln s2" d="M67.4,17.0 L81.1,12.8 L98.1,21.3 L115.2,26.8 L132.3,34.4 L149.3,33.5 L166.4,36.0 L183.5,43.1 L200.5,33.4 L217.6,43.1 L234.7,33.1 L251.7,47.2 L268.8,50.2 L285.9,48.4 L302.9,53.8 L320.0,39.1 L337.1,55.8 L354.1,57.5 L371.2,39.1 L388.3,55.6 L405.3,56.9 L422.4,59.1 L439.5,69.8 L456.5,66.8 L473.6,63.1 L490.7,61.6 L507.7,51.7 L524.8,63.3 L541.9,76.4 L558.9,85.7 L576.0,64.7"/></svg>
+</figure><details class="tbl"><summary>Training loss — data table</summary><table><thead><tr><th>step</th><th>instruct</th><th>thinking</th></tr></thead><tbody><tr><td>1</td><td>1.0275</td><td>1.9203</td></tr><tr><td>15</td><td>0.1879</td><td>1.2790</td></tr><tr><td>30</td><td>0.0630</td><td>0.8759</td></tr><tr><td>45</td><td>0.0029</td><td>0.6532</td></tr><tr><td>60</td><td>0.0005</td><td>0.4886</td></tr><tr><td>75</td><td>0.0016</td><td>0.7723</td></tr><tr><td>90</td><td>0.0002</td><td>0.7718</td></tr><tr><td>105</td><td>0.0006</td><td>0.3384</td></tr><tr><td>120</td><td>0.0006</td><td>0.2860</td></tr><tr><td>135</td><td>0.0001</td><td>0.2838</td></tr><tr><td>150</td><td>0.0003</td><td>0.2678</td></tr></tbody></table></details></div><div class="cell"><figure class="chart">
+  <figcaption><h3>Dev accuracy by epoch — checkpoint selection</h3><p>Instruct peaks at epoch 2 then declines; Thinking is still climbing at 3, so its result is a lower bound. Selecting on validation loss would have picked Instruct epoch 3 — the worse checkpoint.</p></figcaption>
+  <div class="legend"><span class="lg"><i class="s1"></i>instruct</span><span class="lg"><i class="s2"></i>thinking</span></div>
+  <svg viewBox="0 0 640 300" role="img" aria-label="Dev accuracy by epoch — checkpoint selection"><line class="grid" x1="64" y1="256.0" x2="576" y2="256.0"/>
+<text class="tick" x="54" y="260.0" text-anchor="end">40%</text>
+<line class="grid" x1="64" y1="176.0" x2="576" y2="176.0"/>
+<text class="tick" x="54" y="180.0" text-anchor="end">50%</text>
+<line class="grid" x1="64" y1="96.0" x2="576" y2="96.0"/>
+<text class="tick" x="54" y="100.0" text-anchor="end">60%</text>
+<line class="grid" x1="64" y1="16.0" x2="576" y2="16.0"/>
+<text class="tick" x="54" y="20.0" text-anchor="end">70%</text>
+<text class="tick" x="64.0" y="276" text-anchor="middle">epoch 1</text>
+<text class="tick" x="320.0" y="276" text-anchor="middle">epoch 2</text>
+<text class="tick" x="576.0" y="276" text-anchor="middle">epoch 3</text>
+<line class="axis" x1="64" y1="256" x2="576" y2="256"/>
+<text class="axlabel" x="320.0" y="294" text-anchor="middle">training epoch</text>
+<text class="axlabel" transform="translate(14,136.0) rotate(-90)" text-anchor="middle">dev hidden-pass</text><path class="ln s1" d="M64.0,163.2 L320.0,79.2 L576.0,88.8"/><circle class="mk s1" cx="64.0" cy="163.2" r="5"><title>instruct — epoch 1: 51.6%</title></circle><circle class="mk s1" cx="320.0" cy="79.2" r="5"><title>instruct — epoch 2: 62.1%</title></circle><circle class="mk s1" cx="576.0" cy="88.8" r="5"><title>instruct — epoch 3: 60.9%</title></circle><text class="dlabel s1" x="586.0" y="92.8">60.9%</text><path class="ln s2" d="M64.0,198.4 L320.0,108.8 L576.0,74.4"/><circle class="mk s2" cx="64.0" cy="198.4" r="5"><title>thinking — epoch 1: 47.2%</title></circle><circle class="mk s2" cx="320.0" cy="108.8" r="5"><title>thinking — epoch 2: 58.4%</title></circle><circle class="mk s2" cx="576.0" cy="74.4" r="5"><title>thinking — epoch 3: 62.7%</title></circle><text class="dlabel s2" x="586.0" y="78.4">62.7%</text></svg>
+</figure><details class="tbl"><summary>Dev sweep — data table</summary><table><thead><tr><th>epoch</th><th>instruct</th><th>thinking</th></tr></thead><tbody><tr><td>1</td><td>51.6%</td><td>47.2%</td></tr><tr><td>2</td><td>62.1%</td><td>58.4%</td></tr><tr><td>3</td><td>60.9%</td><td>62.7%</td></tr></tbody></table></details></div><div class="cell"><figure class="chart">
+  <figcaption><h3>Free-running: accuracy collapse across turns</h3><p>Each model reads its OWN previous answers. Instruct compounds its mistakes; Thinking re-derives from the instruction each turn and degrades far less.</p></figcaption>
+  <div class="legend"><span class="lg"><i class="s1"></i>instruct</span><span class="lg"><i class="s2"></i>thinking</span></div>
+  <svg viewBox="0 0 640 300" role="img" aria-label="Free-running: accuracy collapse across turns"><line class="grid" x1="64" y1="256.0" x2="576" y2="256.0"/>
+<text class="tick" x="54" y="260.0" text-anchor="end">20%</text>
+<line class="grid" x1="64" y1="187.4" x2="576" y2="187.4"/>
+<text class="tick" x="54" y="191.4" text-anchor="end">40%</text>
+<line class="grid" x1="64" y1="118.9" x2="576" y2="118.9"/>
+<text class="tick" x="54" y="122.9" text-anchor="end">60%</text>
+<line class="grid" x1="64" y1="50.3" x2="576" y2="50.3"/>
+<text class="tick" x="54" y="54.3" text-anchor="end">80%</text>
+<text class="tick" x="64.0" y="276" text-anchor="middle">turn 1</text>
+<text class="tick" x="320.0" y="276" text-anchor="middle">turn 2</text>
+<text class="tick" x="576.0" y="276" text-anchor="middle">turn 3</text>
+<line class="axis" x1="64" y1="256" x2="576" y2="256"/>
+<text class="axlabel" x="320.0" y="294" text-anchor="middle">conversation turn</text>
+<text class="axlabel" transform="translate(14,136.0) rotate(-90)" text-anchor="middle">hidden-pass</text><path class="ln s1" d="M64.0,50.3 L320.0,164.5 L576.0,233.0"/><circle class="mk s1" cx="64.0" cy="50.3" r="5"><title>instruct — turn 1: 80.0%</title></circle><circle class="mk s1" cx="320.0" cy="164.5" r="5"><title>instruct — turn 2: 46.7%</title></circle><circle class="mk s1" cx="576.0" cy="233.0" r="5"><title>instruct — turn 3: 26.7%</title></circle><text class="dlabel s1" x="586.0" y="237.0">26.7%</text><path class="ln s2" d="M64.0,27.3 L320.0,61.6 L576.0,141.8"/><circle class="mk s2" cx="64.0" cy="27.3" r="5"><title>thinking — turn 1: 86.7%</title></circle><circle class="mk s2" cx="320.0" cy="61.6" r="5"><title>thinking — turn 2: 76.7%</title></circle><circle class="mk s2" cx="576.0" cy="141.8" r="5"><title>thinking — turn 3: 53.3%</title></circle><text class="dlabel s2" x="586.0" y="145.8">53.3%</text></svg>
+</figure><details class="tbl"><summary>Free-running by turn — data table</summary><table><thead><tr><th>turn</th><th>instruct</th><th>thinking</th></tr></thead><tbody><tr><td>1</td><td>80.0%</td><td>86.7%</td></tr><tr><td>2</td><td>46.7%</td><td>76.7%</td></tr><tr><td>3</td><td>26.7%</td><td>53.3%</td></tr></tbody></table></details></div><div class="cell"><figure class="chart">
+  <figcaption><h3>Multi-turn: given correct history vs its own</h3><p>Same 90 test turns, same models — only the conversation history differs. Instruct drops 15.6 pp when it must read its own output (p&lt;0.05); Thinking drops 4.5 pp (not significant).</p></figcaption>
+  <div class="legend"><span class="lg"><i class="s1"></i>instruct</span><span class="lg"><i class="s2"></i>thinking</span></div>
+  <svg viewBox="0 0 640 300" role="img" aria-label="Multi-turn: given correct history vs its own"><line class="grid" x1="64" y1="256.0" x2="576" y2="256.0"/>
+<text class="tick" x="54" y="260.0" text-anchor="end">0%</text>
+<line class="grid" x1="64" y1="196.0" x2="576" y2="196.0"/>
+<text class="tick" x="54" y="200.0" text-anchor="end">20%</text>
+<line class="grid" x1="64" y1="136.0" x2="576" y2="136.0"/>
+<text class="tick" x="54" y="140.0" text-anchor="end">40%</text>
+<line class="grid" x1="64" y1="76.0" x2="576" y2="76.0"/>
+<text class="tick" x="54" y="80.0" text-anchor="end">60%</text>
+<line class="grid" x1="64" y1="16.0" x2="576" y2="16.0"/>
+<text class="tick" x="54" y="20.0" text-anchor="end">80%</text>
+<line class="axis" x1="64" y1="256" x2="576" y2="256"/>
+<text class="axlabel" x="320.0" y="294" text-anchor="middle"></text>
+<text class="axlabel" transform="translate(14,136.0) rotate(-90)" text-anchor="middle">hidden-pass</text><rect class="br s1" x="145.0" y="55.9" width="46.0" height="200.1" rx="4"><title>instruct — gold history: 66.7%</title></rect><text class="blabel" x="168.0" y="48.9" text-anchor="middle">66.7</text><rect class="br s2" x="193.0" y="25.9" width="46.0" height="230.1" rx="4"><title>thinking — gold history: 76.7%</title></rect><text class="blabel" x="216.0" y="18.9" text-anchor="middle">76.7</text><text class="tick" x="192.0" y="276" text-anchor="middle">gold history</text><rect class="br s1" x="401.0" y="102.7" width="46.0" height="153.3" rx="4"><title>instruct — free-running: 51.1%</title></rect><text class="blabel" x="424.0" y="95.7" text-anchor="middle">51.1</text><rect class="br s2" x="449.0" y="39.4" width="46.0" height="216.6" rx="4"><title>thinking — free-running: 72.2%</title></rect><text class="blabel" x="472.0" y="32.4" text-anchor="middle">72.2</text><text class="tick" x="448.0" y="276" text-anchor="middle">free-running</text></svg>
+</figure><details class="tbl"><summary>Gold vs free — data table</summary><table><thead><tr><th>condition</th><th>instruct</th><th>thinking</th></tr></thead><tbody><tr><td>gold history</td><td>66.7%</td><td>76.7%</td></tr><tr><td>free-running</td><td>51.1%</td><td>72.2%</td></tr></tbody></table></details></div>
+</div>
+</div></body>

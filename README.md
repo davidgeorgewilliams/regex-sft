@@ -9,6 +9,14 @@ labelling, no proxy metric.
 
 ---
 
+## Charts
+
+`results/curves.html` — self-contained, no dependencies, opens in any browser.
+Training loss, the dev sweep used for checkpoint selection, the free-running
+turn-by-turn collapse, and gold-vs-free multi-turn. Hover any point for its
+value; every chart has a data table beneath it. Regenerate with
+`python scripts/make_charts.py`.
+
 ## Headline result
 
 Fine-tuning works, the two variants tie overall, and the difference shows up
